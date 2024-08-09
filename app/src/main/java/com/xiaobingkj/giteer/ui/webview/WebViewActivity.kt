@@ -24,6 +24,7 @@
 
 package com.xiaobingkj.giteer.ui.webview
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
@@ -31,6 +32,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.tencent.smtt.sdk.WebView
+import com.tencent.smtt.sdk.WebViewClient
+import com.ycbjie.webviewlib.base.X5WebChromeClient
+import com.ycbjie.webviewlib.base.X5WebViewClient
 import com.ycbjie.webviewlib.inter.InterWebListener
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.ActivityWebViewBinding
@@ -74,7 +79,9 @@ class WebViewActivity : BaseVmDbActivity<BaseViewModel, ActivityWebViewBinding>(
             }
 
         }
-        mDatabind.webView.x5WebChromeClient.setWebListener(listener)
+        val webClient = MyX5WebViewClient(mDatabind.webView, this)
+        mDatabind.webView.webViewClient = webClient
+        webClient.setWebListener(listener)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,4 +93,11 @@ class WebViewActivity : BaseVmDbActivity<BaseViewModel, ActivityWebViewBinding>(
 
     }
 
+    inner class MyX5WebViewClient(webView: WebView?, context: Context?) :
+        X5WebViewClient(webView, context) {
+        override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+
+            return super.shouldOverrideUrlLoading(view, url)
+        }
+    }
 }
