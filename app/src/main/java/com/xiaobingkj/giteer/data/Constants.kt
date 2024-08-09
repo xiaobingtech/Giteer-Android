@@ -21,37 +21,13 @@
  *     Please contact Rosemoe by email 2073412493@qq.com if you need
  *     additional information or have any questions
  ******************************************************************************/
-@file:Suppress("UnstableApiUsage")
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+package com.xiaobingkj.giteer.data
 
-pluginManagement {
-    includeBuild("build-logic")
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
+class Constants {
+    companion object {
+        const val CLIENT_ID = "0b6b0e8abd56956a17a197ef2913064eea92208fc4752b224b87a9aba5470513"
+        const val CLIENT_SECRET = "aaff83a79e3bc05bf6dae8c2acd3679b9709250f9977251fd0dc79198b64f168"
+        const val REDIRECT_URI = "giteer://oauth-callback"
     }
 }
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://repo.eclipse.org/content/groups/releases/")
-        maven("https://maven.aliyun.com/nexus/content/groups/public/")
-        maven("https://jitpack.io")
-    }
-}
-
-rootProject.name="sora-editor"
-include(
-    ":bom",
-    ":editor",
-    ":app",
-    ":language-java",
-    ":language-textmate",
-    ":editor-lsp",
-    ":language-treesitter"
-)

@@ -64,6 +64,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
     packaging {
         resources.pickFirsts.addAll(
@@ -82,6 +83,7 @@ android {
 dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.gms.instantapps)
+    implementation(libs.androidx.activity)
 
     // Desugar
     coreLibraryDesugaring(libs.desugar)
@@ -113,4 +115,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso)
+
+    implementation("com.github.hegaojian:JetpackMvvm:1.2.7")
+
+    implementation("com.tencent:mmkv:1.3.9")
+
+    implementation("cn.yc:WebViewLib:1.4.0")
 }

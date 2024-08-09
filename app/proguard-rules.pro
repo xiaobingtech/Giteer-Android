@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+# 该包下所有的类和类成员不混淆
+-keep class com.ycbjie.webviewlib.** {
+    *;
+}
+-dontwarn com.ycbjie.webviewlib.**

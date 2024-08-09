@@ -4,6 +4,7 @@ kotlin = "1.9.23"
 tsBinding = "4.3.1"
 lsp4j = "0.22.0"
 androidxAnnotation = "1.8.1"
+activity = "1.9.1"
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidxAnnotation" }
@@ -32,6 +33,7 @@ jdt-annotation = { module = "org.eclipse.jdt:org.eclipse.jdt.annotation", versio
 
 tests-google-truth = { module = "com.google.truth:truth", version = "1.4.2" }
 tests-robolectric = { module = "org.robolectric:robolectric", version = "4.11.1" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

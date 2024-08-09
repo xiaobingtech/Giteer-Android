@@ -21,37 +21,24 @@
  *     Please contact Rosemoe by email 2073412493@qq.com if you need
  *     additional information or have any questions
  ******************************************************************************/
-@file:Suppress("UnstableApiUsage")
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+package com.xiaobingkj.giteer
 
-pluginManagement {
-    includeBuild("build-logic")
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
+import android.app.Application
+import android.util.Log
+import com.tencent.mmkv.MMKV
+import com.ycbjie.webviewlib.utils.X5WebUtils
+
+class GiteerApplication: Application() {
+
+    private val TAG = "GiteerApplication"
+
+    override fun onCreate() {
+        super.onCreate()
+
+        val rootDir = MMKV.initialize(this)
+        Log.d(TAG, "MMKV rootDir:" + rootDir)
+
+        X5WebUtils.init(this)
     }
 }
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://repo.eclipse.org/content/groups/releases/")
-        maven("https://maven.aliyun.com/nexus/content/groups/public/")
-        maven("https://jitpack.io")
-    }
-}
-
-rootProject.name="sora-editor"
-include(
-    ":bom",
-    ":editor",
-    ":app",
-    ":language-java",
-    ":language-textmate",
-    ":editor-lsp",
-    ":language-treesitter"
-)

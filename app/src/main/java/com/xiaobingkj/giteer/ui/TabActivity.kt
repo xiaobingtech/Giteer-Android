@@ -21,37 +21,39 @@
  *     Please contact Rosemoe by email 2073412493@qq.com if you need
  *     additional information or have any questions
  ******************************************************************************/
-@file:Suppress("UnstableApiUsage")
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+package com.xiaobingkj.giteer.ui
 
-pluginManagement {
-    includeBuild("build-logic")
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
+import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import io.github.rosemoe.sora.app.R
+import io.github.rosemoe.sora.app.databinding.ActivityTabBinding
+import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
+
+class TabActivity : BaseVmDbActivity<BaseViewModel, ActivityTabBinding>() {
+    override fun layoutId(): Int = R.layout.activity_tab
+
+    override fun createObserver() {
+
+    }
+
+    override fun dismissLoading() {
+
+    }
+
+    override fun initView(savedInstanceState: Bundle?) {
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun showLoading(message: String) {
+
     }
 }
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://repo.eclipse.org/content/groups/releases/")
-        maven("https://maven.aliyun.com/nexus/content/groups/public/")
-        maven("https://jitpack.io")
-    }
-}
-
-rootProject.name="sora-editor"
-include(
-    ":bom",
-    ":editor",
-    ":app",
-    ":language-java",
-    ":language-textmate",
-    ":editor-lsp",
-    ":language-treesitter"
-)
