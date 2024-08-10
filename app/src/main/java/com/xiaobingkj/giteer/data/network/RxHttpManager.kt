@@ -22,42 +22,32 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui
+package com.xiaobingkj.giteer.data.network
 
-import android.content.Intent
-import android.os.Bundle
+import android.app.Application
+import com.tencent.mmkv.MMKV
 import com.xiaobingkj.giteer.data.storage.Storage
-import com.xiaobingkj.giteer.ui.login.LoginActivity
-import com.xiaobingkj.giteer.ui.login.LoginViewModel
-import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.ActivitySplashBinding
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import io.github.rosemoe.sora.langs.textmate.BuildConfig
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import rxhttp.RxHttpPlugins
+import rxhttp.wrapper.annotation.OkClient
+import java.util.concurrent.TimeUnit
 
-class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>() {
-    override fun layoutId(): Int = R.layout.activity_splash
+class RxHttpManager(context: Application) {
 
-    override fun createObserver() {
+    fun setup() {
+        val client = OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .build()
 
+        RxHttpPlugins.init(client)
+            .setDebug(BuildConfig.DEBUG)
+            .setOnParamAssembly { p ->
+                p.add("access_token", Storage.token)
+            }
     }
 
-    override fun dismissLoading() {
-
-    }
-
-    override fun initView(savedInstanceState: Bundle?) {
-        if (Storage.isLogin) {
-            mViewModel.postOauthToken(Storage.token)
-            startActivity(Intent(this, TabActivity::class.java))
-        }else{
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun showLoading(message: String) {
-
-    }
 }

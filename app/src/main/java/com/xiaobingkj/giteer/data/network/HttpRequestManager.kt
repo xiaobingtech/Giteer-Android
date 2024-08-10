@@ -22,42 +22,38 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui
+package com.xiaobingkj.giteer.data.network
 
-import android.content.Intent
-import android.os.Bundle
+import com.xiaobingkj.giteer.data.model.EventBean
+import com.xiaobingkj.giteer.data.model.TokenBean
 import com.xiaobingkj.giteer.data.storage.Storage
-import com.xiaobingkj.giteer.ui.login.LoginActivity
-import com.xiaobingkj.giteer.ui.login.LoginViewModel
-import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.ActivitySplashBinding
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import rxhttp.RxHttp
+import rxhttp.toAwait
+import rxhttp.toAwaitList
+import rxhttp.toObservableList
+import rxhttp.wrapper.coroutines.CallAwait
 
-class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>() {
-    override fun layoutId(): Int = R.layout.activity_splash
+val HttpRequestCoroutine: HttpRequestManager by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+    HttpRequestManager()
+}
 
-    override fun createObserver() {
+class HttpRequestManager {
 
+    //https://gitee.com/oauth/token?grant_type=refresh_token&refresh_token={refresh_token}
+    suspend fun postOauthToken(refresh_token: String): TokenBean {
+        return RxHttp.postJson("oauth/token")
+            .add("grant_type", "refresh_token")
+            .add("refresh_token", refresh_token)
+            .toAwait<TokenBean>()
+            .await()
     }
 
-    override fun dismissLoading() {
-
-    }
-
-    override fun initView(savedInstanceState: Bundle?) {
-        if (Storage.isLogin) {
-            mViewModel.postOauthToken(Storage.token)
-            startActivity(Intent(this, TabActivity::class.java))
-        }else{
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun showLoading(message: String) {
-
+    //https://gitee.com/api/v5/users/fandongtongxue_admin/received_events?access_token=45face680d313b0749afb5a1891c245f&limit=100
+    suspend fun getReceivedEvents(prev_id: Int, limit: Int = 100): MutableList<EventBean> {
+        return RxHttp.get("api/v5/users/${Storage.user.login}/received_events")
+            .add("prev_id", prev_id)
+            .add("limit", limit)
+            .toAwaitList<EventBean>()
+            .await()
     }
 }

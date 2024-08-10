@@ -22,42 +22,25 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui
+package com.xiaobingkj.giteer.ui.event
 
-import android.content.Intent
-import android.os.Bundle
-import com.xiaobingkj.giteer.data.storage.Storage
-import com.xiaobingkj.giteer.ui.login.LoginActivity
-import com.xiaobingkj.giteer.ui.login.LoginViewModel
-import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.ActivitySplashBinding
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
+import com.xiaobingkj.giteer.data.network.HttpRequestManager
+import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
+import me.hgj.jetpackmvvm.ext.request
+import me.hgj.jetpackmvvm.ext.requestNoCheck
 
-class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>() {
-    override fun layoutId(): Int = R.layout.activity_splash
+class EventViewModel: BaseViewModel() {
 
-    override fun createObserver() {
+    fun getReceiveEvents(prev_id: Int, limit: Int = 100) {
+        requestNoCheck({
+            HttpRequestCoroutine.getReceivedEvents(prev_id, limit)
+        },{
 
-    }
-
-    override fun dismissLoading() {
-
-    }
-
-    override fun initView(savedInstanceState: Bundle?) {
-        if (Storage.isLogin) {
-            mViewModel.postOauthToken(Storage.token)
-            startActivity(Intent(this, TabActivity::class.java))
-        }else{
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun showLoading(message: String) {
-
+        },{
+            ToastUtils.showLong(it.message)
+        })
     }
 }

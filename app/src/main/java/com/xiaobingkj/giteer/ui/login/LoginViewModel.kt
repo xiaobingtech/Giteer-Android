@@ -24,8 +24,19 @@
 
 package com.xiaobingkj.giteer.ui.login
 
+import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
+import me.hgj.jetpackmvvm.ext.requestNoCheck
 
 class LoginViewModel: BaseViewModel() {
+    fun postOauthToken(refresh_token: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.postOauthToken(refresh_token)
+        }, {
 
+        }, {
+            ToastUtils.showLong(it.errorMsg)
+        })
+    }
 }

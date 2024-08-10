@@ -29,6 +29,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
+import com.xiaobingkj.giteer.ui.event.EventFragment
+import com.xiaobingkj.giteer.ui.me.MeFragment
+import com.xiaobingkj.giteer.ui.search.SearchFragment
+import com.xiaobingkj.giteer.ui.star.StarFragment
+import com.xiaobingkj.giteer.ui.trend.TrendFragment
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.ActivityTabBinding
 import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
@@ -46,7 +55,19 @@ class TabActivity : BaseVmDbActivity<BaseViewModel, ActivityTabBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        mDatabind.viewPager2.adapter = ViewPageAdapter(this)
+        mDatabind.viewPager2.isUserInputEnabled = true
 
+        TabLayoutMediator(mDatabind.tabLayout, mDatabind.viewPager2, { tab, position ->
+            when (position) {
+                0 -> tab.text = "动态"
+                1 -> tab.text = "Star"
+                2 -> tab.text = "搜索"
+                3 -> tab.text = "趋势"
+                4 -> tab.text = "我的"
+                else -> {}
+            }
+        }).attach()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,5 +76,20 @@ class TabActivity : BaseVmDbActivity<BaseViewModel, ActivityTabBinding>() {
 
     override fun showLoading(message: String) {
 
+    }
+
+    inner class ViewPageAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
+        override fun getItemCount(): Int = 5
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> EventFragment()
+                1 -> StarFragment()
+                2 -> SearchFragment()
+                3 -> TrendFragment()
+                4 -> MeFragment()
+                else -> Fragment()
+            }
+        }
     }
 }

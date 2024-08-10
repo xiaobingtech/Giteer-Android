@@ -25,6 +25,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp") version "1.9.23-1.0.19"
 }
 
 android {
@@ -80,6 +81,13 @@ android {
     namespace = "io.github.rosemoe.sora.app"
 }
 
+kotlin {
+    ksp {
+        arg("rxhttp_rxjava", "3.1.6")
+        arg("rxhttp_package", "rxhttp")  //指定RxHttp类包名，可随意指定
+    }
+}
+
 dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.gms.instantapps)
@@ -121,4 +129,14 @@ dependencies {
     implementation("com.tencent:mmkv:1.3.9")
 
     implementation("cn.yc:WebViewLib:1.4.0")
+
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.github.liujingxing.rxhttp:rxhttp:3.2.7")
+    ksp("com.github.liujingxing.rxhttp:rxhttp-compiler:3.2.7")
+
+    implementation("io.reactivex.rxjava3:rxjava:3.1.6")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation("com.github.liujingxing.rxlife:rxlife-rxjava3:2.2.2")//管理RxJava3生命周期，页面销毁，关闭请求
+
+    implementation("com.blankj:utilcodex:1.31.1")
 }

@@ -22,42 +22,13 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui
+package com.xiaobingkj.giteer.data.network
 
-import android.content.Intent
-import android.os.Bundle
-import com.xiaobingkj.giteer.data.storage.Storage
-import com.xiaobingkj.giteer.ui.login.LoginActivity
-import com.xiaobingkj.giteer.ui.login.LoginViewModel
-import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.ActivitySplashBinding
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import rxhttp.wrapper.annotation.DefaultDomain
 
-class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>() {
-    override fun layoutId(): Int = R.layout.activity_splash
-
-    override fun createObserver() {
-
-    }
-
-    override fun dismissLoading() {
-
-    }
-
-    override fun initView(savedInstanceState: Bundle?) {
-        if (Storage.isLogin) {
-            mViewModel.postOauthToken(Storage.token)
-            startActivity(Intent(this, TabActivity::class.java))
-        }else{
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun showLoading(message: String) {
-
+class URL {
+    companion object {
+        @DefaultDomain
+        val baseURL = "https://gitee.com/"
     }
 }

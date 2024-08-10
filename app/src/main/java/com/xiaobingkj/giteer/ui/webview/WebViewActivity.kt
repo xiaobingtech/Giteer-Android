@@ -32,6 +32,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.blankj.utilcode.util.ToastUtils
 import com.tencent.smtt.sdk.WebView
 import com.tencent.smtt.sdk.WebViewClient
 import com.ycbjie.webviewlib.base.X5WebChromeClient
@@ -55,10 +56,9 @@ class WebViewActivity : BaseVmDbActivity<BaseViewModel, ActivityWebViewBinding>(
     override fun initView(savedInstanceState: Bundle?) {
         val url = intent.getStringExtra("url")
         if (url?.isEmpty()!!){
-            Toast.makeText(this@WebViewActivity, "URL不合法", Toast.LENGTH_LONG).show()
+            ToastUtils.showLong("URL不合法")
             return
         }
-        mDatabind.webView.loadUrl(url)
         mDatabind.progress.setColor(Color.GREEN)
         mDatabind.progress.show()
         val listener = object: InterWebListener {
@@ -67,7 +67,7 @@ class WebViewActivity : BaseVmDbActivity<BaseViewModel, ActivityWebViewBinding>(
             }
 
             override fun showErrorView(type: Int) {
-                Toast.makeText(this@WebViewActivity, type.toString(), Toast.LENGTH_LONG).show()
+                ToastUtils.showLong(type.toString())
             }
 
             override fun startProgress(newProgress: Int) {
@@ -79,9 +79,8 @@ class WebViewActivity : BaseVmDbActivity<BaseViewModel, ActivityWebViewBinding>(
             }
 
         }
-        val webClient = MyX5WebViewClient(mDatabind.webView, this)
-        mDatabind.webView.webViewClient = webClient
-        webClient.setWebListener(listener)
+        mDatabind.webView.x5WebChromeClient.setWebListener(listener)
+        mDatabind.webView.loadUrl(url)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,13 +90,5 @@ class WebViewActivity : BaseVmDbActivity<BaseViewModel, ActivityWebViewBinding>(
 
     override fun showLoading(message: String) {
 
-    }
-
-    inner class MyX5WebViewClient(webView: WebView?, context: Context?) :
-        X5WebViewClient(webView, context) {
-        override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-
-            return super.shouldOverrideUrlLoading(view, url)
-        }
     }
 }

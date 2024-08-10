@@ -22,42 +22,41 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui
+package com.xiaobingkj.giteer.data.storage
 
-import android.content.Intent
-import android.os.Bundle
-import com.xiaobingkj.giteer.data.storage.Storage
-import com.xiaobingkj.giteer.ui.login.LoginActivity
-import com.xiaobingkj.giteer.ui.login.LoginViewModel
-import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.ActivitySplashBinding
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import com.google.gson.Gson
+import com.tencent.mmkv.MMKV
+import com.xiaobingkj.giteer.data.model.UserBean
+import me.hgj.jetpackmvvm.ext.util.toJson
 
-class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>() {
-    override fun layoutId(): Int = R.layout.activity_splash
-
-    override fun createObserver() {
-
-    }
-
-    override fun dismissLoading() {
-
-    }
-
-    override fun initView(savedInstanceState: Bundle?) {
-        if (Storage.isLogin) {
-            mViewModel.postOauthToken(Storage.token)
-            startActivity(Intent(this, TabActivity::class.java))
-        }else{
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun showLoading(message: String) {
-
+class Storage {
+    companion object {
+        var token: String
+            get() {
+                return MMKV.defaultMMKV().getString("token", "").toString()
+            }
+            set(value) {
+                MMKV.defaultMMKV().putString("token", value)
+            }
+        var isLogin: Boolean
+            get() {
+                return MMKV.defaultMMKV().getBoolean("isLogin", false)
+            }
+            set(value) {
+                MMKV.defaultMMKV().putBoolean("isLogin", value)
+            }
+        var user: UserBean
+            get() {
+                val json = MMKV.defaultMMKV().getString("token", "")
+                if (json?.isEmpty() == true) {
+                    return UserBean()
+                }
+                val gson = Gson()
+                val bean = gson.fromJson<UserBean>(json, UserBean::class.java)
+                return bean
+            }
+            set(value) {
+                MMKV.defaultMMKV().putString("user", value.toJson())
+            }
     }
 }

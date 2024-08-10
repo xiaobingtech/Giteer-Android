@@ -33,8 +33,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.blankj.utilcode.util.ToastUtils
 import com.tencent.mmkv.MMKV
 import com.xiaobingkj.giteer.data.Constants
+import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ui.TabActivity
 import com.xiaobingkj.giteer.ui.webview.WebViewActivity
 import io.github.rosemoe.sora.app.R
@@ -84,10 +86,12 @@ class LoginActivity : BaseVmDbActivity<LoginViewModel, ActivityLoginBinding>() {
                 .setPositiveButton("确定") {_, _->
                     val token = eT.text.toString()
                     if (token.isNotEmpty()){
-                        MMKV.defaultMMKV().putString("token", token)
+                        Storage.token = token
+                        Storage.isLogin = true
                         startActivity(Intent(this@LoginActivity, TabActivity::class.java))
+                        finish()
                     }else{
-                        Toast.makeText(this@LoginActivity, "token不合法", Toast.LENGTH_LONG).show()
+                        ToastUtils.showLong("token不合法")
                     }
                 }
                 .show()

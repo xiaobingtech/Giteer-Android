@@ -27,6 +27,7 @@ package com.xiaobingkj.giteer
 import android.app.Application
 import android.util.Log
 import com.tencent.mmkv.MMKV
+import com.xiaobingkj.giteer.data.network.RxHttpManager
 import com.ycbjie.webviewlib.utils.X5WebUtils
 
 class GiteerApplication: Application() {
@@ -35,10 +36,12 @@ class GiteerApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        //初始化MMKV
         val rootDir = MMKV.initialize(this)
         Log.d(TAG, "MMKV rootDir:" + rootDir)
-
+        //初始化YCWebView
         X5WebUtils.init(this)
+        //初始化RxHttp
+        RxHttpManager(this).setup()
     }
 }
