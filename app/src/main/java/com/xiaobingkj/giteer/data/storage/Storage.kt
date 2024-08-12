@@ -26,17 +26,24 @@ package com.xiaobingkj.giteer.data.storage
 
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
+import com.xiaobingkj.giteer.data.model.TokenBean
 import com.xiaobingkj.giteer.data.model.UserBean
 import me.hgj.jetpackmvvm.ext.util.toJson
 
 class Storage {
     companion object {
-        var token: String
+        var token: TokenBean
             get() {
-                return MMKV.defaultMMKV().getString("token", "").toString()
+                val json = MMKV.defaultMMKV().getString("token", "")
+                if (json?.isEmpty() == true) {
+                    return TokenBean()
+                }
+                val gson = Gson()
+                val bean = gson.fromJson<TokenBean>(json, TokenBean::class.java)
+                return bean
             }
             set(value) {
-                MMKV.defaultMMKV().putString("token", value)
+                MMKV.defaultMMKV().putString("token", value.toJson())
             }
         var isLogin: Boolean
             get() {
@@ -47,7 +54,7 @@ class Storage {
             }
         var user: UserBean
             get() {
-                val json = MMKV.defaultMMKV().getString("token", "")
+                val json = MMKV.defaultMMKV().getString("user", "")
                 if (json?.isEmpty() == true) {
                     return UserBean()
                 }

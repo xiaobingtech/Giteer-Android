@@ -26,6 +26,7 @@ package com.xiaobingkj.giteer.ui
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ui.login.LoginActivity
 import com.xiaobingkj.giteer.ui.login.LoginViewModel
@@ -46,7 +47,9 @@ class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>()
 
     override fun initView(savedInstanceState: Bundle?) {
         if (Storage.isLogin) {
-            mViewModel.postOauthToken(Storage.token)
+            if (Storage.token.refresh_token != null) {
+                mViewModel.postOauthToken(Storage.token.refresh_token)
+            }
             startActivity(Intent(this, TabActivity::class.java))
         }else{
             startActivity(Intent(this, LoginActivity::class.java))

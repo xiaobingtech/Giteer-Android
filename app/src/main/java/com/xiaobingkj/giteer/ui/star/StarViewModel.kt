@@ -22,32 +22,26 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.data.network
+package com.xiaobingkj.giteer.ui.star
 
-import android.app.Application
-import com.tencent.mmkv.MMKV
-import com.xiaobingkj.giteer.data.storage.Storage
-import io.github.rosemoe.sora.langs.textmate.BuildConfig
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import rxhttp.RxHttpPlugins
-import rxhttp.wrapper.annotation.OkClient
-import java.util.concurrent.TimeUnit
+import androidx.lifecycle.MutableLiveData
+import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.model.RepositoryBean
+import com.xiaobingkj.giteer.data.model.UserBean
+import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
+import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
+import me.hgj.jetpackmvvm.ext.requestNoCheck
 
-class RxHttpManager(context: Application) {
+class StarViewModel: BaseViewModel() {
+    val repoEvent = MutableLiveData<List<RepositoryBean>>()
 
-    fun setup() {
-        val client = OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
-
-        RxHttpPlugins.init(client)
-            .setDebug(BuildConfig.DEBUG)
-            .setOnParamAssembly { p ->
-                p.add("access_token", Storage.token.access_token)
-            }
+    fun getStarred(prev_id: Int) {
+        requestNoCheck({
+            HttpRequestCoroutine.getStarred(prev_id)
+        }, {
+            repoEvent.postValue(it)
+        }, {
+            ToastUtils.showLong(it.errorMsg)
+        })
     }
-
 }

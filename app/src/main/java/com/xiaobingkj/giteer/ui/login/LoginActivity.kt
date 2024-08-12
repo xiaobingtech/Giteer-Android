@@ -33,9 +33,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.ToastUtils
 import com.tencent.mmkv.MMKV
 import com.xiaobingkj.giteer.data.Constants
+import com.xiaobingkj.giteer.data.model.TokenBean
 import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ui.TabActivity
 import com.xiaobingkj.giteer.ui.webview.WebViewActivity
@@ -47,7 +49,11 @@ class LoginActivity : BaseVmDbActivity<LoginViewModel, ActivityLoginBinding>() {
     override fun layoutId(): Int = R.layout.activity_login
 
     override fun createObserver() {
-
+        mViewModel.userEvent.observe(this, Observer {
+            Storage.isLogin = true
+            startActivity(Intent(this, TabActivity::class.java))
+            finish()
+        })
     }
 
     override fun dismissLoading() {
@@ -86,10 +92,10 @@ class LoginActivity : BaseVmDbActivity<LoginViewModel, ActivityLoginBinding>() {
                 .setPositiveButton("确定") {_, _->
                     val token = eT.text.toString()
                     if (token.isNotEmpty()){
-                        Storage.token = token
-                        Storage.isLogin = true
-                        startActivity(Intent(this@LoginActivity, TabActivity::class.java))
-                        finish()
+                        val bean = TokenBean()
+                        bean.access_token = token
+                        Storage.token = bean
+                        mViewModel.getUser()
                     }else{
                         ToastUtils.showLong("token不合法")
                     }

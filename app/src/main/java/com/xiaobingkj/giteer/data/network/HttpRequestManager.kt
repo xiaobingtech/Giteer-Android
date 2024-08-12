@@ -25,13 +25,13 @@
 package com.xiaobingkj.giteer.data.network
 
 import com.xiaobingkj.giteer.data.model.EventBean
+import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.TokenBean
+import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.storage.Storage
 import rxhttp.RxHttp
 import rxhttp.toAwait
 import rxhttp.toAwaitList
-import rxhttp.toObservableList
-import rxhttp.wrapper.coroutines.CallAwait
 
 val HttpRequestCoroutine: HttpRequestManager by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
     HttpRequestManager()
@@ -48,12 +48,30 @@ class HttpRequestManager {
             .await()
     }
 
+
+    suspend fun getUser(): UserBean {
+        return RxHttp.get("api/v5/user")
+            .toAwait<UserBean>()
+            .await()
+    }
+
     //https://gitee.com/api/v5/users/fandongtongxue_admin/received_events?access_token=45face680d313b0749afb5a1891c245f&limit=100
     suspend fun getReceivedEvents(prev_id: Int, limit: Int = 100): MutableList<EventBean> {
         return RxHttp.get("api/v5/users/${Storage.user.login}/received_events")
             .add("prev_id", prev_id)
             .add("limit", limit)
             .toAwaitList<EventBean>()
+            .await()
+    }
+
+    //https://gitee.com/api/v5/users/fandongtongxue_admin/starred?access_token=8b54574d49a35d59fcbff25c54d3e934&limit=20&sort=created&direction=desc
+    suspend fun getStarred(prev_id: Int, sort: String = "created", direction: String = "desc", limit: Int = 100): MutableList<RepositoryBean> {
+        return RxHttp.get("api/v5/users/${Storage.user.login}/starred")
+            .add("prev_id", prev_id)
+            .add("sort", sort)
+            .add("direction", direction)
+            .add("limit", limit)
+            .toAwaitList<RepositoryBean>()
             .await()
     }
 }

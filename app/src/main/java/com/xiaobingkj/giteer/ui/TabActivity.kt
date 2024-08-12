@@ -31,9 +31,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ui.event.EventFragment
+import com.xiaobingkj.giteer.ui.login.LoginViewModel
 import com.xiaobingkj.giteer.ui.me.MeFragment
 import com.xiaobingkj.giteer.ui.search.SearchFragment
 import com.xiaobingkj.giteer.ui.star.StarFragment
@@ -43,11 +46,13 @@ import io.github.rosemoe.sora.app.databinding.ActivityTabBinding
 import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 
-class TabActivity : BaseVmDbActivity<BaseViewModel, ActivityTabBinding>() {
+class TabActivity : BaseVmDbActivity<LoginViewModel, ActivityTabBinding>() {
     override fun layoutId(): Int = R.layout.activity_tab
 
     override fun createObserver() {
-
+        mViewModel.userEvent.observe(this, Observer {
+            Storage.user = it
+        })
     }
 
     override fun dismissLoading() {
@@ -55,6 +60,8 @@ class TabActivity : BaseVmDbActivity<BaseViewModel, ActivityTabBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        mViewModel.getUser()
+
         mDatabind.viewPager2.adapter = ViewPageAdapter(this)
         mDatabind.viewPager2.isUserInputEnabled = true
 

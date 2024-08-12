@@ -139,4 +139,17 @@ dependencies {
     implementation("com.github.liujingxing.rxlife:rxlife-rxjava3:2.2.2")//管理RxJava3生命周期，页面销毁，关闭请求
 
     implementation("com.blankj:utilcodex:1.31.1")
+
+    implementation("androidx.appcompat:appcompat:1.0.0")
+    implementation("io.github.scwang90:refresh-layout-kernel:2.1.0")
+    implementation("io.github.scwang90:refresh-header-classics:2.1.0")
+    implementation("io.github.scwang90:refresh-footer-classics:2.1.0")
+    implementation("io.github.scwang90:refresh-header-material:2.1.0")
+
+    implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.4")
+
+    implementation("cn.carbs.android:AvatarImageView:1.0.4")
+
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    ksp("com.github.bumptech.glide:ksp:4.16.0")
 }

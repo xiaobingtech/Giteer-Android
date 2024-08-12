@@ -38,6 +38,7 @@
         android:layout_marginEnd="15dp"
         app:layout_constraintTop_toTopOf="parent"
         android:hint="请输入私人令牌"
+        android:text="79b6324a5c0f68a4ccc04874cd053674"
         ></EditText>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
