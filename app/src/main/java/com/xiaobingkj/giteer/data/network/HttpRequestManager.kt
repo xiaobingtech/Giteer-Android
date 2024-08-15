@@ -25,6 +25,7 @@
 package com.xiaobingkj.giteer.data.network
 
 import com.xiaobingkj.giteer.data.model.EventBean
+import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.data.model.TokenBean
@@ -99,6 +100,13 @@ class HttpRequestManager {
         return RxHttp.get(url)
             .add("page", page)
             .toAwaitList<RepositoryV3Bean>()
+            .await()
+    }
+    //
+    suspend fun getRepoReadme(name: String, ref: String = "main"): MutableList<ReadMeBean> {
+        return RxHttp.get("api/v5/repos/${name}/readme")
+            .add("ref", ref)
+            .toAwaitList<ReadMeBean>()
             .await()
     }
 }

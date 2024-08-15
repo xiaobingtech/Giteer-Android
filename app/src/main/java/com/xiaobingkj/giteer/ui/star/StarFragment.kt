@@ -37,7 +37,7 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = adapter
-
+        
         val loadMoreListener = object: OnRefreshLoadMoreListener {
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 headerRefresh()
