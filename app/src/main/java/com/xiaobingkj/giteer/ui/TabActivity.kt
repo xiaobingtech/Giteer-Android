@@ -68,7 +68,7 @@ class TabActivity : BaseVmDbActivity<LoginViewModel, ActivityTabBinding>() {
         TabLayoutMediator(mDatabind.tabLayout, mDatabind.viewPager2, { tab, position ->
             when (position) {
                 0 -> tab.text = "动态"
-                1 -> tab.text = "Star"
+                1 -> tab.text = "星标"
                 2 -> tab.text = "搜索"
                 3 -> tab.text = "趋势"
                 4 -> tab.text = "我的"

@@ -74,4 +74,24 @@ class HttpRequestManager {
             .toAwaitList<RepositoryBean>()
             .await()
     }
+    //搜索仓库
+    suspend fun getSearchRepositories(page: Int, q: String, order: String = "desc", perpage: Int = 100): MutableList<RepositoryBean> {
+        return RxHttp.get("api/v5/search/repositories")
+            .add("page", page)
+            .add("q",q)
+            .add("perpage", perpage)
+            .add("order", order)
+            .toAwaitList<RepositoryBean>()
+            .await()
+    }
+    //搜索用户
+    suspend fun getSearchUser(page: Int, q: String, order: String = "desc", perpage: Int = 100): MutableList<UserBean> {
+        return RxHttp.get("api/v5/search/users")
+            .add("page", page)
+            .add("q",q)
+            .add("perpage", perpage)
+            .add("order", order)
+            .toAwaitList<UserBean>()
+            .await()
+    }
 }

@@ -89,3 +89,5 @@ lint/tmp/
 # Idea props
 .idea/
 /.idea/
+
+.DS_Store

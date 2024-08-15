@@ -1,4 +1,4 @@
-package com.xiaobingkj.giteer.ui.star
+package com.xiaobingkj.giteer.ui.search
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -6,16 +6,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.FragmentStarBinding
+import io.github.rosemoe.sora.app.databinding.FragmentSearchUserBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
 
-class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
-    private val adapter = StarAdapter()
-    private var prev_id: Int = 0
-    override fun layoutId(): Int = R.layout.fragment_star
+class SearchUserFragment : BaseVmDbFragment<SearchUserViewModel, FragmentSearchUserBinding>() {
+    override fun layoutId(): Int = R.layout.fragment_search_user
+    private val adapter = SearchUserAdapter()
+    private var page = 1
+    private var q = ""
+    override fun lazyLoadData() {
+
+    }
+
     override fun createObserver() {
-        mViewModel.repoEvent.observe(this, Observer {
-            if (prev_id == 0) {
+        mViewModel.userEvent.observe(this, Observer {
+            if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
             adapter.addAll(it)
@@ -52,25 +57,22 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
     }
 
     fun headerRefresh() {
-        prev_id = 0
-        mViewModel.getStarred(prev_id)
+        page = 1
+        mViewModel.getSearchUser(page, q)
     }
 
     fun footerRefresh() {
-        mViewModel.getStarred(prev_id)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        headerRefresh()
-    }
-
-    override fun lazyLoadData() {
-
+        page = page + 1
+        mViewModel.getSearchUser(page, q)
     }
 
     override fun showLoading(message: String) {
 
+    }
+
+    public fun onKeyChanged(q: String) {
+        this.q = q
+        headerRefresh()
     }
 
 }
