@@ -27,12 +27,13 @@ package com.xiaobingkj.giteer.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.xiaobingkj.giteer.data.storage.Storage
-import com.xiaobingkj.giteer.ui.login.LoginActivity
 import com.xiaobingkj.giteer.ui.login.LoginViewModel
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.ActivitySplashBinding
 import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import me.hgj.jetpackmvvm.ext.nav
 
 class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>() {
     override fun layoutId(): Int = R.layout.activity_splash
@@ -46,13 +47,14 @@ class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>()
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        val navController = findNavController(R.id.nav_host_fragment)
         if (Storage.isLogin) {
             if (Storage.token.refresh_token != null) {
                 mViewModel.postOauthToken(Storage.token.refresh_token)
             }
-            startActivity(Intent(this, TabActivity::class.java))
+            navController.navigate(R.id.tabFragment)
         }else{
-            startActivity(Intent(this, LoginActivity::class.java))
+            navController.navigate(R.id.loginFragment)
         }
     }
 

@@ -40,7 +40,7 @@ class EventViewModel: BaseViewModel() {
         },{
 
         },{
-            ToastUtils.showLong(it.message)
+            ToastUtils.showLong(it.errorLog)
         })
     }
 }

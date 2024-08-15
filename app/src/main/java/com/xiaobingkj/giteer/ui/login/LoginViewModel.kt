@@ -42,7 +42,7 @@ class LoginViewModel: BaseViewModel() {
         }, {
             tokenEvent.postValue(it)
         }, {
-            ToastUtils.showLong(it.errorMsg)
+            ToastUtils.showLong(it.errorLog)
         })
     }
 
@@ -52,7 +52,7 @@ class LoginViewModel: BaseViewModel() {
         }, {
             userEvent.postValue(it)
         }, {
-            ToastUtils.showLong(it.errorMsg)
+            ToastUtils.showLong(it.errorLog)
         })
     }
 }

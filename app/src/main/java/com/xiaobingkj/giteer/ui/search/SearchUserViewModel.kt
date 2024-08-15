@@ -42,7 +42,7 @@ class SearchUserViewModel: BaseViewModel() {
         }, {
             userEvent.postValue(it)
         }, {
-            ToastUtils.showLong(it.errorMsg)
+            ToastUtils.showLong(it.errorLog)
         })
     }
 }

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="click"
-            type="com.xiaobingkj.giteer.ui.login.LoginActivity.ProxyClick" />
+            type="com.xiaobingkj.giteer.ui.login.LoginFragment.ProxyClick" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

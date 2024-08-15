@@ -152,4 +152,24 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     ksp("com.github.bumptech.glide:ksp:4.16.0")
+
+    implementation("com.qmuiteam:qmui:2.0.1")
+    implementation("com.qmuiteam:arch:2.0.1")
+    ksp("com.qmuiteam:arch-compiler:2.0.1")
+
+    implementation("io.noties.markwon:core:4.6.2")
+    implementation("io.noties.markwon:ext-tables:4.6.2")
+    implementation("io.noties.markwon:image-glide:4.6.2")
+
+    implementation("com.github.bmelnychuk:atv:1.2.+")
+    implementation("com.github.johnkil.print:print:1.3.1")
+
+    implementation("com.github.SherlockGougou:BigImageViewPager:androidx-7.3.0")
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.11.0")
+
+    implementation("xyz.doikki.android.dkplayer:dkplayer-java:3.3.7")
+    implementation("xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7")
+    implementation("xyz.doikki.android.dkplayer:player-exo:3.3.7")
+    implementation("xyz.doikki.android.dkplayer:videocache:3.3.7")
+
 }

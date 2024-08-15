@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~    sora-editor - the awesome code editor for Android
+  ~    https://github.com/Rosemoe/sora-editor
+  ~    Copyright (C) 2020-2024  Rosemoe
+  ~
+  ~     This library is free software; you can redistribute it and/or
+  ~     modify it under the terms of the GNU Lesser General Public
+  ~     License as published by the Free Software Foundation; either
+  ~     version 2.1 of the License, or (at your option) any later version.
+  ~
+  ~     This library is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ~     Lesser General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Lesser General Public
+  ~     License along with this library; if not, write to the Free Software
+  ~     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
+  ~     USA
+  ~
+  ~     Please contact Rosemoe by email 2073412493@qq.com if you need
+  ~     additional information or have any questions
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/tabFragment"
+    >
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.xiaobingkj.giteer.ui.login.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_webFragment"
+            app:destination="@id/webFragment">
+            <argument
+                android:name="url"
+                app:argType="string"
+                android:defaultValue=""/>
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/tabFragment"
+        android:name="com.xiaobingkj.giteer.ui.TabFragment"
+        android:label="TabFragment" />
+    <fragment
+        android:id="@+id/webFragment"
+        android:name="com.xiaobingkj.giteer.ui.webview.WebFragment"
+        android:label="WebFragment" />
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.xiaobingkj.giteer.ui.event.EventFragment"
+        android:label="fragment_event"
+        tools:layout="@layout/fragment_event" />
+    <fragment
+        android:id="@+id/starFragment"
+        android:name="com.xiaobingkj.giteer.ui.star.StarFragment"
+        android:label="StarFragment" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.xiaobingkj.giteer.ui.search.SearchFragment"
+        android:label="SearchFragment" />
+    <fragment
+        android:id="@+id/searchRepoFragment"
+        android:name="com.xiaobingkj.giteer.ui.search.SearchRepoFragment"
+        android:label="SearchRepoFragment" />
+    <fragment
+        android:id="@+id/searchUserFragment"
+        android:name="com.xiaobingkj.giteer.ui.search.SearchUserFragment"
+        android:label="SearchUserFragment" />
+    <fragment
+        android:id="@+id/trendFragment"
+        android:name="com.xiaobingkj.giteer.ui.trend.TrendFragment"
+        android:label="TrendFragment" />
+    <fragment
+        android:id="@+id/meFragment"
+        android:name="com.xiaobingkj.giteer.ui.me.MeFragment"
+        android:label="fragment_me"
+        tools:layout="@layout/fragment_me" />
+    <fragment
+        android:id="@+id/trendSubFragment"
+        android:name="com.xiaobingkj.giteer.ui.trend.TrendSubFragment"
+        android:label="TrendSubFragment" />
+</navigation>

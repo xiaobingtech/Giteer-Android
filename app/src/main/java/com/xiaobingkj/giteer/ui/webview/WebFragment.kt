@@ -24,27 +24,21 @@
 
 package com.xiaobingkj.giteer.ui.webview
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.blankj.utilcode.util.ToastUtils
-import com.tencent.smtt.sdk.WebView
-import com.tencent.smtt.sdk.WebViewClient
-import com.ycbjie.webviewlib.base.X5WebChromeClient
-import com.ycbjie.webviewlib.base.X5WebViewClient
 import com.ycbjie.webviewlib.inter.InterWebListener
 import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.ActivityWebViewBinding
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import io.github.rosemoe.sora.app.databinding.FragmentWebViewBinding
+import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 
-class WebViewActivity : BaseVmDbActivity<BaseViewModel, ActivityWebViewBinding>() {
-    override fun layoutId(): Int = R.layout.activity_web_view
+class WebFragment: BaseVmDbFragment<BaseViewModel, FragmentWebViewBinding>() {
+    override fun layoutId(): Int = R.layout.fragment_web_view
+    override fun lazyLoadData() {
+
+    }
+
     override fun createObserver() {
 
     }
@@ -54,7 +48,7 @@ class WebViewActivity : BaseVmDbActivity<BaseViewModel, ActivityWebViewBinding>(
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        val url = intent.getStringExtra("url")
+        val url = arguments?.getString("url")
         if (url?.isEmpty()!!){
             ToastUtils.showLong("URL不合法")
             return

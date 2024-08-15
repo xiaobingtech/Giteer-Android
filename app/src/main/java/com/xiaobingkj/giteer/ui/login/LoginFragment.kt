@@ -24,35 +24,29 @@
 
 package com.xiaobingkj.giteer.ui.login
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.ToastUtils
-import com.tencent.mmkv.MMKV
 import com.xiaobingkj.giteer.data.Constants
 import com.xiaobingkj.giteer.data.model.TokenBean
 import com.xiaobingkj.giteer.data.storage.Storage
-import com.xiaobingkj.giteer.ui.TabActivity
-import com.xiaobingkj.giteer.ui.webview.WebViewActivity
 import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.ActivityLoginBinding
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import io.github.rosemoe.sora.app.databinding.FragmentLoginBinding
+import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
+import me.hgj.jetpackmvvm.ext.nav
 
-class LoginActivity : BaseVmDbActivity<LoginViewModel, ActivityLoginBinding>() {
-    override fun layoutId(): Int = R.layout.activity_login
+class LoginFragment: BaseVmDbFragment<LoginViewModel, FragmentLoginBinding>() {
+    override fun layoutId(): Int = R.layout.fragment_login
+    override fun lazyLoadData() {
+
+    }
 
     override fun createObserver() {
         mViewModel.userEvent.observe(this, Observer {
             Storage.isLogin = true
-            startActivity(Intent(this, TabActivity::class.java))
-            finish()
+            nav().navigate(R.id.tabFragment)
         })
     }
 
@@ -75,15 +69,15 @@ class LoginActivity : BaseVmDbActivity<LoginViewModel, ActivityLoginBinding>() {
     inner class ProxyClick() {
         fun login() {
             val url = "https://gitee.com/oauth/authorize?client_id=${Constants.CLIENT_ID}&redirect_uri=${Constants.REDIRECT_URI}&response_type=code"
-            val intent = Intent(this@LoginActivity, WebViewActivity::class.java)
-            intent.putExtra("url", url)
-            startActivity(intent)
+            val bundle = Bundle()
+            bundle.putString("url", url)
+            nav().navigate(R.id.webFragment, bundle)
         }
 
         fun loginByPersonalToken() {
-            val view = layoutInflater.inflate(R.layout.dialog_edittext, findViewById(R.id.item_cons_edit_text))
+            val view = layoutInflater.inflate(R.layout.dialog_edittext, getView()?.findViewById(R.id.item_cons_edit_text))
             val eT = view.findViewById<EditText>(R.id.edit_text)
-            AlertDialog.Builder(this@LoginActivity)
+            AlertDialog.Builder(mActivity)
                 .setMessage("隐私声明：Giteer不会从您的Gitee账号收集任何信息，请您放心使用。")
                 .setView(view)
                 .setNegativeButton("取消") {_, _ ->

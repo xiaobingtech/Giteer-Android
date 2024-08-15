@@ -25,10 +25,6 @@
 package com.xiaobingkj.giteer.ui
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -42,12 +38,14 @@ import com.xiaobingkj.giteer.ui.search.SearchFragment
 import com.xiaobingkj.giteer.ui.star.StarFragment
 import com.xiaobingkj.giteer.ui.trend.TrendFragment
 import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.ActivityTabBinding
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
-import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
+import io.github.rosemoe.sora.app.databinding.FragmentTabBinding
+import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
 
-class TabActivity : BaseVmDbActivity<LoginViewModel, ActivityTabBinding>() {
-    override fun layoutId(): Int = R.layout.activity_tab
+class TabFragment: BaseVmDbFragment<LoginViewModel, FragmentTabBinding>() {
+    override fun layoutId(): Int = R.layout.fragment_tab
+    override fun lazyLoadData() {
+
+    }
 
     override fun createObserver() {
         mViewModel.userEvent.observe(this, Observer {
@@ -60,9 +58,11 @@ class TabActivity : BaseVmDbActivity<LoginViewModel, ActivityTabBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        mViewModel.getUser()
+        if (Storage.isLogin) {
+            mViewModel.getUser()
+        }
 
-        mDatabind.viewPager2.adapter = ViewPageAdapter(this)
+        mDatabind.viewPager2.adapter = ViewPageAdapter(mActivity)
         mDatabind.viewPager2.isUserInputEnabled = true
 
         TabLayoutMediator(mDatabind.tabLayout, mDatabind.viewPager2, { tab, position ->
@@ -81,9 +81,6 @@ class TabActivity : BaseVmDbActivity<LoginViewModel, ActivityTabBinding>() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun showLoading(message: String) {
-
-    }
 
     inner class ViewPageAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
         override fun getItemCount(): Int = 5
@@ -98,5 +95,9 @@ class TabActivity : BaseVmDbActivity<LoginViewModel, ActivityTabBinding>() {
                 else -> Fragment()
             }
         }
+    }
+
+    override fun showLoading(message: String) {
+
     }
 }

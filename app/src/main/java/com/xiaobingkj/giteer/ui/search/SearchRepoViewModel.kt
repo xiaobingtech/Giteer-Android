@@ -40,7 +40,7 @@ class SearchRepoViewModel: BaseViewModel() {
         }, {
             repoEvent.postValue(it)
         }, {
-            ToastUtils.showLong(it.errorMsg)
+            ToastUtils.showLong(it.errorLog)
         })
     }
 }
