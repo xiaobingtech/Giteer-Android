@@ -26,6 +26,7 @@ package com.xiaobingkj.giteer.data.network
 
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
+import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.data.model.TokenBean
 import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.storage.Storage
@@ -92,6 +93,12 @@ class HttpRequestManager {
             .add("perpage", perpage)
             .add("order", order)
             .toAwaitList<UserBean>()
+            .await()
+    }
+    suspend fun getTrendRepositories(url: String, page: Int): MutableList<RepositoryV3Bean> {
+        return RxHttp.get(url)
+            .add("page", page)
+            .toAwaitList<RepositoryV3Bean>()
             .await()
     }
 }
