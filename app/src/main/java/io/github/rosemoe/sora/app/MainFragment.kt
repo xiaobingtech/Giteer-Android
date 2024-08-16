@@ -404,6 +404,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         CrashHandler.INSTANCE.init(mActivity)
 
+        setHasOptionsMenu(true)
 
         val typeface = Typeface.createFromAsset(mActivity.assets, "JetBrainsMono-Regular.ttf")
 
