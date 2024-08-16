@@ -51,7 +51,6 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
 
     override fun initView(savedInstanceState: Bundle?) {
         val repo: RepositoryBean = arguments?.getParcelable("repo")!!
-        mDatabind.titleBar.title = repo.human_name
         fullName = repo.full_name
         ref = arguments?.getString("ref")!!
 

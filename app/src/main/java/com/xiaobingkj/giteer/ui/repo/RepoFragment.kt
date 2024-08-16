@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.hjq.bar.OnTitleBarListener
-import com.hjq.bar.TitleBar
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentRepoBinding
@@ -44,16 +42,6 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         repo = arguments?.getParcelable("repo")!!
-
-        mDatabind.titleBar.title = repo!!.human_name
-
-        val titleBarLisener = object: OnTitleBarListener {
-            override fun onLeftClick(titleBar: TitleBar?) {
-                super.onLeftClick(titleBar)
-                nav().navigateUp()
-            }
-        }
-        mDatabind.titleBar.setOnTitleBarListener(titleBarLisener)
 
         mDatabind.viewClick.setOnClickListener {
             val bundle = Bundle()

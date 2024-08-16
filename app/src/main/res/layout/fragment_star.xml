@@ -4,15 +4,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <com.hjq.bar.TitleBar
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            app:title="Star"
-            app:titleSize="18dp"
-            app:titleColor="@color/white"
-            android:background="@color/accent"
-            app:leftIcon="@null"
-            ></com.hjq.bar.TitleBar>
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"

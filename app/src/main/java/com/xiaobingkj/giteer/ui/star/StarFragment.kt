@@ -3,6 +3,7 @@ package com.xiaobingkj.giteer.ui.star
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -64,7 +65,7 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
                 val bundle = Bundle()
                 val repo = adapter.getItem(position)
                 bundle.putParcelable("repo", repo)
-                nav().navigate(R.id.repoFragment, bundle)
+                findNavController().navigate(R.id.repoFragment, bundle)
             }
 
         }

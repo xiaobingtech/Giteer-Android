@@ -28,6 +28,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ui.login.LoginViewModel
 import io.github.rosemoe.sora.app.R
@@ -36,6 +39,7 @@ import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
 import me.hgj.jetpackmvvm.ext.nav
 
 class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>() {
+    private lateinit var appBarConfiguration: AppBarConfiguration
     override fun layoutId(): Int = R.layout.activity_splash
 
     override fun createObserver() {
@@ -47,7 +51,12 @@ class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>()
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        setSupportActionBar(mDatabind.toolbar)
+
         val navController = findNavController(R.id.nav_host_fragment)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
         if (Storage.isLogin) {
             if (Storage.token.refresh_token != null) {
                 mViewModel.postOauthToken(Storage.token.refresh_token)
@@ -64,5 +73,11 @@ class SplashActivity : BaseVmDbActivity<LoginViewModel, ActivitySplashBinding>()
 
     override fun showLoading(message: String) {
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 }
