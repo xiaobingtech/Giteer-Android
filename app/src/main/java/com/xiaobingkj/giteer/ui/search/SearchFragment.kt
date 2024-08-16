@@ -29,10 +29,13 @@ class SearchFragment : BaseVmDbFragment<BaseViewModel, FragmentSearchBinding>() 
         mDatabind.viewPager.adapter = adpater
 
         mDatabind.etSearch.addTextChangedListener {
-            val repoFragment = adpater.createFragment(0) as SearchRepoFragment
-            repoFragment.onKeyChanged(it.toString())
-            val userFragment = adpater.createFragment(1) as SearchUserFragment
-            userFragment.onKeyChanged(it.toString())
+            if (mDatabind.viewPager.currentItem == 0) {
+                val repoFragment = adpater.createFragment(0) as SearchRepoFragment
+                repoFragment.onKeyChanged(it.toString())
+            }else{
+                val userFragment = adpater.createFragment(1) as SearchUserFragment
+                userFragment.onKeyChanged(it.toString())
+            }
         }
 
         TabLayoutMediator(mDatabind.tabs, mDatabind.viewPager, { tab, position ->

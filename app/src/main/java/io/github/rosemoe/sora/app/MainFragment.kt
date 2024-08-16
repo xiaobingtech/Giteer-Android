@@ -533,7 +533,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mDatabind.editor.release()
+//        mDatabind.editor.release()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

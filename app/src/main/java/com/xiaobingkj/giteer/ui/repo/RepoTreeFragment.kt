@@ -3,11 +3,14 @@ package com.xiaobingkj.giteer.ui.repo
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import cc.shinichi.library.ImagePreview
+import cc.shinichi.library.bean.ImageInfo
 import com.blankj.utilcode.util.EncodeUtils
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.model.TreeNode.TreeNodeClickListener
 import com.unnamed.b.atv.view.AndroidTreeView
 import com.xiaobingkj.giteer.data.model.RepositoryBean
+import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import io.github.rosemoe.sora.app.MainFragment
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentRepoTreeBinding
@@ -48,8 +51,13 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        val repo: RepositoryBean = arguments?.getParcelable("repo")!!
-        fullName = repo.full_name
+        val repo: RepositoryBean? = arguments?.getParcelable("repo")
+        val repoV3: RepositoryV3Bean? = arguments?.getParcelable("repoV3")
+        if (repo != null) {
+            fullName = repo.full_name
+        }else{
+            fullName = repoV3?.path_with_namespace!!
+        }
         ref = arguments?.getString("ref")!!
 
         rootNode = TreeNode.root()
@@ -69,13 +77,21 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
                     parts[parts.size - 1] = EncodeUtils.urlEncode(item.name)
                     val encodeUrl = parts.joinToString("/")
                     val pathLowercase = item.path.lowercase()
+                    val bundle = Bundle()
+                    bundle.putString("url", encodeUrl)
                     if (pathLowercase.endsWith("jpg") || pathLowercase.endsWith("png") || pathLowercase.endsWith("webp") || pathLowercase.endsWith("gif")) {
-
+                        val imageInfoList = ArrayList<ImageInfo>()
+                        val imageInfo = ImageInfo()
+                        imageInfo.thumbnailUrl = encodeUrl
+                        imageInfo.originUrl = encodeUrl
+                        imageInfoList.add(imageInfo)
+                        ImagePreview.instance.setContext(mActivity)
+                            .setIndex(0)
+                            .setImageInfoList(imageInfoList)
+                            .start()
                     }else if (pathLowercase.endsWith("mp4")) {
-
+                        nav().navigate(R.id.videoFragment, bundle)
                     }else{
-                        val bundle = Bundle()
-                        bundle.putString("url", encodeUrl)
                         nav().navigate(R.id.mainFragment, bundle)
                     }
                 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.xiaobingkj.giteer.data.model.RepositoryBean
+import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentRepoBinding
 import io.noties.markwon.Markwon
@@ -18,6 +19,7 @@ import me.hgj.jetpackmvvm.ext.nav
 
 class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
     private var repo: RepositoryBean? = null
+    private var repoV3: RepositoryV3Bean? = null
     private var ref: String = ""
     override fun layoutId(): Int = R.layout.fragment_repo
     override fun createObserver() {
@@ -41,22 +43,39 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        repo = arguments?.getParcelable("repo")!!
+        repo = arguments?.getParcelable("repo")
+        repoV3 = arguments?.getParcelable("repoV3")
+        if (repo != null) {
+            mDatabind.viewClick.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putParcelable("repo", repo)
+                bundle.putString("ref", ref)
+                nav().navigate(R.id.repoTreeFragment, bundle)
+            }
 
-        mDatabind.viewClick.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putParcelable("repo", repo)
-            bundle.putString("ref", ref)
-            nav().navigate(R.id.repoTreeFragment, bundle)
+            ref = repo!!.default_branch
+
+            mDatabind.name.text = repo!!.human_name
+            mDatabind.desc.text = repo!!.description
+            mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repo!!.updated_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
+
+            mViewModel.getRepoReadme(repo!!.full_name)
+        }else{
+            mDatabind.viewClick.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putParcelable("repoV3", repoV3)
+                bundle.putString("ref", ref)
+                nav().navigate(R.id.repoTreeFragment, bundle)
+            }
+
+            ref = repoV3!!.default_branch
+
+            mDatabind.name.text = repoV3!!.name_with_namespace
+            mDatabind.desc.text = repoV3!!.description
+            mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repoV3!!.last_push_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
+
+            mViewModel.getRepoReadme(repoV3!!.path_with_namespace)
         }
-
-        ref = repo!!.default_branch
-
-        mDatabind.name.text = repo!!.human_name
-        mDatabind.desc.text = repo!!.description
-        mDatabind.time.text = TimeUtils.date2String(com.blankj.utilcode.util.TimeUtils.string2Date(repo!!.updated_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
-
-        mViewModel.getRepoReadme(repo!!.full_name)
     }
 
     override fun lazyLoadData() {

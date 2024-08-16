@@ -23,9 +23,14 @@
  */
 package com.xiaobingkj.giteer.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
-public class RepositoryV3Bean {
+public class RepositoryV3Bean implements Parcelable {
 
     private Integer id;
     private String name;
@@ -58,6 +63,74 @@ public class RepositoryV3Bean {
     private Integer recomm;
     private Object parent_path_with_namespace;
     private Boolean project_is_started;
+
+    protected RepositoryV3Bean(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        name = in.readString();
+        default_branch = in.readString();
+        description = in.readString();
+        byte tmpPublicX = in.readByte();
+        publicX = tmpPublicX == 0 ? null : tmpPublicX == 1;
+        path = in.readString();
+        path_with_namespace = in.readString();
+        name_with_namespace = in.readString();
+        byte tmpIssues_enabled = in.readByte();
+        issues_enabled = tmpIssues_enabled == 0 ? null : tmpIssues_enabled == 1;
+        byte tmpPull_requests_enabled = in.readByte();
+        pull_requests_enabled = tmpPull_requests_enabled == 0 ? null : tmpPull_requests_enabled == 1;
+        byte tmpWiki_enabled = in.readByte();
+        wiki_enabled = tmpWiki_enabled == 0 ? null : tmpWiki_enabled == 1;
+        created_at = in.readString();
+        byte tmpIs_pull_request_readonly = in.readByte();
+        is_pull_request_readonly = tmpIs_pull_request_readonly == 0 ? null : tmpIs_pull_request_readonly == 1;
+        last_push_at = in.readString();
+        if (in.readByte() == 0) {
+            parent_id = null;
+        } else {
+            parent_id = in.readInt();
+        }
+        byte tmp_$Fork127 = in.readByte();
+        _$Fork127 = tmp_$Fork127 == 0 ? null : tmp_$Fork127 == 1;
+        if (in.readByte() == 0) {
+            forks_count = null;
+        } else {
+            forks_count = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            stars_count = null;
+        } else {
+            stars_count = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            watches_count = null;
+        } else {
+            watches_count = in.readInt();
+        }
+        language = in.readString();
+        if (in.readByte() == 0) {
+            recomm = null;
+        } else {
+            recomm = in.readInt();
+        }
+        byte tmpProject_is_started = in.readByte();
+        project_is_started = tmpProject_is_started == 0 ? null : tmpProject_is_started == 1;
+    }
+
+    public static final Creator<RepositoryV3Bean> CREATOR = new Creator<RepositoryV3Bean>() {
+        @Override
+        public RepositoryV3Bean createFromParcel(Parcel in) {
+            return new RepositoryV3Bean(in);
+        }
+
+        @Override
+        public RepositoryV3Bean[] newArray(int size) {
+            return new RepositoryV3Bean[size];
+        }
+    };
 
     public Integer getId() {
         return id;
@@ -289,6 +362,67 @@ public class RepositoryV3Bean {
 
     public void setProject_is_started(Boolean project_is_started) {
         this.project_is_started = project_is_started;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
+        }
+        dest.writeString(name);
+        dest.writeString(default_branch);
+        dest.writeString(description);
+        dest.writeByte((byte) (publicX == null ? 0 : publicX ? 1 : 2));
+        dest.writeString(path);
+        dest.writeString(path_with_namespace);
+        dest.writeString(name_with_namespace);
+        dest.writeByte((byte) (issues_enabled == null ? 0 : issues_enabled ? 1 : 2));
+        dest.writeByte((byte) (pull_requests_enabled == null ? 0 : pull_requests_enabled ? 1 : 2));
+        dest.writeByte((byte) (wiki_enabled == null ? 0 : wiki_enabled ? 1 : 2));
+        dest.writeString(created_at);
+        dest.writeByte((byte) (is_pull_request_readonly == null ? 0 : is_pull_request_readonly ? 1 : 2));
+        dest.writeString(last_push_at);
+        if (parent_id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(parent_id);
+        }
+        dest.writeByte((byte) (_$Fork127 == null ? 0 : _$Fork127 ? 1 : 2));
+        if (forks_count == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(forks_count);
+        }
+        if (stars_count == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(stars_count);
+        }
+        if (watches_count == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(watches_count);
+        }
+        dest.writeString(language);
+        if (recomm == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(recomm);
+        }
+        dest.writeByte((byte) (project_is_started == null ? 0 : project_is_started ? 1 : 2));
     }
 
     public static class OwnerDTO {

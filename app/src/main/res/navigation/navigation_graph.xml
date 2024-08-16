@@ -26,8 +26,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/tabFragment"
-    >
+    app:startDestination="@id/welcomeFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -107,9 +106,27 @@
         <action
             android:id="@+id/action_repoTreeFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_repoTreeFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="io.github.rosemoe.sora.app.MainFragment"
         android:label="MainFragment" />
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.xiaobingkj.giteer.ui.WelcomeFragment"
+        android:label="WelcomeFragment" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_tabFragment"
+            app:destination="@id/tabFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.VideoFragment"
+        android:label="VideoFragment" />
 </navigation>

@@ -58,9 +58,7 @@ class TabFragment: BaseVmDbFragment<LoginViewModel, FragmentTabBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        if (Storage.isLogin) {
-            mViewModel.getUser()
-        }
+        mViewModel.getUser()
 
         mDatabind.viewPager2.adapter = ViewPageAdapter(mActivity)
         mDatabind.viewPager2.isUserInputEnabled = true

@@ -7,12 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.chad.library.adapter4.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
+import com.xiaobingkj.giteer.data.model.RepoTreeBean
+import com.xiaobingkj.giteer.data.model.RepositoryBean
+import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.ui.star.StarAdapter
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentTrendSubBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
+import me.hgj.jetpackmvvm.ext.nav
 
 class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, FragmentTrendSubBinding>() {
     private val url = url
@@ -55,6 +60,21 @@ class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, Fragme
 
         }
         mDatabind.refreshLayout.setOnRefreshLoadMoreListener(loadMoreListener)
+
+        val onItemClickListener = object: BaseQuickAdapter.OnItemClickListener<RepositoryV3Bean> {
+            override fun onClick(
+                adapter: BaseQuickAdapter<RepositoryV3Bean, *>,
+                view: View,
+                position: Int
+            ) {
+                val bundle = Bundle()
+                val repoV3 = adapter.getItem(position)
+                bundle.putParcelable("repoV3", repoV3)
+                nav().navigate(R.id.repoFragment, bundle)
+            }
+
+        }
+        adapter.setOnItemClickListener(onItemClickListener)
     }
 
     fun headerRefresh() {
