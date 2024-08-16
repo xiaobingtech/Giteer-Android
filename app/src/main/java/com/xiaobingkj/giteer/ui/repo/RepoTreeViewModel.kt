@@ -26,21 +26,20 @@ package com.xiaobingkj.giteer.ui.repo
 
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
-import com.xiaobingkj.giteer.data.model.ReadMeBean
+import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
 
-class RepoViewModel: BaseViewModel() {
+class RepoTreeViewModel: BaseViewModel() {
+    val treeEvent = MutableLiveData<List<RepoTreeBean>>()
 
-    val readMeEvent = MutableLiveData<ReadMeBean>()
-
-    fun getRepoReadme(name: String, ref: String = "") {
+    fun getRepoContents(name: String,  path: String = "", ref: String) {
         requestNoCheck({
-            HttpRequestCoroutine.getRepoReadme(name, ref)
+            HttpRequestCoroutine.getRepoContents(name, path, ref)
         }, {
-            readMeEvent.postValue(it)
+            treeEvent.postValue(it)
         }, {
             ToastUtils.showLong(it.errorLog)
         })

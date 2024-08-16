@@ -1,13 +1,17 @@
 package com.xiaobingkj.giteer.ui.star
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.chad.library.adapter4.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
+import com.xiaobingkj.giteer.data.model.RepositoryBean
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentStarBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
+import me.hgj.jetpackmvvm.ext.nav
 
 class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
     private val adapter = StarAdapter()
@@ -34,6 +38,7 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = adapter
@@ -49,6 +54,21 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
 
         }
         mDatabind.refreshLayout.setOnRefreshLoadMoreListener(loadMoreListener)
+        
+        val itemClickListener = object : BaseQuickAdapter.OnItemClickListener<RepositoryBean> {
+            override fun onClick(
+                adapter: BaseQuickAdapter<RepositoryBean, *>,
+                view: View,
+                position: Int
+            ) {
+                val bundle = Bundle()
+                val repo = adapter.getItem(position)
+                bundle.putParcelable("repo", repo)
+                nav().navigate(R.id.repoFragment, bundle)
+            }
+
+        }
+        adapter.setOnItemClickListener(itemClickListener)
     }
 
     fun headerRefresh() {

@@ -8,10 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <com.qmuiteam.qmui.widget.QMUITopBar
-            android:id="@+id/topbar"
+        <com.hjq.bar.TitleBar
+            android:id="@+id/titleBar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"></com.qmuiteam.qmui.widget.QMUITopBar>
+            android:layout_height="?android:attr/actionBarSize"
+            app:titleSize="18dp"
+            app:titleColor="@color/white"
+            android:background="@color/accent"
+            ></com.hjq.bar.TitleBar>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">

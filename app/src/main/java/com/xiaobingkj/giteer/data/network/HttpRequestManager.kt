@@ -24,8 +24,10 @@
 
 package com.xiaobingkj.giteer.data.network
 
+import androidx.lifecycle.MutableLiveData
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
+import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.data.model.TokenBean
@@ -103,10 +105,18 @@ class HttpRequestManager {
             .await()
     }
     //
-    suspend fun getRepoReadme(name: String, ref: String = "main"): MutableList<ReadMeBean> {
+    suspend fun getRepoReadme(name: String, ref: String): ReadMeBean {
         return RxHttp.get("api/v5/repos/${name}/readme")
             .add("ref", ref)
-            .toAwaitList<ReadMeBean>()
+            .toAwait<ReadMeBean>()
             .await()
     }
+
+    suspend fun getRepoContents(name: String, path: String = "", ref: String): MutableList<RepoTreeBean> {
+        return RxHttp.get("api/v5/repos/${name}/contents/${path}")
+            .add("ref", ref)
+            .toAwaitList<RepoTreeBean>()
+            .await()
+    }
+
 }

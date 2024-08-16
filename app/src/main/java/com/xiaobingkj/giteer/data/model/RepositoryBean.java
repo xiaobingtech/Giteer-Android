@@ -23,11 +23,16 @@
  */
 package com.xiaobingkj.giteer.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RepositoryBean {
+public class RepositoryBean implements Parcelable {
 
     private Integer id;
     private String full_name;
@@ -98,6 +103,118 @@ public class RepositoryBean {
     private Object enterprise;
     private List<?> project_labels;
     private String issue_template_source;
+
+    protected RepositoryBean(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        full_name = in.readString();
+        human_name = in.readString();
+        url = in.readString();
+        path = in.readString();
+        name = in.readString();
+        description = in.readString();
+        byte tmpPrivateX = in.readByte();
+        privateX = tmpPrivateX == 0 ? null : tmpPrivateX == 1;
+        byte tmpPublicX = in.readByte();
+        publicX = tmpPublicX == 0 ? null : tmpPublicX == 1;
+        byte tmpInternal = in.readByte();
+        internal = tmpInternal == 0 ? null : tmpInternal == 1;
+        byte tmpFork = in.readByte();
+        fork = tmpFork == 0 ? null : tmpFork == 1;
+        html_url = in.readString();
+        ssh_url = in.readString();
+        forks_url = in.readString();
+        keys_url = in.readString();
+        collaborators_url = in.readString();
+        hooks_url = in.readString();
+        branches_url = in.readString();
+        tags_url = in.readString();
+        blobs_url = in.readString();
+        stargazers_url = in.readString();
+        contributors_url = in.readString();
+        commits_url = in.readString();
+        comments_url = in.readString();
+        issue_comment_url = in.readString();
+        issues_url = in.readString();
+        pulls_url = in.readString();
+        milestones_url = in.readString();
+        notifications_url = in.readString();
+        labels_url = in.readString();
+        releases_url = in.readString();
+        byte tmpRecommend = in.readByte();
+        recommend = tmpRecommend == 0 ? null : tmpRecommend == 1;
+        byte tmpGvp = in.readByte();
+        gvp = tmpGvp == 0 ? null : tmpGvp == 1;
+        homepage = in.readString();
+        language = in.readString();
+        if (in.readByte() == 0) {
+            forks_count = null;
+        } else {
+            forks_count = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            stargazers_count = null;
+        } else {
+            stargazers_count = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            watchers_count = null;
+        } else {
+            watchers_count = in.readInt();
+        }
+        default_branch = in.readString();
+        if (in.readByte() == 0) {
+            open_issues_count = null;
+        } else {
+            open_issues_count = in.readInt();
+        }
+        byte tmpHas_issues = in.readByte();
+        has_issues = tmpHas_issues == 0 ? null : tmpHas_issues == 1;
+        byte tmpHas_wiki = in.readByte();
+        has_wiki = tmpHas_wiki == 0 ? null : tmpHas_wiki == 1;
+        byte tmpIssue_comment = in.readByte();
+        issue_comment = tmpIssue_comment == 0 ? null : tmpIssue_comment == 1;
+        byte tmpCan_comment = in.readByte();
+        can_comment = tmpCan_comment == 0 ? null : tmpCan_comment == 1;
+        byte tmpPull_requests_enabled = in.readByte();
+        pull_requests_enabled = tmpPull_requests_enabled == 0 ? null : tmpPull_requests_enabled == 1;
+        byte tmpHas_page = in.readByte();
+        has_page = tmpHas_page == 0 ? null : tmpHas_page == 1;
+        byte tmpOutsourced = in.readByte();
+        outsourced = tmpOutsourced == 0 ? null : tmpOutsourced == 1;
+        project_creator = in.readString();
+        members = in.createStringArrayList();
+        pushed_at = in.readString();
+        created_at = in.readString();
+        updated_at = in.readString();
+        if (in.readByte() == 0) {
+            assignees_number = null;
+        } else {
+            assignees_number = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            testers_number = null;
+        } else {
+            testers_number = in.readInt();
+        }
+        status = in.readString();
+        issue_template_source = in.readString();
+    }
+
+    public static final Creator<RepositoryBean> CREATOR = new Creator<RepositoryBean>() {
+        @Override
+        public RepositoryBean createFromParcel(Parcel in) {
+            return new RepositoryBean(in);
+        }
+
+        @Override
+        public RepositoryBean[] newArray(int size) {
+            return new RepositoryBean[size];
+        }
+    };
 
     public Integer getId() {
         return id;
@@ -635,12 +752,136 @@ public class RepositoryBean {
         this.issue_template_source = issue_template_source;
     }
 
-    public static class NamespaceDTO {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
+        }
+        dest.writeString(full_name);
+        dest.writeString(human_name);
+        dest.writeString(url);
+        dest.writeString(path);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeByte((byte) (privateX == null ? 0 : privateX ? 1 : 2));
+        dest.writeByte((byte) (publicX == null ? 0 : publicX ? 1 : 2));
+        dest.writeByte((byte) (internal == null ? 0 : internal ? 1 : 2));
+        dest.writeByte((byte) (fork == null ? 0 : fork ? 1 : 2));
+        dest.writeString(html_url);
+        dest.writeString(ssh_url);
+        dest.writeString(forks_url);
+        dest.writeString(keys_url);
+        dest.writeString(collaborators_url);
+        dest.writeString(hooks_url);
+        dest.writeString(branches_url);
+        dest.writeString(tags_url);
+        dest.writeString(blobs_url);
+        dest.writeString(stargazers_url);
+        dest.writeString(contributors_url);
+        dest.writeString(commits_url);
+        dest.writeString(comments_url);
+        dest.writeString(issue_comment_url);
+        dest.writeString(issues_url);
+        dest.writeString(pulls_url);
+        dest.writeString(milestones_url);
+        dest.writeString(notifications_url);
+        dest.writeString(labels_url);
+        dest.writeString(releases_url);
+        dest.writeByte((byte) (recommend == null ? 0 : recommend ? 1 : 2));
+        dest.writeByte((byte) (gvp == null ? 0 : gvp ? 1 : 2));
+        dest.writeString(homepage);
+        dest.writeString(language);
+        if (forks_count == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(forks_count);
+        }
+        if (stargazers_count == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(stargazers_count);
+        }
+        if (watchers_count == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(watchers_count);
+        }
+        dest.writeString(default_branch);
+        if (open_issues_count == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(open_issues_count);
+        }
+        dest.writeByte((byte) (has_issues == null ? 0 : has_issues ? 1 : 2));
+        dest.writeByte((byte) (has_wiki == null ? 0 : has_wiki ? 1 : 2));
+        dest.writeByte((byte) (issue_comment == null ? 0 : issue_comment ? 1 : 2));
+        dest.writeByte((byte) (can_comment == null ? 0 : can_comment ? 1 : 2));
+        dest.writeByte((byte) (pull_requests_enabled == null ? 0 : pull_requests_enabled ? 1 : 2));
+        dest.writeByte((byte) (has_page == null ? 0 : has_page ? 1 : 2));
+        dest.writeByte((byte) (outsourced == null ? 0 : outsourced ? 1 : 2));
+        dest.writeString(project_creator);
+        dest.writeStringList(members);
+        dest.writeString(pushed_at);
+        dest.writeString(created_at);
+        dest.writeString(updated_at);
+        if (assignees_number == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(assignees_number);
+        }
+        if (testers_number == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(testers_number);
+        }
+        dest.writeString(status);
+        dest.writeString(issue_template_source);
+    }
+
+    public static class NamespaceDTO implements Parcelable {
         private Integer id;
         private String type;
         private String name;
         private String path;
         private String html_url;
+
+        protected NamespaceDTO(Parcel in) {
+            if (in.readByte() == 0) {
+                id = null;
+            } else {
+                id = in.readInt();
+            }
+            type = in.readString();
+            name = in.readString();
+            path = in.readString();
+            html_url = in.readString();
+        }
+
+        public static final Creator<NamespaceDTO> CREATOR = new Creator<NamespaceDTO>() {
+            @Override
+            public NamespaceDTO createFromParcel(Parcel in) {
+                return new NamespaceDTO(in);
+            }
+
+            @Override
+            public NamespaceDTO[] newArray(int size) {
+                return new NamespaceDTO[size];
+            }
+        };
 
         public Integer getId() {
             return id;
@@ -681,9 +922,28 @@ public class RepositoryBean {
         public void setHtml_url(String html_url) {
             this.html_url = html_url;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            if (id == null) {
+                dest.writeByte((byte) 0);
+            } else {
+                dest.writeByte((byte) 1);
+                dest.writeInt(id);
+            }
+            dest.writeString(type);
+            dest.writeString(name);
+            dest.writeString(path);
+            dest.writeString(html_url);
+        }
     }
 
-    public static class OwnerDTO {
+    public static class OwnerDTO implements Parcelable {
         private Integer id;
         private String login;
         private String name;
@@ -701,6 +961,42 @@ public class RepositoryBean {
         private String events_url;
         private String received_events_url;
         private String type;
+
+        protected OwnerDTO(Parcel in) {
+            if (in.readByte() == 0) {
+                id = null;
+            } else {
+                id = in.readInt();
+            }
+            login = in.readString();
+            name = in.readString();
+            avatar_url = in.readString();
+            url = in.readString();
+            html_url = in.readString();
+            remark = in.readString();
+            followers_url = in.readString();
+            following_url = in.readString();
+            gists_url = in.readString();
+            starred_url = in.readString();
+            subscriptions_url = in.readString();
+            organizations_url = in.readString();
+            repos_url = in.readString();
+            events_url = in.readString();
+            received_events_url = in.readString();
+            type = in.readString();
+        }
+
+        public static final Creator<OwnerDTO> CREATOR = new Creator<OwnerDTO>() {
+            @Override
+            public OwnerDTO createFromParcel(Parcel in) {
+                return new OwnerDTO(in);
+            }
+
+            @Override
+            public OwnerDTO[] newArray(int size) {
+                return new OwnerDTO[size];
+            }
+        };
 
         public Integer getId() {
             return id;
@@ -837,9 +1133,40 @@ public class RepositoryBean {
         public void setType(String type) {
             this.type = type;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            if (id == null) {
+                dest.writeByte((byte) 0);
+            } else {
+                dest.writeByte((byte) 1);
+                dest.writeInt(id);
+            }
+            dest.writeString(login);
+            dest.writeString(name);
+            dest.writeString(avatar_url);
+            dest.writeString(url);
+            dest.writeString(html_url);
+            dest.writeString(remark);
+            dest.writeString(followers_url);
+            dest.writeString(following_url);
+            dest.writeString(gists_url);
+            dest.writeString(starred_url);
+            dest.writeString(subscriptions_url);
+            dest.writeString(organizations_url);
+            dest.writeString(repos_url);
+            dest.writeString(events_url);
+            dest.writeString(received_events_url);
+            dest.writeString(type);
+        }
     }
 
-    public static class AssignerDTO {
+    public static class AssignerDTO implements Parcelable {
         private Integer id;
         private String login;
         private String name;
@@ -857,6 +1184,42 @@ public class RepositoryBean {
         private String events_url;
         private String received_events_url;
         private String type;
+
+        protected AssignerDTO(Parcel in) {
+            if (in.readByte() == 0) {
+                id = null;
+            } else {
+                id = in.readInt();
+            }
+            login = in.readString();
+            name = in.readString();
+            avatar_url = in.readString();
+            url = in.readString();
+            html_url = in.readString();
+            remark = in.readString();
+            followers_url = in.readString();
+            following_url = in.readString();
+            gists_url = in.readString();
+            starred_url = in.readString();
+            subscriptions_url = in.readString();
+            organizations_url = in.readString();
+            repos_url = in.readString();
+            events_url = in.readString();
+            received_events_url = in.readString();
+            type = in.readString();
+        }
+
+        public static final Creator<AssignerDTO> CREATOR = new Creator<AssignerDTO>() {
+            @Override
+            public AssignerDTO createFromParcel(Parcel in) {
+                return new AssignerDTO(in);
+            }
+
+            @Override
+            public AssignerDTO[] newArray(int size) {
+                return new AssignerDTO[size];
+            }
+        };
 
         public Integer getId() {
             return id;
@@ -993,9 +1356,40 @@ public class RepositoryBean {
         public void setType(String type) {
             this.type = type;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            if (id == null) {
+                dest.writeByte((byte) 0);
+            } else {
+                dest.writeByte((byte) 1);
+                dest.writeInt(id);
+            }
+            dest.writeString(login);
+            dest.writeString(name);
+            dest.writeString(avatar_url);
+            dest.writeString(url);
+            dest.writeString(html_url);
+            dest.writeString(remark);
+            dest.writeString(followers_url);
+            dest.writeString(following_url);
+            dest.writeString(gists_url);
+            dest.writeString(starred_url);
+            dest.writeString(subscriptions_url);
+            dest.writeString(organizations_url);
+            dest.writeString(repos_url);
+            dest.writeString(events_url);
+            dest.writeString(received_events_url);
+            dest.writeString(type);
+        }
     }
 
-    public static class AssigneeDTO {
+    public static class AssigneeDTO implements Parcelable {
         private Integer id;
         private String login;
         private String name;
@@ -1013,6 +1407,42 @@ public class RepositoryBean {
         private String events_url;
         private String received_events_url;
         private String type;
+
+        protected AssigneeDTO(Parcel in) {
+            if (in.readByte() == 0) {
+                id = null;
+            } else {
+                id = in.readInt();
+            }
+            login = in.readString();
+            name = in.readString();
+            avatar_url = in.readString();
+            url = in.readString();
+            html_url = in.readString();
+            remark = in.readString();
+            followers_url = in.readString();
+            following_url = in.readString();
+            gists_url = in.readString();
+            starred_url = in.readString();
+            subscriptions_url = in.readString();
+            organizations_url = in.readString();
+            repos_url = in.readString();
+            events_url = in.readString();
+            received_events_url = in.readString();
+            type = in.readString();
+        }
+
+        public static final Creator<AssigneeDTO> CREATOR = new Creator<AssigneeDTO>() {
+            @Override
+            public AssigneeDTO createFromParcel(Parcel in) {
+                return new AssigneeDTO(in);
+            }
+
+            @Override
+            public AssigneeDTO[] newArray(int size) {
+                return new AssigneeDTO[size];
+            }
+        };
 
         public Integer getId() {
             return id;
@@ -1149,9 +1579,40 @@ public class RepositoryBean {
         public void setType(String type) {
             this.type = type;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            if (id == null) {
+                dest.writeByte((byte) 0);
+            } else {
+                dest.writeByte((byte) 1);
+                dest.writeInt(id);
+            }
+            dest.writeString(login);
+            dest.writeString(name);
+            dest.writeString(avatar_url);
+            dest.writeString(url);
+            dest.writeString(html_url);
+            dest.writeString(remark);
+            dest.writeString(followers_url);
+            dest.writeString(following_url);
+            dest.writeString(gists_url);
+            dest.writeString(starred_url);
+            dest.writeString(subscriptions_url);
+            dest.writeString(organizations_url);
+            dest.writeString(repos_url);
+            dest.writeString(events_url);
+            dest.writeString(received_events_url);
+            dest.writeString(type);
+        }
     }
 
-    public static class TestersDTO {
+    public static class TestersDTO implements Parcelable {
         private Integer id;
         private String login;
         private String name;
@@ -1169,6 +1630,42 @@ public class RepositoryBean {
         private String events_url;
         private String received_events_url;
         private String type;
+
+        protected TestersDTO(Parcel in) {
+            if (in.readByte() == 0) {
+                id = null;
+            } else {
+                id = in.readInt();
+            }
+            login = in.readString();
+            name = in.readString();
+            avatar_url = in.readString();
+            url = in.readString();
+            html_url = in.readString();
+            remark = in.readString();
+            followers_url = in.readString();
+            following_url = in.readString();
+            gists_url = in.readString();
+            starred_url = in.readString();
+            subscriptions_url = in.readString();
+            organizations_url = in.readString();
+            repos_url = in.readString();
+            events_url = in.readString();
+            received_events_url = in.readString();
+            type = in.readString();
+        }
+
+        public static final Creator<TestersDTO> CREATOR = new Creator<TestersDTO>() {
+            @Override
+            public TestersDTO createFromParcel(Parcel in) {
+                return new TestersDTO(in);
+            }
+
+            @Override
+            public TestersDTO[] newArray(int size) {
+                return new TestersDTO[size];
+            }
+        };
 
         public Integer getId() {
             return id;
@@ -1304,6 +1801,37 @@ public class RepositoryBean {
 
         public void setType(String type) {
             this.type = type;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            if (id == null) {
+                dest.writeByte((byte) 0);
+            } else {
+                dest.writeByte((byte) 1);
+                dest.writeInt(id);
+            }
+            dest.writeString(login);
+            dest.writeString(name);
+            dest.writeString(avatar_url);
+            dest.writeString(url);
+            dest.writeString(html_url);
+            dest.writeString(remark);
+            dest.writeString(followers_url);
+            dest.writeString(following_url);
+            dest.writeString(gists_url);
+            dest.writeString(starred_url);
+            dest.writeString(subscriptions_url);
+            dest.writeString(organizations_url);
+            dest.writeString(repos_url);
+            dest.writeString(events_url);
+            dest.writeString(received_events_url);
+            dest.writeString(type);
         }
     }
 }

@@ -58,7 +58,11 @@
     <fragment
         android:id="@+id/starFragment"
         android:name="com.xiaobingkj.giteer.ui.star.StarFragment"
-        android:label="StarFragment" />
+        android:label="StarFragment" >
+        <action
+            android:id="@+id/action_starFragment_to_repoFragment"
+            app:destination="@id/repoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.xiaobingkj.giteer.ui.search.SearchFragment"
@@ -66,7 +70,11 @@
     <fragment
         android:id="@+id/searchRepoFragment"
         android:name="com.xiaobingkj.giteer.ui.search.SearchRepoFragment"
-        android:label="SearchRepoFragment" />
+        android:label="SearchRepoFragment" >
+        <action
+            android:id="@+id/action_searchRepoFragment_to_repoFragment"
+            app:destination="@id/repoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchUserFragment"
         android:name="com.xiaobingkj.giteer.ui.search.SearchUserFragment"
@@ -83,5 +91,21 @@
     <fragment
         android:id="@+id/trendSubFragment"
         android:name="com.xiaobingkj.giteer.ui.trend.TrendSubFragment"
-        android:label="TrendSubFragment" />
+        android:label="TrendSubFragment" >
+        <action
+            android:id="@+id/action_trendSubFragment_to_repoFragment"
+            app:destination="@id/repoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/repoFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.RepoFragment"
+        android:label="RepoFragment" >
+        <action
+            android:id="@+id/action_repoFragment_to_repoTreeFragment"
+            app:destination="@id/repoTreeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/repoTreeFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.RepoTreeFragment"
+        android:label="RepoTreeFragment" />
 </navigation>

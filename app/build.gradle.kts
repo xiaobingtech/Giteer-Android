@@ -153,9 +153,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     ksp("com.github.bumptech.glide:ksp:4.16.0")
 
-    implementation("com.qmuiteam:qmui:2.0.1")
-    implementation("com.qmuiteam:arch:2.0.1")
-    ksp("com.qmuiteam:arch-compiler:2.0.1")
+    implementation("com.github.getActivity:TitleBar:10.5")
 
     implementation("io.noties.markwon:core:4.6.2")
     implementation("io.noties.markwon:ext-tables:4.6.2")
