@@ -24,6 +24,7 @@
 package io.github.rosemoe.sora.app
 
 import android.app.AlertDialog
+import android.content.Context.MODE_PRIVATE
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.graphics.Typeface
@@ -33,16 +34,18 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.ContextMenu
 import android.view.KeyEvent
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import io.github.rosemoe.sora.app.databinding.ActivityMainBinding
+import com.blankj.utilcode.util.ToastUtils
+import io.github.rosemoe.sora.app.databinding.FragmentMainBinding
 import io.github.rosemoe.sora.app.tests.TestActivity
 import io.github.rosemoe.sora.event.ContentChangeEvent
 import io.github.rosemoe.sora.event.EditorKeyEvent
@@ -92,6 +95,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import me.hgj.jetpackmvvm.base.appContext
+import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
 import org.eclipse.tm4e.core.registry.IGrammarSource
 import org.eclipse.tm4e.core.registry.IThemeSource
 import java.util.regex.PatternSyntaxException
@@ -99,7 +104,12 @@ import java.util.regex.PatternSyntaxException
 /**
  * Demo and debug Activity for the code editor
  */
-class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
+class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
+
+    override fun layoutId(): Int = R.layout.fragment_main
+    override fun lazyLoadData() {
+
+    }
 
     companion object {
         init {
@@ -181,7 +191,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
         // Add assets file provider so that files in assets can be loaded
         FileProviderRegistry.getInstance().addFileProvider(
             AssetsFileResolver(
-                applicationContext.assets // use application context
+                appContext.assets // use application context
             )
         )
         loadDefaultThemes()
@@ -308,6 +318,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
      * Open file from assets, and set editor text
      */
     private fun openAssetsFile(name: String) {
+        /*
         lifecycleScope.launch(Dispatchers.IO) {
             val text = ContentIO.createFrom(assets.open(name))
             withContext(Dispatchers.Main) {
@@ -317,6 +328,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
                 updateBtnState()
             }
         }
+         */
     }
 
     /**
@@ -390,10 +402,10 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        CrashHandler.INSTANCE.init(this)
-        setContentView(mDatabind.root)
+        CrashHandler.INSTANCE.init(mActivity)
 
-        val typeface = Typeface.createFromAsset(assets, "JetBrainsMono-Regular.ttf")
+
+        val typeface = Typeface.createFromAsset(mActivity.assets, "JetBrainsMono-Regular.ttf")
 
         // Setup Listeners
         mDatabind.apply {
@@ -420,7 +432,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
         })
 
         // Search options
-        searchMenu = PopupMenu(this, mDatabind.searchOptions)
+        searchMenu = PopupMenu(mActivity, mDatabind.searchOptions)
         searchMenu.inflate(R.menu.menu_search_options)
         searchMenu.setOnMenuItemClickListener {
             // Update option states
@@ -461,7 +473,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
                 )
             }
             subscribeAlways<SideIconClickEvent> {
-                toast(R.string.tip_side_icon)
+                ToastUtils.showLong(R.string.tip_side_icon)
             }
             subscribeAlways<TextSizeChangeEvent> { event ->
                 Log.d(
@@ -472,10 +484,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
 
             subscribeAlways<KeyBindingEvent> { event ->
                 if (event.eventType == EditorKeyEvent.Type.DOWN) {
-                    toast(
-                        "Keybinding event: " + generateKeybindingString(event),
-                        Toast.LENGTH_LONG
-                    )
+                    ToastUtils.showLong("Keybinding event: " + generateKeybindingString(event))
                 }
             }
 
@@ -500,24 +509,26 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
         // Open assets file
 //        openAssetsFile("samples/sample.txt")
 
-        mViewModel.getRepoFile(intent.getStringExtra("url")!!)
+        val url = arguments?.getString("url")!!
+        mViewModel.getRepoFile(url)
 
         updatePositionText()
         updateBtnState()
 
-        switchThemeIfRequired(this, mDatabind.editor)
+        switchThemeIfRequired(mActivity, mDatabind.editor)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        switchThemeIfRequired(this, mDatabind.editor)
+        switchThemeIfRequired(mActivity, mDatabind.editor)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
         undo = menu.findItem(R.id.text_undo)
         redo = menu.findItem(R.id.text_redo)
-        return super.onCreateOptionsMenu(menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onDestroy() {
@@ -529,23 +540,23 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
         val id = item.itemId
         val editor = mDatabind.editor
         when (id) {
-            R.id.open_test_activity -> startActivity<TestActivity>()
+            R.id.open_test_activity -> mActivity.startActivity<TestActivity>()
             R.id.open_lsp_activity -> {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                    AlertDialog.Builder(this)
+                    AlertDialog.Builder(mActivity)
                         .setTitle(getString(R.string.not_supported))
                         .setMessage(getString(R.string.dialog_api_warning_msg))
                         .setPositiveButton(android.R.string.ok, null)
                         .show()
                 } else {
-                    AlertDialog.Builder(this)
+                    AlertDialog.Builder(mActivity)
                         .setTitle(R.string.dialog_lsp_entry_title)
                         .setMessage(R.string.dialog_lsp_entry_msg)
                         .setPositiveButton(R.string.choice_yes) { _, _ ->
-                            startActivity<LspTestActivity>()
+                            mActivity.startActivity<LspTestActivity>()
                         }
                         .setNegativeButton(R.string.choice_no) { _, _ ->
-                            startActivity<LspTestJavaActivity>()
+                            mActivity.startActivity<LspTestJavaActivity>()
                         }
                         .setNeutralButton(android.R.string.cancel, null)
                         .show()
@@ -583,7 +594,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
                     getString(R.string.center),
                     getString(R.string.bottom)
                 )
-                AlertDialog.Builder(this)
+                AlertDialog.Builder(mActivity)
                     .setTitle(R.string.fixed)
                     .setSingleChoiceItems(themes, -1) { dialog: DialogInterface, which: Int ->
                         editor.lnPanelPositionMode = LineInfoPanelPositionMode.FOLLOW
@@ -670,7 +681,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
             getString(R.string.bottom_left),
             getString(R.string.bottom_right)
         )
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(mActivity)
             .setTitle(R.string.fixed)
             .setSingleChoiceItems(themes, -1) { dialog: DialogInterface, which: Int ->
                 editor.lnPanelPositionMode = LineInfoPanelPositionMode.FIXED
@@ -716,21 +727,21 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
 
     private fun openLogs() {
         runCatching {
-            openFileInput(LOG_FILE).reader().readText()
+            mActivity.openFileInput(LOG_FILE).reader().readText()
         }.onSuccess {
             mDatabind.editor.setText(it)
         }.onFailure {
-            toast(it.toString())
+            ToastUtils.showLong(it.toString())
         }
     }
 
     private fun clearLogs() {
         runCatching {
-            openFileOutput(LOG_FILE, MODE_PRIVATE)?.use {}
+            mActivity.openFileOutput(LOG_FILE, MODE_PRIVATE)?.use {}
         }.onFailure {
-            toast(it.toString())
+            ToastUtils.showLong(it.toString())
         }.onSuccess {
-            toast(R.string.deleting_log_success)
+            ToastUtils.showLong(R.string.deleting_log_success)
         }
     }
 
@@ -756,7 +767,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
             "TextMate JavaScript" to Pair("source.js", "source.js"),
             "TextMate MarkDown" to Pair("text.html.markdown", "text.html.markdown")
         )
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(mActivity)
             .setTitle(R.string.switch_language)
             .setSingleChoiceItems(languageOptions, -1) { dialog: DialogInterface, which: Int ->
                 val selected = languageOptions[which]
@@ -784,13 +795,13 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
                             editor.setEditorLanguage(
                                 TsLanguageJava(
                                     JavaLanguageSpec(
-                                        highlightScmSource = assets.open("tree-sitter-queries/java/highlights.scm")
+                                        highlightScmSource = mActivity.assets.open("tree-sitter-queries/java/highlights.scm")
                                             .reader().readText(),
-                                        codeBlocksScmSource = assets.open("tree-sitter-queries/java/blocks.scm")
+                                        codeBlocksScmSource = mActivity.assets.open("tree-sitter-queries/java/blocks.scm")
                                             .reader().readText(),
-                                        bracketsScmSource = assets.open("tree-sitter-queries/java/brackets.scm")
+                                        bracketsScmSource = mActivity.assets.open("tree-sitter-queries/java/brackets.scm")
                                             .reader().readText(),
-                                        localsScmSource = assets.open("tree-sitter-queries/java/locals.scm")
+                                        localsScmSource = mActivity.assets.open("tree-sitter-queries/java/locals.scm")
                                             .reader().readText()
                                     )
                                 )
@@ -819,7 +830,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
             "Solarized(Dark) for TM(VSCode)",
             "TM theme from file"
         )
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(mActivity)
             .setTitle(R.string.color_scheme)
             .setSingleChoiceItems(themes, -1) { dialog: DialogInterface, which: Int ->
                 when (which) {
@@ -913,7 +924,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
                 editorLanguage.updateLanguage(
                     DefaultGrammarDefinition.withGrammarSource(
                         IGrammarSource.fromInputStream(
-                            contentResolver.openInputStream(result),
+                            mActivity.contentResolver.openInputStream(result),
                             result.path, null
                         ),
                     )
@@ -923,7 +934,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
                 TextMateLanguage.create(
                     DefaultGrammarDefinition.withGrammarSource(
                         IGrammarSource.fromInputStream(
-                            contentResolver.openInputStream(result),
+                            mActivity.contentResolver.openInputStream(result),
                             result.path, null
                         ),
                     ), true
@@ -943,7 +954,7 @@ class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
 
             ThemeRegistry.getInstance().loadTheme(
                 IThemeSource.fromInputStream(
-                    contentResolver.openInputStream(result), result.path,
+                    mActivity.contentResolver.openInputStream(result), result.path,
                     null
                 )
             )

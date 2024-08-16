@@ -1,17 +1,14 @@
 package com.xiaobingkj.giteer.ui.repo
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.blankj.utilcode.util.EncodeUtils
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.model.TreeNode.TreeNodeClickListener
 import com.unnamed.b.atv.view.AndroidTreeView
-import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
+import io.github.rosemoe.sora.app.MainFragment
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentRepoTreeBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
@@ -79,7 +76,7 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
                     }else{
                         val bundle = Bundle()
                         bundle.putString("url", encodeUrl)
-                        nav().navigate(R.id.mainActivity, bundle)
+                        nav().navigate(R.id.mainFragment, bundle)
                     }
                 }
             }

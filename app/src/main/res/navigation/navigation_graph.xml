@@ -105,11 +105,11 @@
         android:name="com.xiaobingkj.giteer.ui.repo.RepoTreeFragment"
         android:label="RepoTreeFragment" >
         <action
-            android:id="@+id/action_repoTreeFragment_to_mainActivity"
-            app:destination="@id/mainActivity" />
+            android:id="@+id/action_repoTreeFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
-    <activity
-        android:id="@+id/mainActivity"
-        android:name="io.github.rosemoe.sora.app.MainActivity"
-        android:label="MainActivity" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="io.github.rosemoe.sora.app.MainFragment"
+        android:label="MainFragment" />
 </navigation>
