@@ -15,6 +15,7 @@ import com.xiaobingkj.giteer.data.model.RepositoryBean
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentRepoTreeBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
+import me.hgj.jetpackmvvm.ext.nav
 
 class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBinding>() {
     override fun layoutId(): Int = R.layout.fragment_repo_tree
@@ -76,7 +77,9 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
                     }else if (pathLowercase.endsWith("mp4")) {
 
                     }else{
-
+                        val bundle = Bundle()
+                        bundle.putString("url", encodeUrl)
+                        nav().navigate(R.id.mainActivity, bundle)
                     }
                 }
             }

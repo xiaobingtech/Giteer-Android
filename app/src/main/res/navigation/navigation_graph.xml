@@ -80,10 +80,6 @@
         android:name="com.xiaobingkj.giteer.ui.search.SearchUserFragment"
         android:label="SearchUserFragment" />
     <fragment
-        android:id="@+id/trendFragment"
-        android:name="com.xiaobingkj.giteer.ui.trend.TrendFragment"
-        android:label="TrendFragment" />
-    <fragment
         android:id="@+id/meFragment"
         android:name="com.xiaobingkj.giteer.ui.me.MeFragment"
         android:label="fragment_me"
@@ -107,5 +103,13 @@
     <fragment
         android:id="@+id/repoTreeFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.RepoTreeFragment"
-        android:label="RepoTreeFragment" />
+        android:label="RepoTreeFragment" >
+        <action
+            android:id="@+id/action_repoTreeFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="io.github.rosemoe.sora.app.MainActivity"
+        android:label="MainActivity" />
 </navigation>

@@ -65,7 +65,7 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
                 val bundle = Bundle()
                 val repo = adapter.getItem(position)
                 bundle.putParcelable("repo", repo)
-                findNavController().navigate(R.id.repoFragment, bundle)
+                nav().navigate(R.id.repoFragment, bundle)
             }
 
         }

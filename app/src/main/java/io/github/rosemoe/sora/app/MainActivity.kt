@@ -91,6 +91,7 @@ import io.github.rosemoe.sora.widget.subscribeAlways
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
 import org.eclipse.tm4e.core.registry.IGrammarSource
 import org.eclipse.tm4e.core.registry.IThemeSource
 import java.util.regex.PatternSyntaxException
@@ -98,7 +99,7 @@ import java.util.regex.PatternSyntaxException
 /**
  * Demo and debug Activity for the code editor
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseVmDbActivity<MainViewModel, ActivityMainBinding>() {
 
     companion object {
         init {
@@ -132,130 +133,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private lateinit var binding: ActivityMainBinding
     private lateinit var searchMenu: PopupMenu
     private var searchOptions = SearchOptions(false, false)
     private var undo: MenuItem? = null
     private var redo: MenuItem? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        CrashHandler.INSTANCE.init(this)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val typeface = Typeface.createFromAsset(assets, "JetBrainsMono-Regular.ttf")
-
-        // Setup Listeners
-        binding.apply {
-            btnGotoPrev.setOnClickListener(::gotoPrev)
-            btnGotoNext.setOnClickListener(::gotoNext)
-            btnReplace.setOnClickListener(::replace)
-            btnReplaceAll.setOnClickListener(::replaceAll)
-            searchOptions.setOnClickListener(::showSearchOptions)
-        }
-
-        // Configure symbol input view
-        val inputView = binding.symbolInput
-        inputView.bindEditor(binding.editor)
-        inputView.addSymbols(SYMBOLS, SYMBOL_INSERT_TEXT)
-        inputView.forEachButton { it.typeface = typeface }
-
-        // Commit search when text changed
-        binding.searchEditor.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun afterTextChanged(editable: Editable) {
-                tryCommitSearch()
-            }
-        })
-
-        // Search options
-        searchMenu = PopupMenu(this, binding.searchOptions)
-        searchMenu.inflate(R.menu.menu_search_options)
-        searchMenu.setOnMenuItemClickListener {
-            // Update option states
-            it.isChecked = !it.isChecked
-            if (it.isChecked) {
-                // Regex and whole word mode can not be both chose
-                when (it.itemId) {
-                    R.id.search_option_regex -> {
-                        searchMenu.menu.findItem(R.id.search_option_whole_word)!!.isChecked = false
-                    }
-
-                    R.id.search_option_whole_word -> {
-                        searchMenu.menu.findItem(R.id.search_option_regex)!!.isChecked = false
-                    }
-                }
-            }
-            // Update search options and commit search with the new options
-            computeSearchOptions()
-            tryCommitSearch()
-            true
-        }
-
-        // Configure editor
-        binding.editor.apply {
-            typefaceText = typeface
-            props.stickyScroll = true
-            setLineSpacing(2f, 1.1f)
-            nonPrintablePaintingFlags =
-                CodeEditor.FLAG_DRAW_WHITESPACE_LEADING or CodeEditor.FLAG_DRAW_LINE_SEPARATOR or CodeEditor.FLAG_DRAW_WHITESPACE_IN_SELECTION
-            // Update display dynamically
-            // Use CodeEditor#subscribeEvent to add listeners of different events to editor
-            subscribeAlways<SelectionChangeEvent> { updatePositionText() }
-            subscribeAlways<PublishSearchResultEvent> { updatePositionText() }
-            subscribeAlways<ContentChangeEvent> {
-                postDelayedInLifecycle(
-                    ::updateBtnState,
-                    50
-                )
-            }
-            subscribeAlways<SideIconClickEvent> {
-                toast(R.string.tip_side_icon)
-            }
-            subscribeAlways<TextSizeChangeEvent> { event ->
-                Log.d(
-                    TAG,
-                    "TextSizeChangeEvent onReceive() called with: oldTextSize = [${event.oldTextSize}], newTextSize = [${event.newTextSize}]"
-                )
-            }
-
-            subscribeAlways<KeyBindingEvent> { event ->
-                if (event.eventType == EditorKeyEvent.Type.DOWN) {
-                    toast(
-                        "Keybinding event: " + generateKeybindingString(event),
-                        Toast.LENGTH_LONG
-                    )
-                }
-            }
-
-            // Handle span interactions
-            EditorSpanInteractionHandler(this)
-            getComponent<EditorAutoCompletion>()
-                .setEnabledAnimation(true)
-        }
-
-        // Load textmate themes and grammars
-        setupTextmate()
-        // Before using Textmate Language, TextmateColorScheme should be applied
-        ensureTextmateTheme()
-
-        // Set editor language to textmate Java
-        val editor = binding.editor
-        val language = TextMateLanguage.create(
-            "source.java", true
-        )
-        editor.setEditorLanguage(language)
-
-        // Open assets file
-        openAssetsFile("samples/sample.txt")
-
-        updatePositionText()
-        updateBtnState()
-
-        switchThemeIfRequired(this, binding.editor)
-    }
 
     /**
      * Generate new [SearchOptions] for text searching in editor
@@ -278,10 +159,10 @@ class MainActivity : AppCompatActivity() {
      * Commit a text search to editor
      */
     private fun tryCommitSearch() {
-        val query = binding.searchEditor.editableText
+        val query = mDatabind.searchEditor.editableText
         if (query.isNotEmpty()) {
             try {
-                binding.editor.searcher.search(
+                mDatabind.editor.searcher.search(
                     query.toString(),
                     searchOptions
                 )
@@ -289,7 +170,7 @@ class MainActivity : AppCompatActivity() {
                 // Regex error
             }
         } else {
-            binding.editor.searcher.stopSearch()
+            mDatabind.editor.searcher.stopSearch()
         }
     }
 
@@ -367,7 +248,7 @@ class MainActivity : AppCompatActivity() {
      * Re-apply color scheme
      */
     private fun resetColorScheme() {
-        binding.editor.apply {
+        mDatabind.editor.apply {
             val colorScheme = this.colorScheme
             // reset
             this.colorScheme = colorScheme
@@ -378,7 +259,7 @@ class MainActivity : AppCompatActivity() {
      * Add diagnostic items to editor. For debug only.
      */
     private fun setupDiagnostics() {
-        val editor = binding.editor
+        val editor = mDatabind.editor
         val container = DiagnosticsContainer()
         for (i in 0 until editor.text.lineCount) {
             val index = editor.text.getCharIndex(i, 0)
@@ -397,7 +278,7 @@ class MainActivity : AppCompatActivity() {
      * Ensure the editor uses a [TextMateColorScheme]
      */
     private fun ensureTextmateTheme() {
-        val editor = binding.editor
+        val editor = mDatabind.editor
         var editorColorScheme = editor.colorScheme
         if (editorColorScheme !is TextMateColorScheme) {
             editorColorScheme = TextMateColorScheme.create(ThemeRegistry.getInstance())
@@ -430,7 +311,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val text = ContentIO.createFrom(assets.open(name))
             withContext(Dispatchers.Main) {
-                binding.editor.setText(text, null)
+                mDatabind.editor.setText(text, null)
 
                 updatePositionText()
                 updateBtnState()
@@ -442,22 +323,22 @@ class MainActivity : AppCompatActivity() {
      * Update buttons state for undo/redo
      */
     private fun updateBtnState() {
-        undo?.isEnabled = binding.editor.canUndo()
-        redo?.isEnabled = binding.editor.canRedo()
+        undo?.isEnabled = mDatabind.editor.canUndo()
+        redo?.isEnabled = mDatabind.editor.canRedo()
     }
 
     /**
      * Update editor position tracker text
      */
     private fun updatePositionText() {
-        val cursor = binding.editor.cursor
+        val cursor = mDatabind.editor.cursor
         var text =
             (1 + cursor.leftLine).toString() + ":" + cursor.leftColumn + ";" + cursor.left + " "
 
         text += if (cursor.isSelected) {
             "(" + (cursor.right - cursor.left) + " chars)"
         } else {
-            val content = binding.editor.text
+            val content = mDatabind.editor.text
             if (content.getColumnCount(cursor.leftLine) == cursor.leftColumn) {
                 "(<" + content.getLine(cursor.leftLine).lineSeparator.let {
                     if (it == LineSeparator.NONE) {
@@ -474,7 +355,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Indicator for text matching
-        val searcher = binding.editor.searcher
+        val searcher = mDatabind.editor.searcher
         if (searcher.hasQuery()) {
             val idx = searcher.currentMatchedPositionIndex
             val count = searcher.matchedPositionCount
@@ -492,12 +373,144 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.positionDisplay.text = text
+        mDatabind.positionDisplay.text = text
+    }
+
+    override fun createObserver() {
+        mViewModel.fileEvent.observe(this){
+            mDatabind.editor.setText(it, null)
+
+            updatePositionText()
+            updateBtnState()
+        }
+    }
+
+    override fun dismissLoading() {
+
+    }
+
+    override fun initView(savedInstanceState: Bundle?) {
+        CrashHandler.INSTANCE.init(this)
+        setContentView(mDatabind.root)
+
+        val typeface = Typeface.createFromAsset(assets, "JetBrainsMono-Regular.ttf")
+
+        // Setup Listeners
+        mDatabind.apply {
+            btnGotoPrev.setOnClickListener(::gotoPrev)
+            btnGotoNext.setOnClickListener(::gotoNext)
+            btnReplace.setOnClickListener(::replace)
+            btnReplaceAll.setOnClickListener(::replaceAll)
+            searchOptions.setOnClickListener(::showSearchOptions)
+        }
+
+        // Configure symbol input view
+        val inputView = mDatabind.symbolInput
+        inputView.bindEditor(mDatabind.editor)
+        inputView.addSymbols(SYMBOLS, SYMBOL_INSERT_TEXT)
+        inputView.forEachButton { it.typeface = typeface }
+
+        // Commit search when text changed
+        mDatabind.searchEditor.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {
+                tryCommitSearch()
+            }
+        })
+
+        // Search options
+        searchMenu = PopupMenu(this, mDatabind.searchOptions)
+        searchMenu.inflate(R.menu.menu_search_options)
+        searchMenu.setOnMenuItemClickListener {
+            // Update option states
+            it.isChecked = !it.isChecked
+            if (it.isChecked) {
+                // Regex and whole word mode can not be both chose
+                when (it.itemId) {
+                    R.id.search_option_regex -> {
+                        searchMenu.menu.findItem(R.id.search_option_whole_word)!!.isChecked = false
+                    }
+
+                    R.id.search_option_whole_word -> {
+                        searchMenu.menu.findItem(R.id.search_option_regex)!!.isChecked = false
+                    }
+                }
+            }
+            // Update search options and commit search with the new options
+            computeSearchOptions()
+            tryCommitSearch()
+            true
+        }
+
+        // Configure editor
+        mDatabind.editor.apply {
+            typefaceText = typeface
+            props.stickyScroll = true
+            setLineSpacing(2f, 1.1f)
+            nonPrintablePaintingFlags =
+                CodeEditor.FLAG_DRAW_WHITESPACE_LEADING or CodeEditor.FLAG_DRAW_LINE_SEPARATOR or CodeEditor.FLAG_DRAW_WHITESPACE_IN_SELECTION
+            // Update display dynamically
+            // Use CodeEditor#subscribeEvent to add listeners of different events to editor
+            subscribeAlways<SelectionChangeEvent> { updatePositionText() }
+            subscribeAlways<PublishSearchResultEvent> { updatePositionText() }
+            subscribeAlways<ContentChangeEvent> {
+                postDelayedInLifecycle(
+                    ::updateBtnState,
+                    50
+                )
+            }
+            subscribeAlways<SideIconClickEvent> {
+                toast(R.string.tip_side_icon)
+            }
+            subscribeAlways<TextSizeChangeEvent> { event ->
+                Log.d(
+                    TAG,
+                    "TextSizeChangeEvent onReceive() called with: oldTextSize = [${event.oldTextSize}], newTextSize = [${event.newTextSize}]"
+                )
+            }
+
+            subscribeAlways<KeyBindingEvent> { event ->
+                if (event.eventType == EditorKeyEvent.Type.DOWN) {
+                    toast(
+                        "Keybinding event: " + generateKeybindingString(event),
+                        Toast.LENGTH_LONG
+                    )
+                }
+            }
+
+            // Handle span interactions
+            EditorSpanInteractionHandler(this)
+            getComponent<EditorAutoCompletion>()
+                .setEnabledAnimation(true)
+        }
+
+        // Load textmate themes and grammars
+        setupTextmate()
+        // Before using Textmate Language, TextmateColorScheme should be applied
+        ensureTextmateTheme()
+
+        // Set editor language to textmate Java
+        val editor = mDatabind.editor
+        val language = TextMateLanguage.create(
+            "source.java", true
+        )
+        editor.setEditorLanguage(language)
+
+        // Open assets file
+//        openAssetsFile("samples/sample.txt")
+
+        mViewModel.getRepoFile(intent.getStringExtra("url")!!)
+
+        updatePositionText()
+        updateBtnState()
+
+        switchThemeIfRequired(this, mDatabind.editor)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        switchThemeIfRequired(this, binding.editor)
+        switchThemeIfRequired(this, mDatabind.editor)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -509,12 +522,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.editor.release()
+        mDatabind.editor.release()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        val editor = binding.editor
+        val editor = mDatabind.editor
         when (id) {
             R.id.open_test_activity -> startActivity<TestActivity>()
             R.id.open_lsp_activity -> {
@@ -590,8 +603,8 @@ class MainActivity : AppCompatActivity() {
             R.id.search_panel_st -> toggleSearchPanel(item)
 
             R.id.search_am -> {
-                binding.replaceEditor.setText("")
-                binding.searchEditor.setText("")
+                mDatabind.replaceEditor.setText("")
+                mDatabind.searchEditor.setText("")
                 editor.searcher.stopSearch()
                 editor.beginSearchMode()
             }
@@ -640,8 +653,12 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun showLoading(message: String) {
+        TODO("Not yet implemented")
+    }
+
     private fun chooseLineNumberPanelPosition() {
-        val editor = binding.editor
+        val editor = mDatabind.editor
         val themes = arrayOf(
             getString(R.string.top),
             getString(R.string.bottom),
@@ -682,8 +699,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toggleSearchPanel(item: MenuItem) {
-        if (binding.searchPanel.visibility == View.GONE) {
-            binding.apply {
+        if (mDatabind.searchPanel.visibility == View.GONE) {
+            mDatabind.apply {
                 replaceEditor.setText("")
                 searchEditor.setText("")
                 editor.searcher.stopSearch()
@@ -691,8 +708,8 @@ class MainActivity : AppCompatActivity() {
                 item.isChecked = true
             }
         } else {
-            binding.searchPanel.visibility = View.GONE
-            binding.editor.searcher.stopSearch()
+            mDatabind.searchPanel.visibility = View.GONE
+            mDatabind.editor.searcher.stopSearch()
             item.isChecked = false
         }
     }
@@ -701,7 +718,7 @@ class MainActivity : AppCompatActivity() {
         runCatching {
             openFileInput(LOG_FILE).reader().readText()
         }.onSuccess {
-            binding.editor.setText(it)
+            mDatabind.editor.setText(it)
         }.onFailure {
             toast(it.toString())
         }
@@ -718,7 +735,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun chooseLanguage() {
-        val editor = binding.editor
+        val editor = mDatabind.editor
         val languageOptions = arrayOf(
             "Java",
             "TextMate Java",
@@ -788,7 +805,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun chooseTheme() {
-        val editor = binding.editor
+        val editor = mDatabind.editor
         val themes = arrayOf(
             "Default",
             "GitHub",
@@ -851,7 +868,7 @@ class MainActivity : AppCompatActivity() {
 
     fun gotoNext(view: View) {
         try {
-            binding.editor.searcher.gotoNext()
+            mDatabind.editor.searcher.gotoNext()
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -859,7 +876,7 @@ class MainActivity : AppCompatActivity() {
 
     fun gotoPrev(view: View) {
         try {
-            binding.editor.searcher.gotoPrevious()
+            mDatabind.editor.searcher.gotoPrevious()
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -867,7 +884,7 @@ class MainActivity : AppCompatActivity() {
 
     fun replace(view: View) {
         try {
-            binding.editor.searcher.replaceCurrentMatch(binding.replaceEditor.text.toString())
+            mDatabind.editor.searcher.replaceCurrentMatch(mDatabind.replaceEditor.text.toString())
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -875,7 +892,7 @@ class MainActivity : AppCompatActivity() {
 
     fun replaceAll(view: View) {
         try {
-            binding.editor.searcher.replaceAll(binding.replaceEditor.text.toString())
+            mDatabind.editor.searcher.replaceAll(mDatabind.replaceEditor.text.toString())
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -890,7 +907,7 @@ class MainActivity : AppCompatActivity() {
             if (result == null) return@registerForActivityResult
 
 
-            val editorLanguage = binding.editor.editorLanguage
+            val editorLanguage = mDatabind.editor.editorLanguage
 
             val language = if (editorLanguage is TextMateLanguage) {
                 editorLanguage.updateLanguage(
@@ -912,7 +929,7 @@ class MainActivity : AppCompatActivity() {
                     ), true
                 )
             }
-            binding.editor.setEditorLanguage(language)
+            mDatabind.editor.setEditorLanguage(language)
         } catch (e: Exception) {
             e.printStackTrace()
         }

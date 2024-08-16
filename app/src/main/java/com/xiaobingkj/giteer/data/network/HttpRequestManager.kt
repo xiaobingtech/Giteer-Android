@@ -119,4 +119,10 @@ class HttpRequestManager {
             .await()
     }
 
+    suspend fun getRepoFile(url: String): String {
+        return RxHttp.get(url)
+            .toAwait<String>()
+            .await()
+    }
+
 }
