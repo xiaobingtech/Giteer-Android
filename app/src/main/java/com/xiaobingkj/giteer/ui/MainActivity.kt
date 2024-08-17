@@ -50,7 +50,7 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
         setSupportActionBar(mDatabind.toolbar)
 
         val navController = findNavController(R.id.nav_host_fragment)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.loginFragment, R.id.tabFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 

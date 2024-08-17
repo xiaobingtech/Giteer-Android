@@ -31,10 +31,12 @@ import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
+import me.hgj.jetpackmvvm.network.AppException
 
 class SearchUserViewModel: BaseViewModel() {
 
     val userEvent = MutableLiveData<List<UserBean>>()
+    val errorEvent = MutableLiveData<AppException>()
 
     fun getSearchUser(page: Int, q: String, order: String = "desc", perpage: Int = 100) {
         requestNoCheck({
@@ -42,6 +44,7 @@ class SearchUserViewModel: BaseViewModel() {
         }, {
             userEvent.postValue(it)
         }, {
+            errorEvent.postValue(it)
             ToastUtils.showLong(it.errorLog)
         })
     }

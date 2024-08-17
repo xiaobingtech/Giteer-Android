@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.rosemoe.sora.app.R
@@ -28,15 +29,26 @@ class SearchFragment : BaseVmDbFragment<BaseViewModel, FragmentSearchBinding>() 
         adpater.addFragment(SearchUserFragment())
         mDatabind.viewPager.adapter = adpater
 
-        mDatabind.etSearch.addTextChangedListener {
-            if (mDatabind.viewPager.currentItem == 0) {
-                val repoFragment = adpater.createFragment(0) as SearchRepoFragment
-                repoFragment.onKeyChanged(it.toString())
-            }else{
-                val userFragment = adpater.createFragment(1) as SearchUserFragment
-                userFragment.onKeyChanged(it.toString())
+        val textListener = object: OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query == null) { return false }
+                if (mDatabind.viewPager.currentItem == 0) {
+                    val repoFragment = adpater.createFragment(0) as SearchRepoFragment
+                    repoFragment.onKeyChanged(query)
+                }else{
+                    val userFragment = adpater.createFragment(1) as SearchUserFragment
+                    userFragment.onKeyChanged(query)
+                }
+                mDatabind.searchView.clearFocus()
+                return true
             }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+
         }
+        mDatabind.searchView.setOnQueryTextListener(textListener)
 
         TabLayoutMediator(mDatabind.tabs, mDatabind.viewPager, { tab, position ->
             when (position) {

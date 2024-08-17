@@ -30,9 +30,10 @@ import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
+import me.hgj.jetpackmvvm.network.AppException
 
 class TrendSubViewModel: BaseViewModel() {
-
+    val errorEvent = MutableLiveData<AppException>()
     val repoEvent = MutableLiveData<List<RepositoryV3Bean>>()
 
     fun getTrendRepositories(url: String, page: Int) {
@@ -41,6 +42,7 @@ class TrendSubViewModel: BaseViewModel() {
         }, {
             repoEvent.postValue(it)
         }, {
+            errorEvent.postValue(it)
             ToastUtils.showLong(it.errorLog)
         })
     }

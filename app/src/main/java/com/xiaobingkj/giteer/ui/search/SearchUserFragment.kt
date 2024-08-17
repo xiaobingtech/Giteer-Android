@@ -19,7 +19,11 @@ class SearchUserFragment : BaseVmDbFragment<SearchUserViewModel, FragmentSearchU
     }
 
     override fun createObserver() {
-        mViewModel.userEvent.observe(this, Observer {
+        mViewModel.errorEvent.observe(viewLifecycleOwner) {
+            mDatabind.refreshLayout.finishRefresh()
+            mDatabind.refreshLayout.finishLoadMore()
+        }
+        mViewModel.userEvent.observe(viewLifecycleOwner, Observer {
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }

@@ -25,6 +25,10 @@ class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, Fragme
     private var page: Int = 1
     override fun layoutId(): Int = R.layout.fragment_trend_sub
     override fun createObserver() {
+        mViewModel.errorEvent.observe(viewLifecycleOwner) {
+            mDatabind.refreshLayout.finishRefresh()
+            mDatabind.refreshLayout.finishLoadMore()
+        }
         mViewModel.repoEvent.observe(this, Observer {
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))

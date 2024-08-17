@@ -24,30 +24,34 @@
 
 package com.xiaobingkj.giteer.ui.event
 
-import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
-import com.blankj.utilcode.util.ToastUtils
+import android.content.Context
+import android.view.ViewGroup
+import cn.carbs.android.avatarimageview.library.AvatarImageView
+import com.blankj.utilcode.util.TimeUtils
+import com.bumptech.glide.Glide
+import com.chad.library.adapter4.BaseQuickAdapter
+import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.xiaobingkj.giteer.data.model.EventBean
-import com.xiaobingkj.giteer.data.model.ReadMeBean
-import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
-import com.xiaobingkj.giteer.data.network.HttpRequestManager
-import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
-import me.hgj.jetpackmvvm.ext.request
-import me.hgj.jetpackmvvm.ext.requestNoCheck
-import me.hgj.jetpackmvvm.network.AppException
+import com.xiaobingkj.giteer.data.model.RepositoryBean
+import io.github.rosemoe.sora.app.R
 
-class EventViewModel: BaseViewModel() {
-    val eventEvent = MutableLiveData<List<EventBean>>()
-    val errorEvent = MutableLiveData<AppException>()
+class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
+    override fun onBindViewHolder(holder: QuickViewHolder, position: Int, item: EventBean?) {
+        val avatar = holder.getView<AvatarImageView>(R.id.avatar)
+        if (item?.actor?.avatar_url.equals("https://gitee.com/assets/no_portrait.png")) {
+            avatar.setTextAndColor(item?.actor?.name?.substring(0, 1), R.color.gray)
+        }else{
+            Glide.with(holder.itemView).load(item?.actor?.avatar_url).into(avatar)
+        }
+        holder.setText(R.id.name, item?.actor?.name)
+        holder.setText(R.id.time, TimeUtils.date2String(TimeUtils.string2Date(item?.created_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss"))
+    }
 
-    fun getReceiveEvents(prev_id: Int, limit: Int = 100) {
-        requestNoCheck({
-            HttpRequestCoroutine.getReceivedEvents(prev_id, limit)
-        },{
-            eventEvent.postValue(it)
-        },{
-            errorEvent.postValue(it)
-            ToastUtils.showLong(it.errorLog)
-        })
+    override fun onCreateViewHolder(
+        context: Context,
+        parent: ViewGroup,
+        viewType: Int
+    ): QuickViewHolder {
+        return QuickViewHolder(R.layout.item_event, parent)
     }
 }

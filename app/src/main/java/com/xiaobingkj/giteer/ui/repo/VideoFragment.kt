@@ -12,6 +12,7 @@ import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import xyz.doikki.videocontroller.StandardVideoController
 
 class VideoFragment : BaseVmDbFragment<BaseViewModel, FragmentVideoBinding>() {
+    override fun layoutId(): Int = R.layout.fragment_video
     override fun createObserver() {
 
     }

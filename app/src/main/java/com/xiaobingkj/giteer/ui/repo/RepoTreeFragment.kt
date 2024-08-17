@@ -128,4 +128,9 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        tView?.removeNode(rootNode)
+    }
+
 }

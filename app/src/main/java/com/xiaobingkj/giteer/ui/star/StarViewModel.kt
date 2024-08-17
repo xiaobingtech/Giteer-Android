@@ -31,9 +31,11 @@ import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
+import me.hgj.jetpackmvvm.network.AppException
 
 class StarViewModel: BaseViewModel() {
     val repoEvent = MutableLiveData<List<RepositoryBean>>()
+    val errorEvent = MutableLiveData<AppException>()
 
     fun getStarred(prev_id: Int) {
         requestNoCheck({
@@ -41,6 +43,7 @@ class StarViewModel: BaseViewModel() {
         }, {
             repoEvent.postValue(it)
         }, {
+            errorEvent.postValue(it)
             ToastUtils.showLong(it.errorLog)
         })
     }

@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.xiaobingkj.giteer.ui.login.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="登录Gitee（码云）" >
         <action
             android:id="@+id/action_loginFragment_to_webFragment"
             app:destination="@id/webFragment">
@@ -48,7 +48,7 @@
     <fragment
         android:id="@+id/webFragment"
         android:name="com.xiaobingkj.giteer.ui.webview.WebFragment"
-        android:label="WebFragment" />
+        android:label="加载中..." />
     <fragment
         android:id="@+id/eventFragment"
         android:name="com.xiaobingkj.giteer.ui.event.EventFragment"

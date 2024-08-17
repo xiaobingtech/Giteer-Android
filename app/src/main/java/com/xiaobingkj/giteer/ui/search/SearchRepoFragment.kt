@@ -20,6 +20,10 @@ class SearchRepoFragment : BaseVmDbFragment<SearchRepoViewModel, FragmentSearchR
     }
 
     override fun createObserver() {
+        mViewModel.errorEvent.observe(viewLifecycleOwner) {
+            mDatabind.refreshLayout.finishRefresh()
+            mDatabind.refreshLayout.finishLoadMore()
+        }
         mViewModel.repoEvent.observe(this, Observer {
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))

@@ -26,12 +26,14 @@ package com.xiaobingkj.giteer.ui.webview
 
 import android.graphics.Color
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ToastUtils
 import com.ycbjie.webviewlib.inter.InterWebListener
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentWebViewBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
+import me.hgj.jetpackmvvm.ext.nav
 
 class WebFragment: BaseVmDbFragment<BaseViewModel, FragmentWebViewBinding>() {
     override fun layoutId(): Int = R.layout.fragment_web_view
@@ -69,7 +71,7 @@ class WebFragment: BaseVmDbFragment<BaseViewModel, FragmentWebViewBinding>() {
             }
 
             override fun showTitle(title: String?) {
-
+                requireActivity().title = title
             }
 
         }

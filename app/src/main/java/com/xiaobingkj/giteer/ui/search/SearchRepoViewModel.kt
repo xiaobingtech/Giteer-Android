@@ -30,9 +30,11 @@ import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
+import me.hgj.jetpackmvvm.network.AppException
 
 class SearchRepoViewModel: BaseViewModel() {
     val repoEvent = MutableLiveData<List<RepositoryBean>>()
+    val errorEvent = MutableLiveData<AppException>()
 
     fun getSearchRepositories(page: Int, q: String, order: String = "desc", perpage: Int = 100) {
         requestNoCheck({
@@ -40,6 +42,7 @@ class SearchRepoViewModel: BaseViewModel() {
         }, {
             repoEvent.postValue(it)
         }, {
+            errorEvent.postValue(it)
             ToastUtils.showLong(it.errorLog)
         })
     }

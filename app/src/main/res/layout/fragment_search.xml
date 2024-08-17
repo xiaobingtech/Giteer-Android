@@ -5,24 +5,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-        <EditText
-            android:id="@+id/etSearch"
-            android:background="@color/white"
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_left"
-            android:layout_marginEnd="@dimen/margin_right"
-            android:layout_marginTop="@dimen/margin_top"
-            android:layout_marginBottom="@dimen/margin_bottom"
-            android:drawableStart="@mipmap/icon_search"
-            android:drawablePadding="@dimen/margin_top"
-            android:hint="请输入搜索内容"
-            android:imeOptions="actionSearch"
-            android:importantForAutofill="no"
-            android:padding="8dp"
-            android:singleLine="true"
-            android:textColorHint="@color/grey_text"
-            android:textSize="16sp" />
+            android:layout_height="?attr/actionBarSize"
+            app:queryHint="请输入搜索内容"
+            app:iconifiedByDefault="false"
+            ></androidx.appcompat.widget.SearchView>
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"

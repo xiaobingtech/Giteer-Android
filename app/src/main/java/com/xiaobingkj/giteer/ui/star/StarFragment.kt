@@ -19,10 +19,15 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
     private var prev_id: Int = 0
     override fun layoutId(): Int = R.layout.fragment_star
     override fun createObserver() {
-        mViewModel.repoEvent.observe(this, Observer {
+        mViewModel.errorEvent.observe(viewLifecycleOwner) {
+            mDatabind.refreshLayout.finishRefresh()
+            mDatabind.refreshLayout.finishLoadMore()
+        }
+        mViewModel.repoEvent.observe(viewLifecycleOwner, Observer {
             if (prev_id == 0) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
+            prev_id = it.last().id
             adapter.addAll(it)
             adapter.notifyDataSetChanged()
             if (it.size < 100) {

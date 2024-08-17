@@ -113,7 +113,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     companion object {
         init {
-            // Load tree-sitter libraries
+            // Load tree-sitter librariesa
             System.loadLibrary("android-tree-sitter")
             System.loadLibrary("tree-sitter-java")
         }
@@ -532,9 +532,10 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-//        mDatabind.editor.release()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mDatabind.editor.release()
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
