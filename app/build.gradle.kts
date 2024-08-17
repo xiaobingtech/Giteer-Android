@@ -168,4 +168,6 @@ dependencies {
     implementation("xyz.doikki.android.dkplayer:player-exo:3.3.7")
     implementation("xyz.doikki.android.dkplayer:videocache:3.3.7")
 
+    implementation("com.github.armcha:AutoLinkTextViewV2:3.0.0")
+
 }

@@ -16,8 +16,8 @@
         android:scaleType="fitCenter">
     </cn.carbs.android.avatarimageview.library.AvatarImageView>
 
-    <TextView
-        android:id="@+id/name"
+    <io.github.armcha.autolink.AutoLinkTextView
+        android:id="@+id/content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_left"
@@ -26,7 +26,7 @@
         android:textSize="@dimen/primary_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/avatar"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintTop_toTopOf="parent"></io.github.armcha.autolink.AutoLinkTextView>
 
     <TextView
         android:id="@+id/time"
@@ -36,8 +36,8 @@
         android:layout_marginTop="@dimen/margin_s_top"
         android:layout_marginBottom="@dimen/margin_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/name"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@id/name"></TextView>
+        app:layout_constraintEnd_toEndOf="@+id/content"
+        app:layout_constraintStart_toStartOf="@+id/content"
+        app:layout_constraintTop_toBottomOf="@id/content"></TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

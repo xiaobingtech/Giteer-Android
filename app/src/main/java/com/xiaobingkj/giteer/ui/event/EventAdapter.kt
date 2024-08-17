@@ -25,6 +25,7 @@
 package com.xiaobingkj.giteer.ui.event
 
 import android.content.Context
+import android.util.Log
 import android.view.ViewGroup
 import cn.carbs.android.avatarimageview.library.AvatarImageView
 import com.blankj.utilcode.util.TimeUtils
@@ -33,6 +34,9 @@ import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
+import io.github.armcha.autolink.AutoLinkTextView
+import io.github.armcha.autolink.MODE_CUSTOM
+import io.github.armcha.autolink.Mode
 import io.github.rosemoe.sora.app.R
 
 class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
@@ -43,7 +47,49 @@ class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
         }else{
             Glide.with(holder.itemView).load(item?.actor?.avatar_url).into(avatar)
         }
-        holder.setText(R.id.name, item?.actor?.name)
+        var content: String = ""
+        when (item?.type) {
+            "PushEvent" -> {
+                if (item.payload.commits.size > 0) {
+                    content = "${item.actor.name} 推送到了分支 ${item.repo.human_name} 的 ${item.payload.ref.split("/").last()} 分支 ${item.payload.commits.first().sha.substring(0, 7)} ${item.payload.commits.first().message}"
+                }else{
+                    content = "${item.actor.name} 推送到了分支 ${item.repo.human_name} 的 ${item.payload.ref.split("/").last()} 分支"
+                }
+
+            }
+            "MemberEvent" -> {
+                content = "${item.actor.name} 加入了仓库 ${item.repo.human_name}"
+            }
+            "CreateEvent" -> {
+                content = "${item.actor.name} 创建了仓库 ${item.repo.human_name}"
+            }
+            "IssueCommentEvent" -> {
+                content = "${item.actor.name} 发表了新的任务评论"
+            }
+            "StarEvent" -> {
+                content = "${item.actor.name} Star了仓库 ${item.repo.human_name}"
+            }
+            "ForkEvent" -> {
+                content = "${item.actor.name} Fork了仓库 ${item.repo.human_name}"
+            }
+            "FollowEvent" -> {
+                content = "${item.actor.name} 关注了"
+            }
+            else -> {}
+        }
+        var custom = MODE_CUSTOM("\\s${item?.actor?.name}\\b", "\\s${item?.repo?.human_name}\\b", "\\s${item?.payload?.ref?.split("/")?.last()}\\b")
+        if (!item?.payload?.commits.isNullOrEmpty()) {
+            custom = MODE_CUSTOM("\\s${item?.actor?.name}\\b", "\\s${item?.repo?.human_name}\\b", "\\s${item?.payload?.ref?.split("/")?.last()}\\b", "\\s${item?.payload?.commits?.first()?.sha?.substring(0, 7)}\\b", "\\s${item?.payload?.commits?.first()?.message}\\b")
+        }
+
+        val textView = holder.getView<AutoLinkTextView>(R.id.content)
+        textView.addAutoLinkMode(custom)
+        textView.customModeColor = R.color.accent
+        textView.onAutoLinkClick {
+            Log.d("TAG", it.originalText)
+        }
+
+        holder.setText(R.id.content, content)
         holder.setText(R.id.time, TimeUtils.date2String(TimeUtils.string2Date(item?.created_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss"))
     }
 
