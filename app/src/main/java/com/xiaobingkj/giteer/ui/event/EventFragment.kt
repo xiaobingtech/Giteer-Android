@@ -47,9 +47,7 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-
-        requireActivity().title = "动态"
-
+        mActivity.supportActionBar?.title = "动态"
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = adapter
@@ -78,6 +76,7 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
 
     override fun onResume() {
         super.onResume()
+        mActivity.supportActionBar?.title = "动态"
         headerRefresh()
     }
 

@@ -27,6 +27,7 @@ class TrendFragment : BaseVmDbFragment<BaseViewModel, FragmentTrendBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        mActivity.supportActionBar?.title = "趋势"
         val adpater = TrendFragmentStateAdapter(this)
         adpater.addFragment(TrendSubFragment("api/v3/projects/featured/"))
         adpater.addFragment(TrendSubFragment("api/v3/projects/popular/"))
@@ -49,5 +50,10 @@ class TrendFragment : BaseVmDbFragment<BaseViewModel, FragmentTrendBinding>() {
 
     override fun showLoading(message: String) {
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mActivity.supportActionBar?.title = "趋势"
     }
 }

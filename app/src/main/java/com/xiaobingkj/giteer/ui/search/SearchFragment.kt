@@ -24,6 +24,7 @@ class SearchFragment : BaseVmDbFragment<BaseViewModel, FragmentSearchBinding>() 
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        mActivity.supportActionBar?.title = "搜索"
         val adpater = SearchFragmentStateAdapter(this)
         adpater.addFragment(SearchRepoFragment())
         adpater.addFragment(SearchUserFragment())
@@ -65,6 +66,11 @@ class SearchFragment : BaseVmDbFragment<BaseViewModel, FragmentSearchBinding>() 
 
     override fun showLoading(message: String) {
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mActivity.supportActionBar?.title = "搜索"
     }
 
 }

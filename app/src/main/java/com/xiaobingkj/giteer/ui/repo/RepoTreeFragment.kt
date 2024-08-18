@@ -55,7 +55,9 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
         val repoV3: RepositoryV3Bean? = arguments?.getParcelable("repoV3")
         if (repo != null) {
             fullName = repo.full_name
+            mActivity.supportActionBar?.title = repo!!.human_name
         }else{
+            mActivity.supportActionBar?.title = repoV3!!.name_with_namespace
             fullName = repoV3?.path_with_namespace!!
         }
         ref = arguments?.getString("ref")!!

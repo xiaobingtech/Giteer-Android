@@ -46,7 +46,7 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
         repo = arguments?.getParcelable("repo")
         repoV3 = arguments?.getParcelable("repoV3")
         if (repo != null) {
-            mDatabind.viewClick.setOnClickListener {
+            mDatabind.code.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putParcelable("repo", repo)
                 bundle.putString("ref", ref)
@@ -55,13 +55,15 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
 
             ref = repo!!.default_branch
 
+            mActivity.supportActionBar?.title = repo!!.human_name
+
             mDatabind.name.text = repo!!.human_name
             mDatabind.desc.text = repo!!.description
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repo!!.updated_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
 
             mViewModel.getRepoReadme(repo!!.full_name)
         }else{
-            mDatabind.viewClick.setOnClickListener {
+            mDatabind.code.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putParcelable("repoV3", repoV3)
                 bundle.putString("ref", ref)
@@ -70,6 +72,7 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
 
             ref = repoV3!!.default_branch
 
+            mActivity.supportActionBar?.title = repoV3!!.name_with_namespace
             mDatabind.name.text = repoV3!!.name_with_namespace
             mDatabind.desc.text = repoV3!!.description
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repoV3!!.last_push_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")

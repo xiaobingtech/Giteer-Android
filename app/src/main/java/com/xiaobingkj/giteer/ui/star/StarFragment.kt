@@ -44,7 +44,7 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-
+        mActivity.supportActionBar?.title = "星标"
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = adapter
@@ -88,6 +88,7 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
 
     override fun onResume() {
         super.onResume()
+        mActivity.supportActionBar?.title = "星标"
         headerRefresh()
     }
 

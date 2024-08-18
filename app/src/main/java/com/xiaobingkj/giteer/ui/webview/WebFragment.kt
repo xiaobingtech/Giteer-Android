@@ -28,6 +28,7 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.ui.MainActivity
 import com.ycbjie.webviewlib.inter.InterWebListener
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentWebViewBinding
@@ -71,7 +72,7 @@ class WebFragment: BaseVmDbFragment<BaseViewModel, FragmentWebViewBinding>() {
             }
 
             override fun showTitle(title: String?) {
-                requireActivity().title = title
+                mActivity.supportActionBar?.title = title
             }
 
         }
