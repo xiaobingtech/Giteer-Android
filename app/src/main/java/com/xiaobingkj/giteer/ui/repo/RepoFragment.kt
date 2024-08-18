@@ -52,6 +52,11 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
                 bundle.putString("ref", ref)
                 nav().navigate(R.id.repoTreeFragment, bundle)
             }
+            mDatabind.release.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putParcelable("repo", repo)
+                nav().navigate(R.id.releaseFragment, bundle)
+            }
 
             ref = repo!!.default_branch
 
@@ -68,6 +73,11 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
                 bundle.putParcelable("repoV3", repoV3)
                 bundle.putString("ref", ref)
                 nav().navigate(R.id.repoTreeFragment, bundle)
+            }
+            mDatabind.release.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putParcelable("repoV3", repoV3)
+                nav().navigate(R.id.releaseFragment, bundle)
             }
 
             ref = repoV3!!.default_branch

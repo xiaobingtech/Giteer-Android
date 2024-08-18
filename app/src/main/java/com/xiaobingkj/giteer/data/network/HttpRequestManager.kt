@@ -27,6 +27,7 @@ package com.xiaobingkj.giteer.data.network
 import androidx.lifecycle.MutableLiveData
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
+import com.xiaobingkj.giteer.data.model.ReleaseBean
 import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
@@ -122,6 +123,15 @@ class HttpRequestManager {
     suspend fun getRepoFile(url: String): String {
         return RxHttp.get(url)
             .toAwait<String>()
+            .await()
+    }
+    //https://gitee.com/api/v5/repos/gfdgd-xi/waydroid-runner/releases?access_token=f6ea55ecc1106afaf9a985aea700334b&page=1&per_page=20&direction=desc
+    suspend fun getReleases(name: String, page: Int, perpage: Int = 100): MutableList<ReleaseBean> {
+        return RxHttp.get("api/v5/repos/${name}/releases")
+            .add("page", page)
+            .add("per_page", perpage)
+            .add("direction", "desc")
+            .toAwaitList<ReleaseBean>()
             .await()
     }
 

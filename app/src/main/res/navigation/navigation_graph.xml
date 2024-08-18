@@ -98,6 +98,9 @@
         <action
             android:id="@+id/action_repoFragment_to_repoTreeFragment"
             app:destination="@id/repoTreeFragment" />
+        <action
+            android:id="@+id/action_repoFragment_to_releaseFragment"
+            app:destination="@id/releaseFragment" />
     </fragment>
     <fragment
         android:id="@+id/repoTreeFragment"
@@ -129,4 +132,8 @@
         android:id="@+id/videoFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.VideoFragment"
         android:label="VideoFragment" />
+    <fragment
+        android:id="@+id/releaseFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.ReleaseFragment"
+        android:label="ReleaseFragment" />
 </navigation>

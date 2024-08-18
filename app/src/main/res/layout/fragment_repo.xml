@@ -240,35 +240,6 @@
                         android:layout_gravity="center_vertical"
                         app:iconSize="20dp" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/readme"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/branch">
-                    <TextView
-                        android:layout_marginLeft="@dimen/margin_left"
-                        android:text="README"
-                        android:textSize="@dimen/primary_text_size"
-                        android:gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"></TextView>
-                    <com.github.johnkil.print.PrintView
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_right"
-                        app:iconText="@string/ic_keyboard_arrow_right"
-                        app:iconColor="#12558C"
-                        app:iconFont="fonts/material-icon-font.ttf"
-                        android:layout_gravity="center_vertical"
-                        app:iconSize="20dp" />
-                </LinearLayout>
-
                 <TextView
                     android:id="@+id/md"
                     android:layout_width="match_parent"
@@ -279,7 +250,7 @@
                     android:layout_marginTop="@dimen/margin_top"
                     android:layout_marginBottom="@dimen/margin_bottom"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/readme"
+                    app:layout_constraintTop_toBottomOf="@id/branch"
                     app:layout_constraintVertical_bias="1.0"
                     tools:layout_editor_absoluteX="0dp"></TextView>
             </androidx.constraintlayout.widget.ConstraintLayout>
