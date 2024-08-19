@@ -28,6 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.IssueBean
+import com.xiaobingkj.giteer.data.model.PullRequestBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.ReleaseBean
 import com.xiaobingkj.giteer.data.model.RepoTreeBean
@@ -151,5 +152,13 @@ class HttpRequestManager {
             .toAwaitList<IssueBean>()
             .await()
     }
+    suspend fun getPulls(name: String, state: String, page: Int): MutableList<PullRequestBean> {
+        return RxHttp.get("api/v5/repos/${name}/pulls")
+            .add("page", page)
+            .add("state", state)
+            .toAwaitList<PullRequestBean>()
+            .await()
+    }
+
 
 }

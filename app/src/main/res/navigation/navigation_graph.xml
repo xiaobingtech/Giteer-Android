@@ -107,6 +107,9 @@
         <action
             android:id="@+id/action_repoFragment_to_issueFragment"
             app:destination="@id/issueFragment" />
+        <action
+            android:id="@+id/action_repoFragment_to_pullRequestFragment"
+            app:destination="@id/pullRequestFragment" />
     </fragment>
     <fragment
         android:id="@+id/repoTreeFragment"
@@ -158,4 +161,8 @@
         android:id="@+id/issueFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.issue.IssueFragment"
         android:label="IssueFragment" />
+    <fragment
+        android:id="@+id/pullRequestFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.pullrequest.PullRequestFragment"
+        android:label="PullRequestFragment" />
 </navigation>
