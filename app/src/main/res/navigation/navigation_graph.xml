@@ -135,5 +135,13 @@
     <fragment
         android:id="@+id/releaseFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.ReleaseFragment"
-        android:label="ReleaseFragment" />
+        android:label="ReleaseFragment" >
+        <action
+            android:id="@+id/action_releaseFragment_to_releaseDetailFragment"
+            app:destination="@id/releaseDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/releaseDetailFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.ReleaseDetailFragment"
+        android:label="ReleaseDetailFragment" />
 </navigation>

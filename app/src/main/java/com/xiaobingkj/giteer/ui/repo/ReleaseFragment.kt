@@ -52,7 +52,7 @@ class ReleaseFragment : BaseVmDbFragment<ReleaseViewModel, FragmentReleaseBindin
         val repo: RepositoryBean? = arguments?.getParcelable("repo")
         val repoV3: RepositoryV3Bean?  = arguments?.getParcelable("repoV3")
         if (repo != null) {
-            name = repo!!.full_name
+            name = repo.full_name
         }else{
             name = repoV3!!.path_with_namespace
         }
@@ -79,7 +79,9 @@ class ReleaseFragment : BaseVmDbFragment<ReleaseViewModel, FragmentReleaseBindin
                 view: View,
                 position: Int
             ) {
-
+                val bundle = Bundle()
+                bundle.putParcelable("bean", adapter.getItem(position))
+                nav().navigate(R.id.releaseDetailFragment, bundle)
             }
 
         }

@@ -23,9 +23,14 @@
  */
 package com.xiaobingkj.giteer.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
-public class ReleaseBean {
+public class ReleaseBean implements Parcelable {
 
     private Integer id;
     private String tag_name;
@@ -36,6 +41,33 @@ public class ReleaseBean {
     private AuthorDTO author;
     private String created_at;
     private List<AssetsDTO> assets;
+
+    protected ReleaseBean(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        tag_name = in.readString();
+        target_commitish = in.readString();
+        byte tmpPrerelease = in.readByte();
+        prerelease = tmpPrerelease == 0 ? null : tmpPrerelease == 1;
+        name = in.readString();
+        body = in.readString();
+        created_at = in.readString();
+    }
+
+    public static final Creator<ReleaseBean> CREATOR = new Creator<ReleaseBean>() {
+        @Override
+        public ReleaseBean createFromParcel(Parcel in) {
+            return new ReleaseBean(in);
+        }
+
+        @Override
+        public ReleaseBean[] newArray(int size) {
+            return new ReleaseBean[size];
+        }
+    };
 
     public Integer getId() {
         return id;
@@ -107,6 +139,27 @@ public class ReleaseBean {
 
     public void setAssets(List<AssetsDTO> assets) {
         this.assets = assets;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
+        }
+        dest.writeString(tag_name);
+        dest.writeString(target_commitish);
+        dest.writeByte((byte) (prerelease == null ? 0 : prerelease ? 1 : 2));
+        dest.writeString(name);
+        dest.writeString(body);
+        dest.writeString(created_at);
     }
 
     public static class AuthorDTO {

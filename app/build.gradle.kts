@@ -170,4 +170,6 @@ dependencies {
 
     implementation("com.github.armcha:AutoLinkTextViewV2:3.0.0")
 
+    implementation("com.github.getActivity:XXPermissions:20.0")
+
 }
