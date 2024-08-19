@@ -101,6 +101,9 @@
         <action
             android:id="@+id/action_repoFragment_to_releaseFragment"
             app:destination="@id/releaseFragment" />
+        <action
+            android:id="@+id/action_repoFragment_to_commitFragment"
+            app:destination="@id/commitFragment" />
     </fragment>
     <fragment
         android:id="@+id/repoTreeFragment"
@@ -134,7 +137,7 @@
         android:label="VideoFragment" />
     <fragment
         android:id="@+id/releaseFragment"
-        android:name="com.xiaobingkj.giteer.ui.repo.ReleaseFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.release.ReleaseFragment"
         android:label="ReleaseFragment" >
         <action
             android:id="@+id/action_releaseFragment_to_releaseDetailFragment"
@@ -142,6 +145,10 @@
     </fragment>
     <fragment
         android:id="@+id/releaseDetailFragment"
-        android:name="com.xiaobingkj.giteer.ui.repo.ReleaseDetailFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.release.ReleaseDetailFragment"
         android:label="ReleaseDetailFragment" />
+    <fragment
+        android:id="@+id/commitFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.commit.CommitFragment"
+        android:label="CommitFragment" />
 </navigation>

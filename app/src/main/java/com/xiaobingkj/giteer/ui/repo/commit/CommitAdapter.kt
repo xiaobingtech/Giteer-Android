@@ -22,22 +22,21 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui.repo
+package com.xiaobingkj.giteer.ui.repo.commit
 
 import android.content.Context
 import android.view.ViewGroup
+import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
+import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.ReleaseBean
 import io.github.rosemoe.sora.app.R
 
-class ReleaseDetailAdapter: BaseQuickAdapter<ReleaseBean.AssetsDTO, QuickViewHolder>() {
-    override fun onBindViewHolder(
-        holder: QuickViewHolder,
-        position: Int,
-        item: ReleaseBean.AssetsDTO?
-    ) {
-        holder.setText(R.id.name, item?.name)
+class CommitAdapter(): BaseQuickAdapter<CommitBean, QuickViewHolder>() {
+    override fun onBindViewHolder(holder: QuickViewHolder, position: Int, item: CommitBean?) {
+        holder.setText(R.id.name, item?.commit?.message)
+        holder.setText(R.id.time, TimeUtils.date2String(TimeUtils.string2Date(item?.commit?.committer?.date, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss"))
     }
 
     override fun onCreateViewHolder(
@@ -45,6 +44,6 @@ class ReleaseDetailAdapter: BaseQuickAdapter<ReleaseBean.AssetsDTO, QuickViewHol
         parent: ViewGroup,
         viewType: Int
     ): QuickViewHolder {
-        return QuickViewHolder(R.layout.item_release_detail, parent)
+        return QuickViewHolder(R.layout.item_commit, parent)
     }
 }

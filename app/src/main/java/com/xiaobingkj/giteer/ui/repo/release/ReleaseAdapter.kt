@@ -22,29 +22,27 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui.repo
+package com.xiaobingkj.giteer.ui.repo.release
 
-import androidx.lifecycle.MutableLiveData
-import com.blankj.utilcode.util.ToastUtils
+import android.content.Context
+import android.view.ViewGroup
+import com.blankj.utilcode.util.TimeUtils
+import com.chad.library.adapter4.BaseQuickAdapter
+import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.xiaobingkj.giteer.data.model.ReleaseBean
-import com.xiaobingkj.giteer.data.model.RepositoryBean
-import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
-import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
-import me.hgj.jetpackmvvm.ext.requestNoCheck
-import me.hgj.jetpackmvvm.network.AppException
+import io.github.rosemoe.sora.app.R
 
-class ReleaseViewModel: BaseViewModel() {
-    val releaseEvent = MutableLiveData<List<ReleaseBean>>()
-    val errorEvent = MutableLiveData<AppException>()
+class ReleaseAdapter(): BaseQuickAdapter<ReleaseBean, QuickViewHolder>() {
+    override fun onBindViewHolder(holder: QuickViewHolder, position: Int, item: ReleaseBean?) {
+        holder.setText(R.id.name, item?.name)
+        holder.setText(R.id.time, TimeUtils.date2String(TimeUtils.string2Date(item?.created_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss"))
+    }
 
-    fun getReleases(name: String, page: Int, perpage: Int = 100) {
-        requestNoCheck({
-            HttpRequestCoroutine.getReleases(name, page)
-        }, {
-            releaseEvent.postValue(it)
-        }, {
-            errorEvent.postValue(it)
-            ToastUtils.showLong(it.errorLog)
-        })
+    override fun onCreateViewHolder(
+        context: Context,
+        parent: ViewGroup,
+        viewType: Int
+    ): QuickViewHolder {
+        return QuickViewHolder(R.layout.item_release, parent)
     }
 }

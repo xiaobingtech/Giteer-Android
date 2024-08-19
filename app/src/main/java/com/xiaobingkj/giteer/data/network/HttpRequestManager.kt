@@ -25,6 +25,7 @@
 package com.xiaobingkj.giteer.data.network
 
 import androidx.lifecycle.MutableLiveData
+import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.ReleaseBean
@@ -132,6 +133,14 @@ class HttpRequestManager {
             .add("per_page", perpage)
             .add("direction", "desc")
             .toAwaitList<ReleaseBean>()
+            .await()
+    }
+    //https://gitee.com/api/v5/repos/GiteerApp/GiteerAndroid/commits?access_token=f6ea55ecc1106afaf9a985aea700334b&page=1&per_page=20
+    suspend fun getCommits(name: String, page: Int, perpage: Int = 100): MutableList<CommitBean> {
+        return RxHttp.get("api/v5/repos/${name}/commits")
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<CommitBean>()
             .await()
     }
 
