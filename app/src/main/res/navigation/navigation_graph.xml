@@ -104,6 +104,9 @@
         <action
             android:id="@+id/action_repoFragment_to_commitFragment"
             app:destination="@id/commitFragment" />
+        <action
+            android:id="@+id/action_repoFragment_to_issueFragment"
+            app:destination="@id/issueFragment" />
     </fragment>
     <fragment
         android:id="@+id/repoTreeFragment"
@@ -151,4 +154,8 @@
         android:id="@+id/commitFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.commit.CommitFragment"
         android:label="CommitFragment" />
+    <fragment
+        android:id="@+id/issueFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.issue.IssueFragment"
+        android:label="IssueFragment" />
 </navigation>

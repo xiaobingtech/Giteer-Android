@@ -27,6 +27,7 @@ package com.xiaobingkj.giteer.data.network
 import androidx.lifecycle.MutableLiveData
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.EventBean
+import com.xiaobingkj.giteer.data.model.IssueBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.ReleaseBean
 import com.xiaobingkj.giteer.data.model.RepoTreeBean
@@ -141,6 +142,13 @@ class HttpRequestManager {
             .add("page", page)
             .add("per_page", perpage)
             .toAwaitList<CommitBean>()
+            .await()
+    }
+    suspend fun getIssue(name: String, state: String, page: Int): MutableList<IssueBean> {
+        return RxHttp.get("api/v5/repos/${name}/issues")
+            .add("page", page)
+            .add("state", state)
+            .toAwaitList<IssueBean>()
             .await()
     }
 

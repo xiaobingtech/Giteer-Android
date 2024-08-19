@@ -62,6 +62,11 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
                 bundle.putParcelable("repo", repo)
                 nav().navigate(R.id.commitFragment, bundle)
             }
+            mDatabind.issue.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putParcelable("repo", repo)
+                nav().navigate(R.id.issueFragment, bundle)
+            }
 
             ref = repo!!.default_branch
 
@@ -70,7 +75,7 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             mDatabind.name.text = repo!!.human_name
             mDatabind.desc.text = repo!!.description
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repo!!.updated_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
-
+            mDatabind.issueNumber.text = repo!!.open_issues_count.toString()
             mViewModel.getRepoReadme(repo!!.full_name)
         }else{
             mDatabind.code.setOnClickListener {
@@ -89,6 +94,11 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
                 bundle.putParcelable("repoV3", repoV3)
                 nav().navigate(R.id.commitFragment, bundle)
             }
+            mDatabind.issue.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putParcelable("repoV3", repoV3)
+                nav().navigate(R.id.issueFragment, bundle)
+            }
 
             ref = repoV3!!.default_branch
 
@@ -96,7 +106,6 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             mDatabind.name.text = repoV3!!.name_with_namespace
             mDatabind.desc.text = repoV3!!.description
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repoV3!!.last_push_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
-
             mViewModel.getRepoReadme(repoV3!!.path_with_namespace)
         }
     }

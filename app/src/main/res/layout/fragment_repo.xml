@@ -137,6 +137,13 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"></TextView>
+                    <TextView
+                        android:id="@+id/issueNumber"
+                        android:layout_marginLeft="@dimen/margin_left"
+                        android:textSize="@dimen/primary_text_size"
+                        android:gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"></TextView>
                     <com.github.johnkil.print.PrintView
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
