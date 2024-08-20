@@ -44,11 +44,11 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             dialog.setTitle("当前分支")
             val listener = object:DialogInterface.OnClickListener{
                 override fun onClick(dialog: DialogInterface?, which: Int) {
-
+                    ref = it.get(which).name
                 }
 
             }
-//            dialog.setSingleChoiceItems(it.map { it.name }, 0, listener)
+            dialog.setSingleChoiceItems(it.map { it.name }.toTypedArray(), 0, listener)
             dialog.setPositiveButton("确定", null)
             dialog.show()
         }
