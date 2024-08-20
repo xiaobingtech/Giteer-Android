@@ -26,6 +26,7 @@ package com.xiaobingkj.giteer.ui.repo
 
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.model.BranchBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
@@ -35,12 +36,23 @@ import me.hgj.jetpackmvvm.ext.requestNoCheck
 class RepoViewModel: BaseViewModel() {
 
     val readMeEvent = MutableLiveData<ReadMeBean>()
+    val branchEvent = MutableLiveData<List<BranchBean>>()
 
     fun getRepoReadme(name: String, ref: String = "") {
         requestNoCheck({
             HttpRequestCoroutine.getRepoReadme(name, ref)
         }, {
             readMeEvent.postValue(it)
+        }, {
+            ToastUtils.showLong(it.errorLog)
+        })
+    }
+
+    fun getBranchs(name: String, page: Int) {
+        requestNoCheck({
+            HttpRequestCoroutine.getRepoBranches(name, page)
+        }, {
+            branchEvent.postValue(it)
         }, {
             ToastUtils.showLong(it.errorLog)
         })

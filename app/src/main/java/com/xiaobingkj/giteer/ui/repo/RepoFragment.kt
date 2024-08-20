@@ -1,10 +1,12 @@
 package com.xiaobingkj.giteer.ui.repo
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.bumptech.glide.Glide
@@ -36,6 +38,19 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             val node = markwon.parse(replacedContent)
             val markdown = markwon.render(node)
             markwon.setParsedMarkdown(mDatabind.md, markdown)
+        }
+        mViewModel.branchEvent.observe(viewLifecycleOwner) {
+            val dialog = AlertDialog.Builder(mActivity)
+            dialog.setTitle("当前分支")
+            val listener = object:DialogInterface.OnClickListener{
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+
+                }
+
+            }
+//            dialog.setSingleChoiceItems(it.map { it.name }, 0, listener)
+            dialog.setPositiveButton("确定", null)
+            dialog.show()
         }
     }
 
@@ -72,6 +87,9 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
                 val bundle = Bundle()
                 bundle.putParcelable("repo", repo)
                 nav().navigate(R.id.pullRequestFragment, bundle)
+            }
+            mDatabind.branch.setOnClickListener{
+                mViewModel.getBranchs(repo!!.full_name, 1)
             }
 
             ref = repo!!.default_branch
@@ -116,6 +134,9 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
                 val bundle = Bundle()
                 bundle.putParcelable("repoV3", repoV3)
                 nav().navigate(R.id.pullRequestFragment, bundle)
+            }
+            mDatabind.branch.setOnClickListener{
+                mViewModel.getBranchs(repoV3!!.path_with_namespace, 1)
             }
 
             ref = repoV3!!.default_branch

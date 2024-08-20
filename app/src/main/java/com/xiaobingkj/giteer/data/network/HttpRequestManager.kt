@@ -25,6 +25,7 @@
 package com.xiaobingkj.giteer.data.network
 
 import androidx.lifecycle.MutableLiveData
+import com.xiaobingkj.giteer.data.model.BranchBean
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.IssueBean
@@ -121,6 +122,16 @@ class HttpRequestManager {
         return RxHttp.get("api/v5/repos/${name}/readme")
             .add("ref", ref)
             .toAwait<ReadMeBean>()
+            .await()
+    }
+
+    //https://gitee.com/api/v5/repos/GiteerApp/GiteerAndroid/branches?access_token=f4a6b6925761ba09c734c75783bf3de7&sort=name&direction=asc&page=1
+    suspend fun getRepoBranches(name: String, page: Int): MutableList<BranchBean> {
+        return RxHttp.get("api/v5/repos/${name}/branches")
+            .add("sort", "name")
+            .add("direction", "asc")
+            .add("page", page)
+            .toAwaitList<BranchBean>()
             .await()
     }
 

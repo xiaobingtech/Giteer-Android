@@ -31,6 +31,8 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
             mDatabind.desc.text = it.bio
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(it.created_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss") + "加入"
             mDatabind.emailAddress.text = it.email
+
+            Storage.user = it
         }
     }
 
