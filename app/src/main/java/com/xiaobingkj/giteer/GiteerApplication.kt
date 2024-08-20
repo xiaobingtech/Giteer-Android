@@ -36,6 +36,10 @@ class GiteerApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Thread.UncaughtExceptionHandler { t, e ->
+            Log.d(TAG, e.toString())
+        }
         //初始化MMKV
         val rootDir = MMKV.initialize(this)
         Log.d(TAG, "MMKV rootDir:" + rootDir)

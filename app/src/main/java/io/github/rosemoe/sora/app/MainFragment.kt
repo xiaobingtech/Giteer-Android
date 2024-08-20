@@ -667,7 +667,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     }
 
     override fun showLoading(message: String) {
-        TODO("Not yet implemented")
+
     }
 
     private fun chooseLineNumberPanelPosition() {

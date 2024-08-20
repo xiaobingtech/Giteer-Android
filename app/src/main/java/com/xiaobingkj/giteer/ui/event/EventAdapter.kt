@@ -61,7 +61,12 @@ class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
                 content = "${item.actor.name} 加入了仓库 ${item.repo.human_name}"
             }
             "CreateEvent" -> {
-                content = "${item.actor.name} 创建了仓库 ${item.repo.human_name}"
+                if (item.payload.ref_type.equals("branch")) {
+                    content = "${item.actor.name} 创建了仓库 ${item.repo.human_name} 的 ${item.payload.ref} 分支"
+                }else{
+                    content = "${item.actor.name} 创建了仓库 ${item.repo.human_name}"
+                }
+
             }
             "IssueCommentEvent" -> {
                 content = "${item.actor.name} 发表了新的任务评论"
@@ -73,7 +78,13 @@ class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
                 content = "${item.actor.name} Fork了仓库 ${item.repo.human_name}"
             }
             "FollowEvent" -> {
-                content = "${item.actor.name} 关注了"
+                content = "${item.actor.name} 关注了 ${item.payload.target.name}"
+            }
+            "PullRequestEvent" -> {
+                content = "${item.actor.name} ${item.payload.action} 了Pull Request ${item.repo.human_name} 的 ${item.payload.title} ${item.payload.head.user.name}:${item.payload.head.ref} -> ${item.payload.base.user.name}:${item.payload.base.ref}"
+            }
+            "PullRequestCommentEvent" -> {
+                content = "${item.actor.name} 发表了新的Pull Request评论 ${item.payload.repository.human_name} 的 ${item.payload.pull_request.title} ${item.payload.comment.body}"
             }
             else -> {}
         }

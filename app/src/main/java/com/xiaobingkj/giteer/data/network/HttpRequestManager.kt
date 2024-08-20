@@ -72,6 +72,14 @@ class HttpRequestManager {
             .await()
     }
 
+    suspend fun getEvents(prev_id: Int, limit: Int = 100): MutableList<EventBean> {
+        return RxHttp.get("api/v5/users/${Storage.user.login}/events")
+            .add("prev_id", prev_id)
+            .add("limit", limit)
+            .toAwaitList<EventBean>()
+            .await()
+    }
+
     //https://gitee.com/api/v5/users/fandongtongxue_admin/starred?access_token=8b54574d49a35d59fcbff25c54d3e934&limit=20&sort=created&direction=desc
     suspend fun getStarred(prev_id: Int, sort: String = "created", direction: String = "desc", limit: Int = 100): MutableList<RepositoryBean> {
         return RxHttp.get("api/v5/users/${Storage.user.login}/starred")

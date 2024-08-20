@@ -47,7 +47,16 @@ class EventViewModel: BaseViewModel() {
             eventEvent.postValue(it)
         },{
             errorEvent.postValue(it)
-            ToastUtils.showLong(it.errorLog)
+        })
+    }
+
+    fun getEvents(prev_id: Int, limit: Int = 100) {
+        requestNoCheck({
+            HttpRequestCoroutine.getEvents(prev_id, limit)
+        },{
+            eventEvent.postValue(it)
+        },{
+            errorEvent.postValue(it)
         })
     }
 }
