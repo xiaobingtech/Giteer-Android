@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.TimeUtils
+import com.bumptech.glide.Glide
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import io.github.rosemoe.sora.app.R
@@ -77,6 +78,13 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
 
             mActivity.supportActionBar?.title = repo!!.human_name
 
+            val avatar = mDatabind.avatar
+            if (repo!!.owner.avatar_url.equals("https://gitee.com/assets/no_portrait.png")) {
+                avatar.setTextAndColor(repo!!.owner.name.substring(0, 1), R.color.gray)
+            }else{
+                Glide.with(mActivity).load(repo!!.owner.avatar_url).into(avatar)
+            }
+
             mDatabind.name.text = repo!!.human_name
             mDatabind.desc.text = repo!!.description
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repo!!.updated_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
@@ -113,6 +121,14 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             ref = repoV3!!.default_branch
 
             mActivity.supportActionBar?.title = repoV3!!.name_with_namespace
+
+            val avatar = mDatabind.avatar
+            if (repoV3!!.owner.portrait_url.contains("no_portrait.png")) {
+                avatar.setTextAndColor(repoV3!!.owner.name.substring(0, 1), R.color.gray)
+            }else{
+                Glide.with(mActivity).load(repoV3!!.owner.portrait_url).into(avatar)
+            }
+
             mDatabind.name.text = repoV3!!.name_with_namespace
             mDatabind.desc.text = repoV3!!.description
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repoV3!!.last_push_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
