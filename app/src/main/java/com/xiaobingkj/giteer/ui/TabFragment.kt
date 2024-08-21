@@ -61,7 +61,7 @@ class TabFragment: BaseVmDbFragment<LoginViewModel, FragmentTabBinding>() {
         mViewModel.getUser()
 
         mDatabind.viewPager2.adapter = ViewPageAdapter(mActivity)
-        mDatabind.viewPager2.isUserInputEnabled = true
+        mDatabind.viewPager2.isUserInputEnabled = false
 
         TabLayoutMediator(mDatabind.tabLayout, mDatabind.viewPager2, { tab, position ->
             when (position) {
