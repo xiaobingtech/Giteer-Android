@@ -172,4 +172,6 @@ dependencies {
 
     implementation("com.github.getActivity:XXPermissions:20.0")
 
+    implementation("cat.ereza:customactivityoncrash:2.4.0")
+
 }

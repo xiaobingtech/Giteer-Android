@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.TimeUtils
@@ -105,6 +106,9 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
 
             mDatabind.name.text = repo!!.human_name
             mDatabind.desc.text = repo!!.description
+            if (repo!!.description.isEmpty()) {
+                mDatabind.desc.visibility = View.GONE
+            }
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repo!!.updated_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
             mDatabind.issueNumber.text = repo!!.open_issues_count.toString()
             mViewModel.getRepoReadme(repo!!.full_name)
@@ -152,6 +156,9 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
 
             mDatabind.name.text = repoV3!!.name_with_namespace
             mDatabind.desc.text = repoV3!!.description
+            if (repoV3!!.description.isEmpty()) {
+                mDatabind.desc.visibility = View.GONE
+            }
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(repoV3!!.last_push_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
             mViewModel.getRepoReadme(repoV3!!.path_with_namespace)
         }

@@ -25,7 +25,9 @@
 package com.xiaobingkj.giteer.ui.star
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import cn.carbs.android.avatarimageview.library.AvatarImageView
 import com.blankj.utilcode.util.TimeUtils
 import com.bumptech.glide.Glide
@@ -44,6 +46,9 @@ class StarAdapter(): BaseQuickAdapter<RepositoryBean, QuickViewHolder>() {
         }
         holder.setText(R.id.name, item?.human_name)
         holder.setText(R.id.desc, item?.description)
+        if (item?.description?.isEmpty() == true) {
+            holder.getView<TextView>(R.id.desc).visibility = View.GONE
+        }
         holder.setText(R.id.time, TimeUtils.date2String(TimeUtils.string2Date(item?.updated_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss"))
     }
 

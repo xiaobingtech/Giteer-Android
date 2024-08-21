@@ -25,17 +25,23 @@
 package com.xiaobingkj.giteer.ui
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.blankj.utilcode.util.ToastUtils
 import com.xiaobingkj.giteer.ui.login.LoginViewModel
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.ActivityMainBinding
 import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
+import me.hgj.jetpackmvvm.demo.ui.activity.ErrorActivity
+import me.hgj.jetpackmvvm.network.manager.NetState
 
 class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
     private lateinit var appBarConfiguration: AppBarConfiguration
+    var exitTime = 0L
     override fun layoutId(): Int = R.layout.activity_main
 
     override fun createObserver() {
@@ -52,6 +58,23 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(setOf(R.id.loginFragment, R.id.tabFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (navController.currentDestination != null && navController.currentDestination!!.id != R.id.tabFragment) {
+                    //如果当前界面不是主页，那么直接调用返回即可
+                    navController.navigateUp()
+                } else {
+                    //是主页
+                    if (System.currentTimeMillis() - exitTime > 2000) {
+                        ToastUtils.showShort("再按一次退出程序")
+                        exitTime = System.currentTimeMillis()
+                    } else {
+                        finish()
+                    }
+                }
+            }
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,5 +89,14 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    override fun onNetworkStateChanged(netState: NetState) {
+        super.onNetworkStateChanged(netState)
+        if (netState.isSuccess) {
+            ToastUtils.showLong("村里终于通网了")
+        }else{
+            ToastUtils.showLong("汤姆断网了")
+        }
     }
 }
