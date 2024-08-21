@@ -34,9 +34,19 @@ import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
 
 class RepoViewModel: BaseViewModel() {
-
+    val repoEvent = MutableLiveData<RepositoryBean>()
     val readMeEvent = MutableLiveData<ReadMeBean>()
     val branchEvent = MutableLiveData<List<BranchBean>>()
+
+    fun getRepo(name: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.getRepo(name)
+        }, {
+            repoEvent.postValue(it)
+        }, {
+            ToastUtils.showLong(it.errorLog)
+        })
+    }
 
     fun getRepoReadme(name: String, ref: String = "") {
         requestNoCheck({

@@ -104,6 +104,10 @@ public class RepositoryBean implements Parcelable {
     private List<?> project_labels;
     private String issue_template_source;
 
+    public RepositoryBean() {
+        super();
+    }
+
     protected RepositoryBean(Parcel in) {
         if (in.readByte() == 0) {
             id = null;

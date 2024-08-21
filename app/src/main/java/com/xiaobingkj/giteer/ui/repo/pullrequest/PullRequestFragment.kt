@@ -47,13 +47,7 @@ class PullRequestFragment : BaseVmDbFragment<BaseViewModel, FragmentTrendBinding
     override fun initView(savedInstanceState: Bundle?) {
 
         val repo: RepositoryBean? = arguments?.getParcelable("repo")
-        val repoV3: RepositoryV3Bean? = arguments?.getParcelable("repoV3")
-        var name = ""
-        if (repo != null) {
-            name = repo.full_name
-        }else{
-            name = repoV3!!.path_with_namespace
-        }
+        var name = repo!!.full_name
 
         mActivity.supportActionBar?.title = "PullRequest"
 

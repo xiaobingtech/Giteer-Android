@@ -179,5 +179,11 @@ class HttpRequestManager {
             .await()
     }
 
+    suspend fun getRepo(name: String): RepositoryBean {
+        return RxHttp.get("api/v5/repos/${name}")
+            .toAwait<RepositoryBean>()
+            .await()
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.xiaobingkj.giteer.ui.event
 
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextMenu
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentEventBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
 import me.hgj.jetpackmvvm.ext.nav
+import me.hgj.jetpackmvvm.ext.util.TAG
 
 class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
     private val adapter = EventAdapter()
@@ -61,6 +63,15 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = adapter
+
+        adapter.onAutoLinkClick = {
+            Log.d(TAG, it.transformedText)
+            if (it.transformedText.contains("/")) {
+                val bundle = Bundle()
+                bundle.putString("name", it.transformedText.substring(1, it.transformedText.length))
+                nav().navigate(R.id.repoFragment, bundle)
+            }
+        }
 
         val loadMoreListener = object: OnRefreshLoadMoreListener {
             override fun onRefresh(refreshLayout: RefreshLayout) {

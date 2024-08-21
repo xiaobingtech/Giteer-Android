@@ -69,7 +69,7 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
             ) {
                 val bundle = Bundle()
                 val repo = adapter.getItem(position)
-                bundle.putParcelable("repo", repo)
+                bundle.putString("name", repo?.full_name)
                 nav().navigate(R.id.repoFragment, bundle)
             }
 

@@ -51,12 +51,7 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
 
     override fun initView(savedInstanceState: Bundle?) {
         val repo: RepositoryBean? = arguments?.getParcelable("repo")
-        val repoV3: RepositoryV3Bean?  = arguments?.getParcelable("repoV3")
-        if (repo != null) {
-            name = repo.full_name
-        }else{
-            name = repoV3!!.path_with_namespace
-        }
+        name = repo!!.full_name
         mActivity.supportActionBar?.title = "提交"
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
