@@ -86,7 +86,7 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
         mDatabind.click = ProxyClick()
         name = arguments?.getString("name")!!
         mViewModel.getRepo(name)
-        setHasOptionsMenu(false)
+        setHasOptionsMenu(true)
 
     }
 
@@ -96,6 +96,11 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
 
     override fun showLoading(message: String) {
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     inner class ProxyClick() {

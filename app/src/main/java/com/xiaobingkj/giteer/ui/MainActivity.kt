@@ -55,13 +55,13 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         setSupportActionBar(mDatabind.toolbar)
 
-        mDatabind.appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            if (Math.abs(verticalOffset) - mDatabind.appbar.totalScrollRange == 0) {
-                supportActionBar?.setDisplayShowTitleEnabled(false)
-            }else{
-                supportActionBar?.setDisplayShowTitleEnabled(true)
-            }
-        }
+//        mDatabind.appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+//            if (Math.abs(verticalOffset) - mDatabind.appbar.totalScrollRange == 0) {
+//                supportActionBar?.setDisplayShowTitleEnabled(false)
+//            }else{
+//                supportActionBar?.setDisplayShowTitleEnabled(true)
+//            }
+//        }
 
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(setOf(R.id.loginFragment, R.id.tabFragment))

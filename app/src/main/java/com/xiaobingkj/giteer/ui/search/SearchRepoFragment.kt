@@ -2,6 +2,7 @@ package com.xiaobingkj.giteer.ui.search
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
@@ -46,6 +47,11 @@ class SearchRepoFragment : BaseVmDbFragment<SearchRepoViewModel, FragmentSearchR
     override fun initView(savedInstanceState: Bundle?) {
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+
+        // 创建DividerItemDecoration并设置为水平分割线
+        val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
+        listView.addItemDecoration(dividerItemDecoration)
+
         listView.adapter = adapter
 
         val loadMoreListener = object: OnRefreshLoadMoreListener {

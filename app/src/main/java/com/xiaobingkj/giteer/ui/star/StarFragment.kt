@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -47,6 +48,11 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
         mActivity.supportActionBar?.title = "星标"
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+
+        // 创建DividerItemDecoration并设置为水平分割线
+        val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
+        listView.addItemDecoration(dividerItemDecoration)
+
         listView.adapter = adapter
         
         val loadMoreListener = object: OnRefreshLoadMoreListener {

@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -62,6 +63,11 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
 
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+
+        // 创建DividerItemDecoration并设置为水平分割线
+        val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
+        listView.addItemDecoration(dividerItemDecoration)
+
         listView.adapter = adapter
 
         adapter.onAutoLinkClick = {
@@ -119,6 +125,7 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
         inflater.inflate(R.menu.menu_event, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }

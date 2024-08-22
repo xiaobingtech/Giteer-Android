@@ -36,6 +36,7 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -79,6 +80,8 @@ class ReleaseDetailFragment : BaseVmDbFragment<BaseViewModel, FragmentReleaseDet
 
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+        val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
+        listView.addItemDecoration(dividerItemDecoration)
         listView.adapter = adapter
 
         adapter.addAll(bean!!.assets)

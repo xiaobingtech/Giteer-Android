@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -51,6 +52,10 @@ class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, Fragme
     override fun initView(savedInstanceState: Bundle?) {
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+
+        val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
+        listView.addItemDecoration(dividerItemDecoration)
+
         listView.adapter = adapter
 
         val loadMoreListener = object: OnRefreshLoadMoreListener {

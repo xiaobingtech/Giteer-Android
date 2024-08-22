@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -55,6 +56,8 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
         mActivity.supportActionBar?.title = "提交"
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+        val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
+        listView.addItemDecoration(dividerItemDecoration)
         listView.adapter = adapter
 
         val loadMoreListener = object: OnRefreshLoadMoreListener {
