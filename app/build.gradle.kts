@@ -44,6 +44,14 @@ android {
             this.enableV1Signing = true
             this.enableV2Signing = true
         }
+        create("release") {
+            storeFile = file("../keystore.jks")
+            storePassword = "910529"
+            keyAlias = "key"
+            keyPassword = "910529"
+            this.enableV1Signing = true
+            this.enableV2Signing = true
+        }
     }
     buildTypes {
         release {

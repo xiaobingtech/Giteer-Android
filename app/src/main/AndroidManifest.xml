@@ -60,11 +60,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode|keyboard|navigation"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".MainFragment"
-            android:configChanges="orientation|keyboardHidden|screenSize|uiMode|keyboard|navigation"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"></activity>
 
         <activity android:name="com.ycbjie.webviewlib.view.X5WebViewActivity" android:exported="true"/>
         <meta-data
