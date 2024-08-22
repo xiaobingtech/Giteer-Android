@@ -25,6 +25,7 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
     private val adapter = CommitAdapter()
     private var page: Int = 1
     private var name = ""
+    private var ref = ""
     override fun layoutId(): Int = R.layout.fragment_star
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
@@ -52,6 +53,7 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
 
     override fun initView(savedInstanceState: Bundle?) {
         val repo: RepositoryBean? = arguments?.getParcelable("repo")
+        ref = arguments?.getString("ref")!!
         name = repo!!.full_name
         mActivity.supportActionBar?.title = "提交"
         val listView = mDatabind.listView
@@ -89,12 +91,12 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
 
     fun headerRefresh() {
         page = 1
-        mViewModel.getCommits(name, page)
+        mViewModel.getCommits(name, ref, page)
     }
 
     fun footerRefresh() {
         page = page + 1
-        mViewModel.getCommits(name, page)
+        mViewModel.getCommits(name, ref, page)
     }
 
     override fun onResume() {

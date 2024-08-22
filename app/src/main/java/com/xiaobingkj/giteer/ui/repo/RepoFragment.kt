@@ -13,8 +13,11 @@ import androidx.appcompat.app.AlertDialog
 import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.bumptech.glide.Glide
+import com.kingja.loadsir.core.LoadService
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
+import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showLoading
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentRepoBinding
 import io.noties.markwon.Markwon
@@ -28,8 +31,11 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
     private var repo: RepositoryBean? = null
     private var ref: String = ""
     override fun layoutId(): Int = R.layout.fragment_repo
+    //界面状态管理者
+    private lateinit var loadsir: LoadService<Any>
     override fun createObserver() {
         mViewModel.repoEvent.observe(viewLifecycleOwner) {
+            loadsir.showSuccess()
             repo = it
             ref = it.default_branch
 
@@ -69,10 +75,10 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             val listener = object:DialogInterface.OnClickListener{
                 override fun onClick(dialog: DialogInterface?, which: Int) {
                     ref = it.get(which).name
+                    mViewModel.getRepoReadme(name, ref)
                 }
-
             }
-            dialog.setSingleChoiceItems(it.map { it.name }.toTypedArray(), 0, listener)
+            dialog.setSingleChoiceItems(it.map { it.name }.toTypedArray(), it.indexOfFirst { it.name == ref }, listener)
             dialog.setPositiveButton("确定", null)
             dialog.show()
         }
@@ -85,13 +91,23 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         mDatabind.click = ProxyClick()
         name = arguments?.getString("name")!!
-        mViewModel.getRepo(name)
+
         setHasOptionsMenu(true)
 
+        loadsir = loadServiceInit(mDatabind.scrollView) {
+            //点击重试时触发的操作
+            requestData()
+        }
+    }
+
+    fun requestData() {
+        loadsir.showLoading()
+        mViewModel.getRepo(name)
     }
 
     override fun lazyLoadData() {
-
+        loadsir.showLoading()
+        mViewModel.getRepo(name)
     }
 
     override fun showLoading(message: String) {
@@ -130,6 +146,7 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
         }
         fun toCommit() {
             val bundle = Bundle()
+            bundle.putString("ref", ref)
             bundle.putParcelable("repo", repo)
             nav().navigate(R.id.commitFragment, bundle)
         }

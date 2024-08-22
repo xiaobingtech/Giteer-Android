@@ -54,7 +54,7 @@ class RepoViewModel: BaseViewModel() {
         }, {
             readMeEvent.postValue(it)
         }, {
-            ToastUtils.showLong(it.errorLog)
+//            ToastUtils.showLong(it.errorLog)
         })
     }
 

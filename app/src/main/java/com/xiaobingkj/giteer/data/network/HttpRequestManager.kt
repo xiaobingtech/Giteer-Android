@@ -157,8 +157,9 @@ class HttpRequestManager {
             .await()
     }
     //https://gitee.com/api/v5/repos/GiteerApp/GiteerAndroid/commits?access_token=f6ea55ecc1106afaf9a985aea700334b&page=1&per_page=20
-    suspend fun getCommits(name: String, page: Int, perpage: Int = 100): MutableList<CommitBean> {
+    suspend fun getCommits(name: String, sha: String, page: Int, perpage: Int = 100): MutableList<CommitBean> {
         return RxHttp.get("api/v5/repos/${name}/commits")
+            .add("sha", sha)
             .add("page", page)
             .add("per_page", perpage)
             .toAwaitList<CommitBean>()

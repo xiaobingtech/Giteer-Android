@@ -25,6 +25,16 @@ package com.xiaobingkj.giteer.data.model;
 
 public class ReadMeBean {
 
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     private String type;
     private String encoding;
     private Integer size;

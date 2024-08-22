@@ -37,9 +37,9 @@ class CommitViewModel: BaseViewModel() {
     val commitEvent = MutableLiveData<List<CommitBean>>()
     val errorEvent = MutableLiveData<AppException>()
 
-    fun getCommits(name: String, page: Int, perpage: Int = 100) {
+    fun getCommits(name: String, sha: String, page: Int, perpage: Int = 100) {
         requestNoCheck({
-            HttpRequestCoroutine.getCommits(name, page)
+            HttpRequestCoroutine.getCommits(name, sha, page)
         }, {
             commitEvent.postValue(it)
         }, {
