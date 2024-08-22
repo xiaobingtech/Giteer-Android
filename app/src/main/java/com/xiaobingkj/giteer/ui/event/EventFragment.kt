@@ -15,9 +15,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.kingja.loadsir.core.LoadService
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.RepositoryBean
+import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showLoading
 import com.xiaobingkj.giteer.ui.star.StarAdapter
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentEventBinding
@@ -30,6 +33,10 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
     private var prev_id: Int = 0
     private var menuIndex: Int = 0
     override fun layoutId(): Int = R.layout.fragment_event
+
+    //界面状态管理者
+    private lateinit var loadsir: LoadService<Any>
+
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
             ToastUtils.showLong(it.errorLog)
@@ -37,6 +44,7 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.eventEvent.observe(viewLifecycleOwner, Observer {
+            loadsir.showSuccess()
             if (prev_id == 0) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
@@ -63,6 +71,11 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
 
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+
+        loadsir = loadServiceInit(mDatabind.refreshLayout) {
+            //点击重试时触发的操作
+            headerRefresh()
+        }
 
         // 创建DividerItemDecoration并设置为水平分割线
         val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
@@ -93,6 +106,9 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
     }
 
     fun headerRefresh() {
+        if (adapter.itemCount == 0) {
+            loadsir.showLoading()
+        }
         prev_id = 0
         if (menuIndex == 0) {
             mViewModel.getReceiveEvents(prev_id)
@@ -113,11 +129,10 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
     override fun onResume() {
         super.onResume()
         mActivity.supportActionBar?.title = "动态"
-        headerRefresh()
     }
 
     override fun lazyLoadData() {
-
+        headerRefresh()
     }
 
     override fun showLoading(message: String) {

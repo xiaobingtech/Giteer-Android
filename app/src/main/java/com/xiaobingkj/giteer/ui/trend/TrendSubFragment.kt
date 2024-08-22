@@ -9,11 +9,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.kingja.loadsir.core.LoadService
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
+import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showLoading
 import com.xiaobingkj.giteer.ui.star.StarAdapter
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentTrendSubBinding
@@ -25,12 +28,15 @@ class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, Fragme
     private val adapter = TrendSubAdapter()
     private var page: Int = 1
     override fun layoutId(): Int = R.layout.fragment_trend_sub
+    //界面状态管理者
+    private lateinit var loadsir: LoadService<Any>
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
             mDatabind.refreshLayout.finishRefresh()
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.repoEvent.observe(this, Observer {
+            loadsir.showSuccess()
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
@@ -52,6 +58,11 @@ class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, Fragme
     override fun initView(savedInstanceState: Bundle?) {
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+
+        loadsir = loadServiceInit(mDatabind.refreshLayout) {
+            //点击重试时触发的操作
+            headerRefresh()
+        }
 
         val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
         listView.addItemDecoration(dividerItemDecoration)
@@ -87,6 +98,9 @@ class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, Fragme
     }
 
     fun headerRefresh() {
+        if (adapter.itemCount == 0) {
+            loadsir.showLoading()
+        }
         page = 1
         mViewModel.getTrendRepositories(url, page)
     }

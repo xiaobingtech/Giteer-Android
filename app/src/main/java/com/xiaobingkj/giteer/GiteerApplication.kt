@@ -27,10 +27,15 @@ package com.xiaobingkj.giteer
 import android.app.Application
 import android.util.Log
 import cat.ereza.customactivityoncrash.config.CaocConfig
+import com.kingja.loadsir.callback.SuccessCallback
+import com.kingja.loadsir.core.LoadSir
 import com.tencent.mmkv.MMKV
 import com.xiaobingkj.giteer.data.network.RxHttpManager
 import com.xiaobingkj.giteer.ui.MainActivity
 import com.ycbjie.webviewlib.utils.X5WebUtils
+import me.hgj.jetpackmvvm.demo.app.weight.loadCallBack.EmptyCallback
+import me.hgj.jetpackmvvm.demo.app.weight.loadCallBack.ErrorCallback
+import me.hgj.jetpackmvvm.demo.app.weight.loadCallBack.LoadingCallback
 import me.hgj.jetpackmvvm.demo.ui.activity.ErrorActivity
 
 
@@ -64,5 +69,13 @@ class GiteerApplication: Application() {
             .restartActivity(MainActivity::class.java) // 重启的activity
             .errorActivity(ErrorActivity::class.java) //发生错误跳转的activity
             .apply()
+
+        //界面加载管理 初始化
+        LoadSir.beginBuilder()
+            .addCallback(LoadingCallback())//加载
+            .addCallback(ErrorCallback())//错误
+            .addCallback(EmptyCallback())//空
+            .setDefaultCallback(SuccessCallback::class.java)//设置默认加载状态页
+            .commit()
     }
 }

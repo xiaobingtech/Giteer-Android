@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
+import com.kingja.loadsir.core.LoadService
 import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.storage.Storage
+import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showLoading
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentUserBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
@@ -18,11 +21,15 @@ import me.hgj.jetpackmvvm.ext.nav
 class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
     override fun layoutId(): Int = R.layout.fragment_user
     private var user: UserBean? = null
+    private var name: String = ""
+    //界面状态管理者
+    private lateinit var loadsir: LoadService<Any>
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
             ToastUtils.showLong(it.errorLog)
         }
         mViewModel.userEvent.observe(viewLifecycleOwner) {
+            loadsir.showSuccess()
             user = it
             mActivity.supportActionBar?.title = it.name
             val avatar = mDatabind.avatar
@@ -34,7 +41,9 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
             mDatabind.name.text = it.name
             mDatabind.desc.text = it.bio
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(it.created_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss") + "加入"
-            mDatabind.emailAddress.text = it.email
+            if (it.email != null) {
+                mDatabind.emailAddress.text = it.email
+            }
             mDatabind.repoNum.text = it.public_repos.toString()
             mDatabind.followerNum.text = it.followers.toString()
             mDatabind.followNum.text = it.following.toString()
@@ -46,9 +55,22 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        val name = arguments?.getString("name")
-        mViewModel.getUser(name!!)
+        name = arguments?.getString("name")!!
         mDatabind.click = ProxyClick()
+
+        loadsir = loadServiceInit(mDatabind.layout) {
+            //点击重试时触发的操作
+            requestData()
+        }
+
+        requestData()
+    }
+
+    fun requestData() {
+        if (user == null) {
+            loadsir.showLoading()
+        }
+        mViewModel.getUser(name!!)
     }
 
     override fun lazyLoadData() {
