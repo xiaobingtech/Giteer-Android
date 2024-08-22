@@ -5,22 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import cn.carbs.android.avatarimageview.library.AvatarImageView
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.xiaobingkj.giteer.data.storage.Storage
 import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.FragmentMeBinding
+import io.github.rosemoe.sora.app.databinding.FragmentUserBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
 
-class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
-    override fun layoutId(): Int = R.layout.fragment_me
+class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
+    override fun layoutId(): Int = R.layout.fragment_user
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
             ToastUtils.showLong(it.errorLog)
         }
         mViewModel.userEvent.observe(viewLifecycleOwner) {
+            mActivity.supportActionBar?.title = it.name
             val avatar = mDatabind.avatar
             if (it.avatar_url.equals("https://gitee.com/assets/no_portrait.png")) {
                 avatar.setTextAndColor(it.name.substring(0, 1), R.color.gray)
@@ -34,7 +34,6 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
             mDatabind.repoNum.text = it.public_repos.toString()
             mDatabind.followerNum.text = it.followers.toString()
             mDatabind.followNum.text = it.following.toString()
-            Storage.user = it
         }
     }
 
@@ -43,8 +42,8 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        mActivity.supportActionBar?.title = "我的"
-        mViewModel.getUser()
+        val name = arguments?.getString("name")
+        mViewModel.getUser(name!!)
     }
 
     override fun lazyLoadData() {
@@ -53,11 +52,6 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
 
     override fun showLoading(message: String) {
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mActivity.supportActionBar?.title = "我的"
     }
 
 }

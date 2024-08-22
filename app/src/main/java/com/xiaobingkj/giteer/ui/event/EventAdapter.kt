@@ -51,55 +51,55 @@ class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
             Glide.with(holder.itemView).load(item?.actor?.avatar_url).into(avatar)
         }
         var content: String = ""
-        var custom: MODE_CUSTOM = MODE_CUSTOM("\\s${item?.actor?.name}\\b")
+        var custom: MODE_CUSTOM = MODE_CUSTOM("${item?.actor?.name}\\b")
         when (item?.type) {
             "PushEvent" -> {
                 if (item.payload.commits.size > 0) {
                     content = "${item.actor.name} 推送到了分支 ${item.repo.full_name} 的 ${item.payload.ref.split("/").last()} 分支 ${item.payload.commits.first().sha.substring(0, 7)} ${item.payload.commits.first().message}"
-                    custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.repo.full_name}\\b", "\\s${item.payload.commits.first().sha.substring(0, 7)}\\b", "\\s${item.payload.commits.first().message}\\b")
+                    custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b", "${item.payload.commits.first().sha.substring(0, 7)}\\b", "${item.payload.commits.first().message}\\b")
                 }else{
                     content = "${item.actor.name} 推送到了分支 ${item.repo.full_name} 的 ${item.payload.ref.split("/").last()} 分支"
-                    custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.repo.full_name}\\b", "\\s${item.payload.ref.split("/").last()}\\b")
+                    custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b", "${item.payload.ref.split("/").last()}\\b")
                 }
 
             }
             "MemberEvent" -> {
                 content = "${item.actor.name} 加入了仓库 ${item.repo.full_name}"
-                custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.repo.full_name}\\b")
+                custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b")
             }
             "CreateEvent" -> {
                 if (item.payload.ref_type.equals("branch")) {
                     content = "${item.actor.name} 创建了仓库 ${item.repo.full_name} 的 ${item.payload.ref} 分支"
-                    custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.repo.full_name}\\b", "\\s${item.payload.ref}\\b")
+                    custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b", "${item.payload.ref}\\b")
                 }else{
                     content = "${item.actor.name} 创建了仓库 ${item.repo.full_name}"
-                    custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.repo.full_name}\\b")
+                    custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b")
                 }
 
             }
             "IssueCommentEvent" -> {
                 content = "${item.actor.name} 发表了新的任务评论"
-                custom = MODE_CUSTOM("\\s${item.actor.name}\\b")
+                custom = MODE_CUSTOM("${item.actor.name}\\b")
             }
             "StarEvent" -> {
                 content = "${item.actor.name} Star了仓库 ${item.repo.full_name}"
-                custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.repo.full_name}\\b")
+                custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b")
             }
             "ForkEvent" -> {
                 content = "${item.actor.name} Fork了仓库 ${item.repo.full_name}"
-                custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.repo.full_name}\\b")
+                custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b")
             }
             "FollowEvent" -> {
                 content = "${item.actor.name} 关注了 ${item.payload.target.name}"
-                custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.payload.target.name}\\b")
+                custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.payload.target.name}\\b")
             }
             "PullRequestEvent" -> {
                 content = "${item.actor.name} ${item.payload.action} 了Pull Request ${item.repo.full_name} 的 ${item.payload.title} ${item.payload.head.user.name}:${item.payload.head.ref} -> ${item.payload.base.user.name}:${item.payload.base.ref}"
-                custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.repo.full_name}\\b", "\\s${item.payload.title}\\b", "\\s${item.payload.user.name}\\b", "\\s${item.payload.head.ref}\\b", "\\s${item.payload.base.user.name}\\b", "\\s${item.payload.base.ref}\\b")
+                custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b", "${item.payload.title}\\b", "${item.payload.user.name}\\b", "${item.payload.head.ref}\\b", "${item.payload.base.user.name}\\b", "${item.payload.base.ref}\\b")
             }
             "PullRequestCommentEvent" -> {
                 content = "${item.actor.name} 发表了新的Pull Request评论 ${item.payload.repository.full_name} 的 ${item.payload.pull_request.title} ${item.payload.comment.body}"
-                custom = MODE_CUSTOM("\\s${item.actor.name}\\b", "\\s${item.payload.repository.full_name}\\b", "\\s${item.payload.pull_request.title}\\b", "\\s${item.payload.comment.body}\\b")
+                custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.payload.repository.full_name}\\b", "${item.payload.pull_request.title}\\b", "${item.payload.comment.body}\\b")
             }
             else -> {}
         }

@@ -185,5 +185,11 @@ class HttpRequestManager {
             .await()
     }
 
+    suspend fun getUser(name: String): UserBean {
+        return RxHttp.get("api/v5/users/${name}")
+            .toAwait<UserBean>()
+            .await()
+    }
+
 
 }

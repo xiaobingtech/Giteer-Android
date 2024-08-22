@@ -1,3 +1,27 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~    sora-editor - the awesome code editor for Android
+  ~    https://github.com/Rosemoe/sora-editor
+  ~    Copyright (C) 2020-2024  Rosemoe
+  ~
+  ~     This library is free software; you can redistribute it and/or
+  ~     modify it under the terms of the GNU Lesser General Public
+  ~     License as published by the Free Software Foundation; either
+  ~     version 2.1 of the License, or (at your option) any later version.
+  ~
+  ~     This library is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ~     Lesser General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Lesser General Public
+  ~     License along with this library; if not, write to the Free Software
+  ~     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
+  ~     USA
+  ~
+  ~     Please contact Rosemoe by email 2073412493@qq.com if you need
+  ~     additional information or have any questions
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
@@ -81,8 +105,8 @@
                             android:layout_height="wrap_content"
                             ></TextView>
                         <TextView
-                            android:id="@+id/repoNum"
                             android:text="0"
+                            android:id="@+id/repoNum"
                             android:textSize="@dimen/secondary_text_size"
                             android:gravity="center"
                             android:layout_width="match_parent"
@@ -145,7 +169,7 @@
                     app:layout_constraintTop_toBottomOf="@id/view_first">
                     <TextView
                         android:layout_marginLeft="@dimen/margin_left"
-                        android:text="消息通知"
+                        android:text="私信"
                         android:textSize="@dimen/primary_text_size"
                         android:gravity="center_vertical"
                         android:layout_weight="1"
@@ -202,33 +226,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     ></View>
-                <LinearLayout
-                    android:id="@+id/setting"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/view_first">
-                    <TextView
-                        android:layout_marginLeft="@dimen/margin_left"
-                        android:text="设置"
-                        android:textSize="@dimen/primary_text_size"
-                        android:gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"></TextView>
-                    <com.github.johnkil.print.PrintView
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_right"
-                        app:iconText="@string/ic_keyboard_arrow_right"
-                        app:iconColor="#12558C"
-                        app:iconFont="fonts/material-icon-font.ttf"
-                        android:layout_gravity="center_vertical"
-                        app:iconSize="20dp" />
-                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

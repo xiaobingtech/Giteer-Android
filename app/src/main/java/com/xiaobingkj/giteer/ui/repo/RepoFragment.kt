@@ -45,7 +45,7 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             mDatabind.name.text = it.human_name
             mDatabind.desc.text = it.description
             mDatabind.time.text = TimeUtils.date2String(TimeUtils.string2Date(it.updated_at, "yyyy-MM-dd'T'HH:mm:ssXXX"), "yyyy-MM-dd HH:mm:ss")
-            if (it.description.isEmpty()) {
+            if (it.description == null) {
                 mDatabind.desc.visibility = View.GONE
             }
             mViewModel.getRepoReadme(name, ref)
@@ -129,7 +129,9 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             nav().navigate(R.id.commitFragment, bundle)
         }
         fun toUser() {
-
+            val bundle = Bundle()
+            bundle.putString("name", repo?.owner?.login)
+            nav().navigate(R.id.userFragment, bundle)
         }
     }
 

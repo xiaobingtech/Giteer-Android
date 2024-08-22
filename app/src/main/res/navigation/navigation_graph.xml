@@ -53,7 +53,11 @@
         android:id="@+id/eventFragment"
         android:name="com.xiaobingkj.giteer.ui.event.EventFragment"
         android:label="fragment_event"
-        tools:layout="@layout/fragment_event" />
+        tools:layout="@layout/fragment_event" >
+        <action
+            android:id="@+id/action_eventFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+    </fragment>
     <fragment
         android:id="@+id/starFragment"
         android:name="com.xiaobingkj.giteer.ui.star.StarFragment"
@@ -77,7 +81,11 @@
     <fragment
         android:id="@+id/searchUserFragment"
         android:name="com.xiaobingkj.giteer.ui.search.SearchUserFragment"
-        android:label="SearchUserFragment" />
+        android:label="SearchUserFragment" >
+        <action
+            android:id="@+id/action_searchUserFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+    </fragment>
     <fragment
         android:id="@+id/meFragment"
         android:name="com.xiaobingkj.giteer.ui.me.MeFragment"
@@ -94,7 +102,7 @@
     <fragment
         android:id="@+id/repoFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.RepoFragment"
-        android:label="RepoFragment" >
+        android:label="加载中..." >
         <action
             android:id="@+id/action_repoFragment_to_repoTreeFragment"
             app:destination="@id/repoTreeFragment" />
@@ -110,6 +118,9 @@
         <action
             android:id="@+id/action_repoFragment_to_pullRequestFragment"
             app:destination="@id/pullRequestFragment" />
+        <action
+            android:id="@+id/action_repoFragment_to_userFragment"
+            app:destination="@id/userFragment" />
     </fragment>
     <fragment
         android:id="@+id/repoTreeFragment"
@@ -165,4 +176,8 @@
         android:id="@+id/pullRequestFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.pullrequest.PullRequestFragment"
         android:label="PullRequestFragment" />
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.xiaobingkj.giteer.ui.me.UserFragment"
+        android:label="加载中..." />
 </navigation>

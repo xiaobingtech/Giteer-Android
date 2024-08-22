@@ -68,7 +68,7 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
             Log.d(TAG, it.transformedText)
             if (it.transformedText.contains("/")) {
                 val bundle = Bundle()
-                bundle.putString("name", it.transformedText.substring(1, it.transformedText.length))
+                bundle.putString("name", it.transformedText)
                 nav().navigate(R.id.repoFragment, bundle)
             }
         }
