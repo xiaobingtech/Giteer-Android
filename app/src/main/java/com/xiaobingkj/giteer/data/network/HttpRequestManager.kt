@@ -206,5 +206,21 @@ class HttpRequestManager {
             .toAwaitList<RepositoryBean>()
             .await()
     }
+    //https://gitee.com/api/v5/user/
+    suspend fun getMyUserList(isFollower: Boolean, page: Int, perpage: Int = 100): MutableList<UserBean> {
+        return RxHttp.get("api/v5/user/${if (isFollower) {"followers"} else {"following"}}")
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<UserBean>()
+            .await()
+    }
+    //https://gitee.com/api/v5/users/{username}/
+    suspend fun getUserUserList(isFollower: Boolean, name: String, page: Int, perpage: Int = 100): MutableList<UserBean> {
+        return RxHttp.get("api/v5/users/${name}/${if (isFollower) {"followers"} else {"following"}}")
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<UserBean>()
+            .await()
+    }
 
 }

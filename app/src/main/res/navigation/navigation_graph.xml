@@ -94,6 +94,9 @@
         <action
             android:id="@+id/action_meFragment_to_repoListFragment"
             app:destination="@id/repoListFragment" />
+        <action
+            android:id="@+id/action_meFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
     </fragment>
     <fragment
         android:id="@+id/trendSubFragment"
@@ -187,6 +190,9 @@
         <action
             android:id="@+id/action_userFragment_to_repoListFragment"
             app:destination="@id/repoListFragment" />
+        <action
+            android:id="@+id/action_userFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
     </fragment>
     <fragment
         android:id="@+id/repoListFragment"
@@ -196,4 +202,8 @@
             android:id="@+id/action_repoListFragment_to_repoFragment"
             app:destination="@id/repoFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.xiaobingkj.giteer.ui.me.UserListFragment"
+        android:label="UserListFragment" />
 </navigation>

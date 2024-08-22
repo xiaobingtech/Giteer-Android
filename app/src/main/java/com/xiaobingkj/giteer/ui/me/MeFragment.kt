@@ -9,6 +9,7 @@ import cn.carbs.android.avatarimageview.library.AvatarImageView
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
+import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.storage.Storage
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentMeBinding
@@ -17,11 +18,13 @@ import me.hgj.jetpackmvvm.ext.nav
 
 class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
     override fun layoutId(): Int = R.layout.fragment_me
+    private var user: UserBean? = null
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
             ToastUtils.showLong(it.errorLog)
         }
         mViewModel.userEvent.observe(viewLifecycleOwner) {
+            user = it
             val avatar = mDatabind.avatar
             if (it.avatar_url.equals("https://gitee.com/assets/no_portrait.png")) {
                 avatar.setTextAndColor(it.name.substring(0, 1), R.color.gray)
@@ -67,6 +70,19 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
             val bundle = Bundle()
             bundle.putString("type", "my")
             nav().navigate(R.id.repoListFragment, bundle)
+        }
+        fun toFollower() {
+            val bundle = Bundle()
+            bundle.putString("type", "my")
+            bundle.putString("action", "follower")
+            nav().navigate(R.id.userListFragment, bundle)
+        }
+
+        fun toFollowing() {
+            val bundle = Bundle()
+            bundle.putString("type", "my")
+            bundle.putString("action", "following")
+            nav().navigate(R.id.userListFragment, bundle)
         }
     }
 

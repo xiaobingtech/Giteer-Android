@@ -124,7 +124,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:onClick="@{() -> click.toFollower()}">
                         <TextView
                             android:text="关注者"
                             android:textSize="@dimen/secondary_text_size"
@@ -145,7 +146,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:onClick="@{() -> click.toFollowing()}"
+                        >
                         <TextView
                             android:text="关注"
                             android:textSize="@dimen/secondary_text_size"

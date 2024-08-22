@@ -66,6 +66,22 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
             bundle.putString("name", user?.login)
             nav().navigate(R.id.repoListFragment, bundle)
         }
+
+        fun toFollower() {
+            val bundle = Bundle()
+            bundle.putString("type", "user")
+            bundle.putString("action", "follower")
+            bundle.putString("name", user?.login)
+            nav().navigate(R.id.userListFragment, bundle)
+        }
+
+        fun toFollowing() {
+            val bundle = Bundle()
+            bundle.putString("type", "user")
+            bundle.putString("action", "following")
+            bundle.putString("name", user?.login)
+            nav().navigate(R.id.userListFragment, bundle)
+        }
     }
 
 }
