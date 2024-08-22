@@ -13,6 +13,7 @@ import com.xiaobingkj.giteer.data.storage.Storage
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentMeBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
+import me.hgj.jetpackmvvm.ext.nav
 
 class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
     override fun layoutId(): Int = R.layout.fragment_me
@@ -44,6 +45,7 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         mActivity.supportActionBar?.title = "我的"
+        mDatabind.click = ProxyClick()
         mViewModel.getUser()
     }
 
@@ -58,6 +60,14 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
     override fun onResume() {
         super.onResume()
         mActivity.supportActionBar?.title = "我的"
+    }
+
+    inner class ProxyClick() {
+        fun toRepoList() {
+            val bundle = Bundle()
+            bundle.putString("type", "my")
+            nav().navigate(R.id.repoListFragment, bundle)
+        }
     }
 
 }

@@ -24,6 +24,11 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="click"
+            type="com.xiaobingkj.giteer.ui.me.UserFragment.ProxyClick" />
+    </data>
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -96,7 +101,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:onClick="@{() -> click.toRepoList()}"
+                        >
                         <TextView
                             android:text="仓库"
                             android:textSize="@dimen/secondary_text_size"

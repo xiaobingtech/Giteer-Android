@@ -190,6 +190,21 @@ class HttpRequestManager {
             .toAwait<UserBean>()
             .await()
     }
-
+    //https://gitee.com/api/v5/user/repos
+    suspend fun getMyRepoList(page: Int, perpage: Int = 100): MutableList<RepositoryBean> {
+        return RxHttp.get("api/v5/user/repos")
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<RepositoryBean>()
+            .await()
+    }
+    //https://gitee.com/api/v5/users/{username}/repos
+    suspend fun getUserRepoList(name: String, page: Int, perpage: Int = 100): MutableList<RepositoryBean> {
+        return RxHttp.get("api/v5/users/${name}/repos")
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<RepositoryBean>()
+            .await()
+    }
 
 }

@@ -1,13 +1,18 @@
 package com.xiaobingkj.giteer.ui.search
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.chad.library.adapter4.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
+import com.xiaobingkj.giteer.data.model.RepositoryBean
+import com.xiaobingkj.giteer.data.model.UserBean
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentSearchUserBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
+import me.hgj.jetpackmvvm.ext.nav
 
 class SearchUserFragment : BaseVmDbFragment<SearchUserViewModel, FragmentSearchUserBinding>() {
     override fun layoutId(): Int = R.layout.fragment_search_user
@@ -58,6 +63,20 @@ class SearchUserFragment : BaseVmDbFragment<SearchUserViewModel, FragmentSearchU
 
         }
         mDatabind.refreshLayout.setOnRefreshLoadMoreListener(loadMoreListener)
+        val itemClickListener = object : BaseQuickAdapter.OnItemClickListener<UserBean> {
+            override fun onClick(
+                adapter: BaseQuickAdapter<UserBean, *>,
+                view: View,
+                position: Int
+            ) {
+                val bundle = Bundle()
+                val user = adapter.getItem(position)
+                bundle.putString("name", user?.login)
+                nav().navigate(R.id.userFragment, bundle)
+            }
+
+        }
+        adapter.setOnItemClickListener(itemClickListener)
     }
 
     fun headerRefresh() {

@@ -1,4 +1,4 @@
-package com.xiaobingkj.giteer.ui.trend
+package com.xiaobingkj.giteer.ui.me
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,32 +10,32 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
-import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
-import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.ui.star.StarAdapter
 import io.github.rosemoe.sora.app.R
-import io.github.rosemoe.sora.app.databinding.FragmentTrendSubBinding
+import io.github.rosemoe.sora.app.databinding.FragmentRepoListBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
 import me.hgj.jetpackmvvm.ext.nav
 
-class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, FragmentTrendSubBinding>() {
-    private val url = url
-    private val adapter = TrendSubAdapter()
+
+class RepoListFragment : BaseVmDbFragment<RepoListViewModel, FragmentRepoListBinding>() {
+    private val adapter = StarAdapter()
     private var page: Int = 1
-    override fun layoutId(): Int = R.layout.fragment_trend_sub
+    private var type: String = ""
+    private var name: String? = ""
+    override fun layoutId(): Int = R.layout.fragment_repo_list
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
             mDatabind.refreshLayout.finishRefresh()
             mDatabind.refreshLayout.finishLoadMore()
         }
-        mViewModel.repoEvent.observe(this, Observer {
+        mViewModel.repoEvent.observe(viewLifecycleOwner, Observer {
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
             adapter.addAll(it)
             adapter.notifyDataSetChanged()
-            if (it.size < 20) {
+            if (it.size < 100) {
                 mDatabind.refreshLayout.finishLoadMoreWithNoMoreData()
             }else{
                 mDatabind.refreshLayout.finishLoadMore()
@@ -49,6 +49,9 @@ class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, Fragme
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        mActivity.supportActionBar?.title = "所有仓库"
+        type = arguments?.getString("type")!!
+        name = arguments?.getString("name")
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = adapter
@@ -65,34 +68,43 @@ class TrendSubFragment(url: String) : BaseVmDbFragment<TrendSubViewModel, Fragme
         }
         mDatabind.refreshLayout.setOnRefreshLoadMoreListener(loadMoreListener)
 
-        val onItemClickListener = object: BaseQuickAdapter.OnItemClickListener<RepositoryV3Bean> {
+        val itemClickListener = object : BaseQuickAdapter.OnItemClickListener<RepositoryBean> {
             override fun onClick(
-                adapter: BaseQuickAdapter<RepositoryV3Bean, *>,
+                adapter: BaseQuickAdapter<RepositoryBean, *>,
                 view: View,
                 position: Int
             ) {
                 val bundle = Bundle()
-                val repoV3 = adapter.getItem(position)
-                bundle.putString("name", repoV3?.path_with_namespace)
+                val repo = adapter.getItem(position)
+                bundle.putString("name", repo?.full_name)
                 nav().navigate(R.id.repoFragment, bundle)
             }
 
         }
-        adapter.setOnItemClickListener(onItemClickListener)
+        adapter.setOnItemClickListener(itemClickListener)
     }
 
     fun headerRefresh() {
         page = 1
-        mViewModel.getTrendRepositories(url, page)
+        requestData()
     }
 
     fun footerRefresh() {
         page = page + 1
-        mViewModel.getTrendRepositories(url, page)
+        requestData()
+    }
+
+    private fun requestData() {
+        when (type) {
+            "my" -> {mViewModel.getMyRepoList(page)}
+            "user" -> {mViewModel.getUserRepoList(name!!, page)}
+            else -> {}
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        mActivity.supportActionBar?.title = "所有仓库"
         headerRefresh()
     }
 

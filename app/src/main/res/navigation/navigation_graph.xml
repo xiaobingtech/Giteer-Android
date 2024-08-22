@@ -90,7 +90,11 @@
         android:id="@+id/meFragment"
         android:name="com.xiaobingkj.giteer.ui.me.MeFragment"
         android:label="fragment_me"
-        tools:layout="@layout/fragment_me" />
+        tools:layout="@layout/fragment_me" >
+        <action
+            android:id="@+id/action_meFragment_to_repoListFragment"
+            app:destination="@id/repoListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/trendSubFragment"
         android:name="com.xiaobingkj.giteer.ui.trend.TrendSubFragment"
@@ -179,5 +183,17 @@
     <fragment
         android:id="@+id/userFragment"
         android:name="com.xiaobingkj.giteer.ui.me.UserFragment"
-        android:label="加载中..." />
+        android:label="加载中..." >
+        <action
+            android:id="@+id/action_userFragment_to_repoListFragment"
+            app:destination="@id/repoListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/repoListFragment"
+        android:name="com.xiaobingkj.giteer.ui.me.RepoListFragment"
+        android:label="RepoListFragment" >
+        <action
+            android:id="@+id/action_repoListFragment_to_repoFragment"
+            app:destination="@id/repoFragment" />
+    </fragment>
 </navigation>
