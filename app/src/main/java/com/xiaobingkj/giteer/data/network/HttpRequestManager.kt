@@ -29,6 +29,7 @@ import com.xiaobingkj.giteer.data.model.BranchBean
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.IssueBean
+import com.xiaobingkj.giteer.data.model.MessageBean
 import com.xiaobingkj.giteer.data.model.PullRequestBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.ReleaseBean
@@ -223,5 +224,14 @@ class HttpRequestManager {
             .toAwaitList<UserBean>()
             .await()
     }
+    //https://gitee.com/api/v5/notifications/messages?access_token=8f4149f43360eb3660398bb24df3a4e9&unread=false&page=1&per_page=100
+    suspend fun getMessageList(page: Int, perpage: Int = 100): MessageBean {
+        return RxHttp.get("api/v5/notifications/messages")
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwait<MessageBean>()
+            .await()
+    }
+
 
 }

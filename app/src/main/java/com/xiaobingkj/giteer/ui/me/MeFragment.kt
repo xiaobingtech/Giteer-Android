@@ -104,6 +104,10 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
             bundle.putString("action", "following")
             nav().navigate(R.id.userListFragment, bundle)
         }
+
+        fun toMsg() {
+            nav().navigate(R.id.msgFragment)
+        }
     }
 
 }

@@ -150,6 +150,7 @@
                     ></View>
                 <LinearLayout
                     android:id="@+id/message"
+                    android:onClick="@{() -> click.toMsg()}"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:orientation="horizontal"

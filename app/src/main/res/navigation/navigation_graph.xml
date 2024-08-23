@@ -97,6 +97,9 @@
         <action
             android:id="@+id/action_meFragment_to_userListFragment"
             app:destination="@id/userListFragment" />
+        <action
+            android:id="@+id/action_meFragment_to_msgFragment"
+            app:destination="@id/msgFragment" />
     </fragment>
     <fragment
         android:id="@+id/trendSubFragment"
@@ -206,4 +209,8 @@
         android:id="@+id/userListFragment"
         android:name="com.xiaobingkj.giteer.ui.me.UserListFragment"
         android:label="UserListFragment" />
+    <fragment
+        android:id="@+id/msgFragment"
+        android:name="com.xiaobingkj.giteer.ui.me.message.MsgFragment"
+        android:label="MsgFragment" />
 </navigation>
