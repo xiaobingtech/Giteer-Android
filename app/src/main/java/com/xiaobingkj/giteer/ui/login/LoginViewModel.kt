@@ -26,6 +26,7 @@ package com.xiaobingkj.giteer.ui.login
 
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.model.GithubVersionBean
 import com.xiaobingkj.giteer.data.model.TokenBean
 import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
@@ -35,6 +36,7 @@ import me.hgj.jetpackmvvm.ext.requestNoCheck
 class LoginViewModel: BaseViewModel() {
     val tokenEvent = MutableLiveData<TokenBean>()
     val userEvent = MutableLiveData<UserBean>()
+    val versionEvent = MutableLiveData<List<GithubVersionBean>>()
 
     fun postOauthToken(refresh_token: String) {
         requestNoCheck({
@@ -51,6 +53,16 @@ class LoginViewModel: BaseViewModel() {
             HttpRequestCoroutine.getUser()
         }, {
             userEvent.postValue(it)
+        }, {
+            ToastUtils.showLong(it.errorLog)
+        })
+    }
+
+    fun getRelease() {
+        requestNoCheck({
+            HttpRequestCoroutine.getGithubRelease()
+        }, {
+            versionEvent.postValue(it)
         }, {
             ToastUtils.showLong(it.errorLog)
         })

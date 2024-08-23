@@ -22,14 +22,10 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.data.network
+package com.xiaobingkj.giteer.data
 
-import rxhttp.wrapper.annotation.DefaultDomain
-import rxhttp.wrapper.annotation.Domain
-
-class URL {
+class GithubVersion {
     companion object {
-        @DefaultDomain
-        val baseURL = "https://gitee.com/"
+        val latest = 34
     }
 }

@@ -24,10 +24,10 @@
 
 package com.xiaobingkj.giteer.data.network
 
-import androidx.lifecycle.MutableLiveData
 import com.xiaobingkj.giteer.data.model.BranchBean
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.EventBean
+import com.xiaobingkj.giteer.data.model.GithubVersionBean
 import com.xiaobingkj.giteer.data.model.IssueBean
 import com.xiaobingkj.giteer.data.model.IssueDetailBean
 import com.xiaobingkj.giteer.data.model.MessageBean
@@ -248,6 +248,12 @@ class HttpRequestManager {
             .add("page", page)
             .add("per_page", perpage)
             .toAwaitList<IssueDetailBean>()
+            .await()
+    }
+    //https://api.github.com/repos/xiaobingtech/sora-editor/releases
+    suspend fun getGithubRelease(): MutableList<GithubVersionBean> {
+        return RxHttp.get("https://api.github.com/repos/xiaobingtech/sora-editor/releases")
+            .toAwaitList<GithubVersionBean>()
             .await()
     }
 }

@@ -32,6 +32,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.GithubVersion
 import com.xiaobingkj.giteer.ui.login.LoginViewModel
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.ActivityMainBinding
@@ -45,7 +46,11 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
     override fun layoutId(): Int = R.layout.activity_main
 
     override fun createObserver() {
-
+        mViewModel.versionEvent.observe(this){
+            if (it.first().tag_name.toInt() != GithubVersion.latest) {
+                TODO("弹出提示框")
+            }
+        }
     }
 
     override fun dismissLoading() {
@@ -83,6 +88,9 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
                 }
             }
         })
+
+        mViewModel.getRelease()
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
