@@ -37,6 +37,7 @@ import com.xiaobingkj.giteer.data.model.PullRequestBean
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentTrendSubBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
+import me.hgj.jetpackmvvm.ext.nav
 
 class PullRequestSubFragment(name: String, state: String) : BaseVmDbFragment<PullRequestSubViewModel, FragmentTrendSubBinding>() {
     private val name = name
@@ -93,10 +94,9 @@ class PullRequestSubFragment(name: String, state: String) : BaseVmDbFragment<Pul
                 view: View,
                 position: Int
             ) {
-//                val bundle = Bundle()
-//                val repoV3 = adapter.getItem(position)
-//                bundle.putParcelable("repoV3", repoV3)
-//                nav().navigate(R.id.repoFragment, bundle)
+                val bundle = Bundle()
+                bundle.putString("url", adapter.getItem(position)?.html_url)
+                nav().navigate(R.id.webFragment, bundle)
             }
 
         }

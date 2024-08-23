@@ -29,6 +29,7 @@ import com.xiaobingkj.giteer.data.model.BranchBean
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.IssueBean
+import com.xiaobingkj.giteer.data.model.IssueDetailBean
 import com.xiaobingkj.giteer.data.model.MessageBean
 import com.xiaobingkj.giteer.data.model.NotificationBean
 import com.xiaobingkj.giteer.data.model.PullRequestBean
@@ -239,6 +240,14 @@ class HttpRequestManager {
             .add("page", page)
             .add("per_page", perpage)
             .toAwait<NotificationBean>()
+            .await()
+    }
+    //https://gitee.com/api/v5/repos/GiteerApp/GiteerFeedback/issues/I4MFUV/comments?access_token=8f4149f43360eb3660398bb24df3a4e9&page=1&per_page=20&order=asc
+    suspend fun getIssueDetail(name: String, issue: String, page: Int, perpage: Int = 100): MutableList<IssueDetailBean> {
+        return RxHttp.get("api/v5/repos/${name}/issues/${issue}/comments")
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<IssueDetailBean>()
             .await()
     }
 }

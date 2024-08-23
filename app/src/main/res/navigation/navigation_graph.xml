@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_eventFragment_to_userFragment"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/action_eventFragment_to_repoFragment"
+            app:destination="@id/repoFragment" />
     </fragment>
     <fragment
         android:id="@+id/starFragment"
@@ -181,7 +184,11 @@
     <fragment
         android:id="@+id/issueFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.issue.IssueFragment"
-        android:label="IssueFragment" />
+        android:label="IssueFragment" >
+        <action
+            android:id="@+id/action_issueFragment_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/pullRequestFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.pullrequest.PullRequestFragment"
@@ -213,4 +220,8 @@
         android:id="@+id/msgFragment"
         android:name="com.xiaobingkj.giteer.ui.me.message.MsgFragment"
         android:label="MsgFragment" />
+    <fragment
+        android:id="@+id/issueDetailFragment"
+        android:name="com.xiaobingkj.giteer.ui.repo.issue.IssueDetailFragment"
+        android:label="IssueDetailFragment" />
 </navigation>
