@@ -39,6 +39,7 @@ import io.github.armcha.autolink.AutoLinkTextView
 import io.github.armcha.autolink.MODE_CUSTOM
 import io.github.armcha.autolink.Mode
 import io.github.rosemoe.sora.app.R
+import me.hgj.jetpackmvvm.ext.util.TAG
 
 class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
     var onAutoLinkClick: ((AutoLinkItem) -> Unit)? = null
@@ -50,7 +51,7 @@ class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
         }else{
             Glide.with(holder.itemView).load(item?.actor?.avatar_url).into(avatar)
         }
-        var content: String = ""
+        var content: String = "${item?.actor?.name}"
         var custom: MODE_CUSTOM = MODE_CUSTOM("${item?.actor?.name}\\b")
         when (item?.type) {
             "PushEvent" -> {
@@ -101,7 +102,13 @@ class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
                 content = "${item.actor.name} 发表了新的Pull Request评论 ${item.payload.repository.full_name} 的 ${item.payload.pull_request.title} ${item.payload.comment.body}"
                 custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.payload.repository.full_name}\\b", "${item.payload.pull_request.title}\\b", "${item.payload.comment.body}\\b")
             }
-            else -> {}
+            "IssueEvent" -> {
+                content = "${item.actor.name} ${item.payload.action} 了 ${item.payload.title}"
+                custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.payload.title}\\b")
+            }
+            else -> {
+                item?.type?.let { Log.d("EventBean", it) }
+            }
         }
 
 
