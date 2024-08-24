@@ -22,38 +22,25 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui.login
+package com.xiaobingkj.giteer.ui
 
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
 import com.xiaobingkj.giteer.data.model.GithubVersionBean
-import com.xiaobingkj.giteer.data.model.TokenBean
-import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
 import me.hgj.jetpackmvvm.network.AppException
 
-class LoginViewModel: BaseViewModel() {
-    val tokenEvent = MutableLiveData<TokenBean>()
-    val userEvent = MutableLiveData<UserBean>()
+class MainViewModel: BaseViewModel(){
+    val versionEvent = MutableLiveData<GithubVersionBean>()
     val errorEvent = MutableLiveData<AppException>()
 
-    fun postOauthToken(refresh_token: String) {
+    fun getLatestVersion() {
         requestNoCheck({
-            HttpRequestCoroutine.postOauthToken(refresh_token)
+            HttpRequestCoroutine.getLatestVersion()
         }, {
-            tokenEvent.postValue(it)
-        }, {
-            errorEvent.postValue(it)
-        })
-    }
-
-    fun getUser() {
-        requestNoCheck({
-            HttpRequestCoroutine.getUser()
-        }, {
-            userEvent.postValue(it)
+            versionEvent.postValue(it)
         }, {
             errorEvent.postValue(it)
         })

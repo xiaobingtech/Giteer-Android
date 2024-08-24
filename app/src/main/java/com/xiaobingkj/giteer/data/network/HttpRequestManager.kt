@@ -251,9 +251,9 @@ class HttpRequestManager {
             .await()
     }
     //https://api.github.com/repos/xiaobingtech/sora-editor/releases
-    suspend fun getGithubRelease(): MutableList<GithubVersionBean> {
-        return RxHttp.get("https://api.github.com/repos/xiaobingtech/sora-editor/releases")
-            .toAwaitList<GithubVersionBean>()
+    suspend fun getLatestVersion(): GithubVersionBean {
+        return RxHttp.get("https://api.github.com/repos/xiaobingtech/sora-editor/releases/latest")
+            .toAwait<GithubVersionBean>()
             .await()
     }
 }
