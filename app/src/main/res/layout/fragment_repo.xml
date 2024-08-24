@@ -82,6 +82,7 @@
                     android:layout_height="44dp"
                     android:gravity="center"
                     android:text="星标"
+                    android:onClick="@{() -> click.operateStar()}"
                     app:layout_constraintTop_toBottomOf="@id/view_first"
                     ></TextView>
 

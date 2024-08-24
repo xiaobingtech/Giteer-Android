@@ -72,8 +72,8 @@ public class RepositoryBean implements Parcelable {
     private String releases_url;
     private Boolean recommend;
     private Boolean gvp;
-    private String homepage;
-    private String language;
+    private Object homepage;
+    private Object language;
     private Integer forks_count;
     private Integer stargazers_count;
     private Integer watchers_count;
@@ -85,7 +85,7 @@ public class RepositoryBean implements Parcelable {
     private Boolean can_comment;
     private Boolean pull_requests_enabled;
     private Boolean has_page;
-    private Object license;
+    private String license;
     private Boolean outsourced;
     private String project_creator;
     private List<String> members;
@@ -94,19 +94,19 @@ public class RepositoryBean implements Parcelable {
     private String updated_at;
     private Object parent;
     private Object paas;
+    private Boolean stared;
+    private Boolean watched;
+    private PermissionDTO permission;
+    private Object relation;
     private Integer assignees_number;
     private Integer testers_number;
-    private List<AssigneeDTO> assignee;
-    private List<TestersDTO> testers;
+    private List<?> assignee;
+    private List<?> testers;
     private String status;
     private List<?> programs;
-    private Object enterprise;
+    private EnterpriseDTO enterprise;
     private List<?> project_labels;
     private String issue_template_source;
-
-    public RepositoryBean() {
-        super();
-    }
 
     protected RepositoryBean(Parcel in) {
         if (in.readByte() == 0) {
@@ -152,8 +152,6 @@ public class RepositoryBean implements Parcelable {
         recommend = tmpRecommend == 0 ? null : tmpRecommend == 1;
         byte tmpGvp = in.readByte();
         gvp = tmpGvp == 0 ? null : tmpGvp == 1;
-        homepage = in.readString();
-        language = in.readString();
         if (in.readByte() == 0) {
             forks_count = null;
         } else {
@@ -187,6 +185,7 @@ public class RepositoryBean implements Parcelable {
         pull_requests_enabled = tmpPull_requests_enabled == 0 ? null : tmpPull_requests_enabled == 1;
         byte tmpHas_page = in.readByte();
         has_page = tmpHas_page == 0 ? null : tmpHas_page == 1;
+        license = in.readString();
         byte tmpOutsourced = in.readByte();
         outsourced = tmpOutsourced == 0 ? null : tmpOutsourced == 1;
         project_creator = in.readString();
@@ -194,6 +193,10 @@ public class RepositoryBean implements Parcelable {
         pushed_at = in.readString();
         created_at = in.readString();
         updated_at = in.readString();
+        byte tmpStared = in.readByte();
+        stared = tmpStared == 0 ? null : tmpStared == 1;
+        byte tmpWatched = in.readByte();
+        watched = tmpWatched == 0 ? null : tmpWatched == 1;
         if (in.readByte() == 0) {
             assignees_number = null;
         } else {
@@ -508,19 +511,19 @@ public class RepositoryBean implements Parcelable {
         this.gvp = gvp;
     }
 
-    public String getHomepage() {
+    public Object getHomepage() {
         return homepage;
     }
 
-    public void setHomepage(String homepage) {
+    public void setHomepage(Object homepage) {
         this.homepage = homepage;
     }
 
-    public String getLanguage() {
+    public Object getLanguage() {
         return language;
     }
 
-    public void setLanguage(String language) {
+    public void setLanguage(Object language) {
         this.language = language;
     }
 
@@ -612,11 +615,11 @@ public class RepositoryBean implements Parcelable {
         this.has_page = has_page;
     }
 
-    public Object getLicense() {
+    public String getLicense() {
         return license;
     }
 
-    public void setLicense(Object license) {
+    public void setLicense(String license) {
         this.license = license;
     }
 
@@ -684,6 +687,38 @@ public class RepositoryBean implements Parcelable {
         this.paas = paas;
     }
 
+    public Boolean getStared() {
+        return stared;
+    }
+
+    public void setStared(Boolean stared) {
+        this.stared = stared;
+    }
+
+    public Boolean getWatched() {
+        return watched;
+    }
+
+    public void setWatched(Boolean watched) {
+        this.watched = watched;
+    }
+
+    public PermissionDTO getPermission() {
+        return permission;
+    }
+
+    public void setPermission(PermissionDTO permission) {
+        this.permission = permission;
+    }
+
+    public Object getRelation() {
+        return relation;
+    }
+
+    public void setRelation(Object relation) {
+        this.relation = relation;
+    }
+
     public Integer getAssignees_number() {
         return assignees_number;
     }
@@ -700,19 +735,19 @@ public class RepositoryBean implements Parcelable {
         this.testers_number = testers_number;
     }
 
-    public List<AssigneeDTO> getAssignee() {
+    public List<?> getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(List<AssigneeDTO> assignee) {
+    public void setAssignee(List<?> assignee) {
         this.assignee = assignee;
     }
 
-    public List<TestersDTO> getTesters() {
+    public List<?> getTesters() {
         return testers;
     }
 
-    public void setTesters(List<TestersDTO> testers) {
+    public void setTesters(List<?> testers) {
         this.testers = testers;
     }
 
@@ -732,11 +767,11 @@ public class RepositoryBean implements Parcelable {
         this.programs = programs;
     }
 
-    public Object getEnterprise() {
+    public EnterpriseDTO getEnterprise() {
         return enterprise;
     }
 
-    public void setEnterprise(Object enterprise) {
+    public void setEnterprise(EnterpriseDTO enterprise) {
         this.enterprise = enterprise;
     }
 
@@ -801,8 +836,6 @@ public class RepositoryBean implements Parcelable {
         dest.writeString(releases_url);
         dest.writeByte((byte) (recommend == null ? 0 : recommend ? 1 : 2));
         dest.writeByte((byte) (gvp == null ? 0 : gvp ? 1 : 2));
-        dest.writeString(homepage);
-        dest.writeString(language);
         if (forks_count == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -834,12 +867,15 @@ public class RepositoryBean implements Parcelable {
         dest.writeByte((byte) (can_comment == null ? 0 : can_comment ? 1 : 2));
         dest.writeByte((byte) (pull_requests_enabled == null ? 0 : pull_requests_enabled ? 1 : 2));
         dest.writeByte((byte) (has_page == null ? 0 : has_page ? 1 : 2));
+        dest.writeString(license);
         dest.writeByte((byte) (outsourced == null ? 0 : outsourced ? 1 : 2));
         dest.writeString(project_creator);
         dest.writeStringList(members);
         dest.writeString(pushed_at);
         dest.writeString(created_at);
         dest.writeString(updated_at);
+        dest.writeByte((byte) (stared == null ? 0 : stared ? 1 : 2));
+        dest.writeByte((byte) (watched == null ? 0 : watched ? 1 : 2));
         if (assignees_number == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -856,36 +892,13 @@ public class RepositoryBean implements Parcelable {
         dest.writeString(issue_template_source);
     }
 
-    public static class NamespaceDTO implements Parcelable {
+    public static class NamespaceDTO {
         private Integer id;
         private String type;
         private String name;
         private String path;
         private String html_url;
-
-        protected NamespaceDTO(Parcel in) {
-            if (in.readByte() == 0) {
-                id = null;
-            } else {
-                id = in.readInt();
-            }
-            type = in.readString();
-            name = in.readString();
-            path = in.readString();
-            html_url = in.readString();
-        }
-
-        public static final Creator<NamespaceDTO> CREATOR = new Creator<NamespaceDTO>() {
-            @Override
-            public NamespaceDTO createFromParcel(Parcel in) {
-                return new NamespaceDTO(in);
-            }
-
-            @Override
-            public NamespaceDTO[] newArray(int size) {
-                return new NamespaceDTO[size];
-            }
-        };
+        private ParentDTO parent;
 
         public Integer getId() {
             return id;
@@ -927,27 +940,64 @@ public class RepositoryBean implements Parcelable {
             this.html_url = html_url;
         }
 
-        @Override
-        public int describeContents() {
-            return 0;
+        public ParentDTO getParent() {
+            return parent;
         }
 
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            if (id == null) {
-                dest.writeByte((byte) 0);
-            } else {
-                dest.writeByte((byte) 1);
-                dest.writeInt(id);
+        public void setParent(ParentDTO parent) {
+            this.parent = parent;
+        }
+
+        public static class ParentDTO {
+            private Integer id;
+            private String type;
+            private String name;
+            private String path;
+            private String html_url;
+
+            public Integer getId() {
+                return id;
             }
-            dest.writeString(type);
-            dest.writeString(name);
-            dest.writeString(path);
-            dest.writeString(html_url);
+
+            public void setId(Integer id) {
+                this.id = id;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getPath() {
+                return path;
+            }
+
+            public void setPath(String path) {
+                this.path = path;
+            }
+
+            public String getHtml_url() {
+                return html_url;
+            }
+
+            public void setHtml_url(String html_url) {
+                this.html_url = html_url;
+            }
         }
     }
 
-    public static class OwnerDTO implements Parcelable {
+    public static class OwnerDTO {
         private Integer id;
         private String login;
         private String name;
@@ -965,42 +1015,6 @@ public class RepositoryBean implements Parcelable {
         private String events_url;
         private String received_events_url;
         private String type;
-
-        protected OwnerDTO(Parcel in) {
-            if (in.readByte() == 0) {
-                id = null;
-            } else {
-                id = in.readInt();
-            }
-            login = in.readString();
-            name = in.readString();
-            avatar_url = in.readString();
-            url = in.readString();
-            html_url = in.readString();
-            remark = in.readString();
-            followers_url = in.readString();
-            following_url = in.readString();
-            gists_url = in.readString();
-            starred_url = in.readString();
-            subscriptions_url = in.readString();
-            organizations_url = in.readString();
-            repos_url = in.readString();
-            events_url = in.readString();
-            received_events_url = in.readString();
-            type = in.readString();
-        }
-
-        public static final Creator<OwnerDTO> CREATOR = new Creator<OwnerDTO>() {
-            @Override
-            public OwnerDTO createFromParcel(Parcel in) {
-                return new OwnerDTO(in);
-            }
-
-            @Override
-            public OwnerDTO[] newArray(int size) {
-                return new OwnerDTO[size];
-            }
-        };
 
         public Integer getId() {
             return id;
@@ -1137,40 +1151,9 @@ public class RepositoryBean implements Parcelable {
         public void setType(String type) {
             this.type = type;
         }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            if (id == null) {
-                dest.writeByte((byte) 0);
-            } else {
-                dest.writeByte((byte) 1);
-                dest.writeInt(id);
-            }
-            dest.writeString(login);
-            dest.writeString(name);
-            dest.writeString(avatar_url);
-            dest.writeString(url);
-            dest.writeString(html_url);
-            dest.writeString(remark);
-            dest.writeString(followers_url);
-            dest.writeString(following_url);
-            dest.writeString(gists_url);
-            dest.writeString(starred_url);
-            dest.writeString(subscriptions_url);
-            dest.writeString(organizations_url);
-            dest.writeString(repos_url);
-            dest.writeString(events_url);
-            dest.writeString(received_events_url);
-            dest.writeString(type);
-        }
     }
 
-    public static class AssignerDTO implements Parcelable {
+    public static class AssignerDTO {
         private Integer id;
         private String login;
         private String name;
@@ -1188,42 +1171,6 @@ public class RepositoryBean implements Parcelable {
         private String events_url;
         private String received_events_url;
         private String type;
-
-        protected AssignerDTO(Parcel in) {
-            if (in.readByte() == 0) {
-                id = null;
-            } else {
-                id = in.readInt();
-            }
-            login = in.readString();
-            name = in.readString();
-            avatar_url = in.readString();
-            url = in.readString();
-            html_url = in.readString();
-            remark = in.readString();
-            followers_url = in.readString();
-            following_url = in.readString();
-            gists_url = in.readString();
-            starred_url = in.readString();
-            subscriptions_url = in.readString();
-            organizations_url = in.readString();
-            repos_url = in.readString();
-            events_url = in.readString();
-            received_events_url = in.readString();
-            type = in.readString();
-        }
-
-        public static final Creator<AssignerDTO> CREATOR = new Creator<AssignerDTO>() {
-            @Override
-            public AssignerDTO createFromParcel(Parcel in) {
-                return new AssignerDTO(in);
-            }
-
-            @Override
-            public AssignerDTO[] newArray(int size) {
-                return new AssignerDTO[size];
-            }
-        };
 
         public Integer getId() {
             return id;
@@ -1360,93 +1307,44 @@ public class RepositoryBean implements Parcelable {
         public void setType(String type) {
             this.type = type;
         }
+    }
 
-        @Override
-        public int describeContents() {
-            return 0;
+    public static class PermissionDTO {
+        private Boolean pull;
+        private Boolean push;
+        private Boolean admin;
+
+        public Boolean getPull() {
+            return pull;
         }
 
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            if (id == null) {
-                dest.writeByte((byte) 0);
-            } else {
-                dest.writeByte((byte) 1);
-                dest.writeInt(id);
-            }
-            dest.writeString(login);
-            dest.writeString(name);
-            dest.writeString(avatar_url);
-            dest.writeString(url);
-            dest.writeString(html_url);
-            dest.writeString(remark);
-            dest.writeString(followers_url);
-            dest.writeString(following_url);
-            dest.writeString(gists_url);
-            dest.writeString(starred_url);
-            dest.writeString(subscriptions_url);
-            dest.writeString(organizations_url);
-            dest.writeString(repos_url);
-            dest.writeString(events_url);
-            dest.writeString(received_events_url);
-            dest.writeString(type);
+        public void setPull(Boolean pull) {
+            this.pull = pull;
+        }
+
+        public Boolean getPush() {
+            return push;
+        }
+
+        public void setPush(Boolean push) {
+            this.push = push;
+        }
+
+        public Boolean getAdmin() {
+            return admin;
+        }
+
+        public void setAdmin(Boolean admin) {
+            this.admin = admin;
         }
     }
 
-    public static class AssigneeDTO implements Parcelable {
+    public static class EnterpriseDTO {
         private Integer id;
-        private String login;
-        private String name;
-        private String avatar_url;
-        private String url;
-        private String html_url;
-        private String remark;
-        private String followers_url;
-        private String following_url;
-        private String gists_url;
-        private String starred_url;
-        private String subscriptions_url;
-        private String organizations_url;
-        private String repos_url;
-        private String events_url;
-        private String received_events_url;
         private String type;
-
-        protected AssigneeDTO(Parcel in) {
-            if (in.readByte() == 0) {
-                id = null;
-            } else {
-                id = in.readInt();
-            }
-            login = in.readString();
-            name = in.readString();
-            avatar_url = in.readString();
-            url = in.readString();
-            html_url = in.readString();
-            remark = in.readString();
-            followers_url = in.readString();
-            following_url = in.readString();
-            gists_url = in.readString();
-            starred_url = in.readString();
-            subscriptions_url = in.readString();
-            organizations_url = in.readString();
-            repos_url = in.readString();
-            events_url = in.readString();
-            received_events_url = in.readString();
-            type = in.readString();
-        }
-
-        public static final Creator<AssigneeDTO> CREATOR = new Creator<AssigneeDTO>() {
-            @Override
-            public AssigneeDTO createFromParcel(Parcel in) {
-                return new AssigneeDTO(in);
-            }
-
-            @Override
-            public AssigneeDTO[] newArray(int size) {
-                return new AssigneeDTO[size];
-            }
-        };
+        private String name;
+        private String path;
+        private String html_url;
 
         public Integer getId() {
             return id;
@@ -1454,126 +1352,6 @@ public class RepositoryBean implements Parcelable {
 
         public void setId(Integer id) {
             this.id = id;
-        }
-
-        public String getLogin() {
-            return login;
-        }
-
-        public void setLogin(String login) {
-            this.login = login;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getAvatar_url() {
-            return avatar_url;
-        }
-
-        public void setAvatar_url(String avatar_url) {
-            this.avatar_url = avatar_url;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getHtml_url() {
-            return html_url;
-        }
-
-        public void setHtml_url(String html_url) {
-            this.html_url = html_url;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
-
-        public String getFollowers_url() {
-            return followers_url;
-        }
-
-        public void setFollowers_url(String followers_url) {
-            this.followers_url = followers_url;
-        }
-
-        public String getFollowing_url() {
-            return following_url;
-        }
-
-        public void setFollowing_url(String following_url) {
-            this.following_url = following_url;
-        }
-
-        public String getGists_url() {
-            return gists_url;
-        }
-
-        public void setGists_url(String gists_url) {
-            this.gists_url = gists_url;
-        }
-
-        public String getStarred_url() {
-            return starred_url;
-        }
-
-        public void setStarred_url(String starred_url) {
-            this.starred_url = starred_url;
-        }
-
-        public String getSubscriptions_url() {
-            return subscriptions_url;
-        }
-
-        public void setSubscriptions_url(String subscriptions_url) {
-            this.subscriptions_url = subscriptions_url;
-        }
-
-        public String getOrganizations_url() {
-            return organizations_url;
-        }
-
-        public void setOrganizations_url(String organizations_url) {
-            this.organizations_url = organizations_url;
-        }
-
-        public String getRepos_url() {
-            return repos_url;
-        }
-
-        public void setRepos_url(String repos_url) {
-            this.repos_url = repos_url;
-        }
-
-        public String getEvents_url() {
-            return events_url;
-        }
-
-        public void setEvents_url(String events_url) {
-            this.events_url = events_url;
-        }
-
-        public String getReceived_events_url() {
-            return received_events_url;
-        }
-
-        public void setReceived_events_url(String received_events_url) {
-            this.received_events_url = received_events_url;
         }
 
         public String getType() {
@@ -1584,109 +1362,6 @@ public class RepositoryBean implements Parcelable {
             this.type = type;
         }
 
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            if (id == null) {
-                dest.writeByte((byte) 0);
-            } else {
-                dest.writeByte((byte) 1);
-                dest.writeInt(id);
-            }
-            dest.writeString(login);
-            dest.writeString(name);
-            dest.writeString(avatar_url);
-            dest.writeString(url);
-            dest.writeString(html_url);
-            dest.writeString(remark);
-            dest.writeString(followers_url);
-            dest.writeString(following_url);
-            dest.writeString(gists_url);
-            dest.writeString(starred_url);
-            dest.writeString(subscriptions_url);
-            dest.writeString(organizations_url);
-            dest.writeString(repos_url);
-            dest.writeString(events_url);
-            dest.writeString(received_events_url);
-            dest.writeString(type);
-        }
-    }
-
-    public static class TestersDTO implements Parcelable {
-        private Integer id;
-        private String login;
-        private String name;
-        private String avatar_url;
-        private String url;
-        private String html_url;
-        private String remark;
-        private String followers_url;
-        private String following_url;
-        private String gists_url;
-        private String starred_url;
-        private String subscriptions_url;
-        private String organizations_url;
-        private String repos_url;
-        private String events_url;
-        private String received_events_url;
-        private String type;
-
-        protected TestersDTO(Parcel in) {
-            if (in.readByte() == 0) {
-                id = null;
-            } else {
-                id = in.readInt();
-            }
-            login = in.readString();
-            name = in.readString();
-            avatar_url = in.readString();
-            url = in.readString();
-            html_url = in.readString();
-            remark = in.readString();
-            followers_url = in.readString();
-            following_url = in.readString();
-            gists_url = in.readString();
-            starred_url = in.readString();
-            subscriptions_url = in.readString();
-            organizations_url = in.readString();
-            repos_url = in.readString();
-            events_url = in.readString();
-            received_events_url = in.readString();
-            type = in.readString();
-        }
-
-        public static final Creator<TestersDTO> CREATOR = new Creator<TestersDTO>() {
-            @Override
-            public TestersDTO createFromParcel(Parcel in) {
-                return new TestersDTO(in);
-            }
-
-            @Override
-            public TestersDTO[] newArray(int size) {
-                return new TestersDTO[size];
-            }
-        };
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getLogin() {
-            return login;
-        }
-
-        public void setLogin(String login) {
-            this.login = login;
-        }
-
         public String getName() {
             return name;
         }
@@ -1695,20 +1370,12 @@ public class RepositoryBean implements Parcelable {
             this.name = name;
         }
 
-        public String getAvatar_url() {
-            return avatar_url;
+        public String getPath() {
+            return path;
         }
 
-        public void setAvatar_url(String avatar_url) {
-            this.avatar_url = avatar_url;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
+        public void setPath(String path) {
+            this.path = path;
         }
 
         public String getHtml_url() {
@@ -1717,125 +1384,6 @@ public class RepositoryBean implements Parcelable {
 
         public void setHtml_url(String html_url) {
             this.html_url = html_url;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
-
-        public String getFollowers_url() {
-            return followers_url;
-        }
-
-        public void setFollowers_url(String followers_url) {
-            this.followers_url = followers_url;
-        }
-
-        public String getFollowing_url() {
-            return following_url;
-        }
-
-        public void setFollowing_url(String following_url) {
-            this.following_url = following_url;
-        }
-
-        public String getGists_url() {
-            return gists_url;
-        }
-
-        public void setGists_url(String gists_url) {
-            this.gists_url = gists_url;
-        }
-
-        public String getStarred_url() {
-            return starred_url;
-        }
-
-        public void setStarred_url(String starred_url) {
-            this.starred_url = starred_url;
-        }
-
-        public String getSubscriptions_url() {
-            return subscriptions_url;
-        }
-
-        public void setSubscriptions_url(String subscriptions_url) {
-            this.subscriptions_url = subscriptions_url;
-        }
-
-        public String getOrganizations_url() {
-            return organizations_url;
-        }
-
-        public void setOrganizations_url(String organizations_url) {
-            this.organizations_url = organizations_url;
-        }
-
-        public String getRepos_url() {
-            return repos_url;
-        }
-
-        public void setRepos_url(String repos_url) {
-            this.repos_url = repos_url;
-        }
-
-        public String getEvents_url() {
-            return events_url;
-        }
-
-        public void setEvents_url(String events_url) {
-            this.events_url = events_url;
-        }
-
-        public String getReceived_events_url() {
-            return received_events_url;
-        }
-
-        public void setReceived_events_url(String received_events_url) {
-            this.received_events_url = received_events_url;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            if (id == null) {
-                dest.writeByte((byte) 0);
-            } else {
-                dest.writeByte((byte) 1);
-                dest.writeInt(id);
-            }
-            dest.writeString(login);
-            dest.writeString(name);
-            dest.writeString(avatar_url);
-            dest.writeString(url);
-            dest.writeString(html_url);
-            dest.writeString(remark);
-            dest.writeString(followers_url);
-            dest.writeString(following_url);
-            dest.writeString(gists_url);
-            dest.writeString(starred_url);
-            dest.writeString(subscriptions_url);
-            dest.writeString(organizations_url);
-            dest.writeString(repos_url);
-            dest.writeString(events_url);
-            dest.writeString(received_events_url);
-            dest.writeString(type);
         }
     }
 }

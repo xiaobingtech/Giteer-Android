@@ -32,11 +32,14 @@ import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
+import me.hgj.jetpackmvvm.network.AppException
 
 class RepoViewModel: BaseViewModel() {
+    val errorEvent = MutableLiveData<AppException>()
     val repoEvent = MutableLiveData<RepositoryBean>()
     val readMeEvent = MutableLiveData<ReadMeBean>()
     val branchEvent = MutableLiveData<List<BranchBean>>()
+    val starEvent = MutableLiveData<RepositoryBean>()
 
     fun getRepo(name: String) {
         requestNoCheck({
@@ -44,7 +47,7 @@ class RepoViewModel: BaseViewModel() {
         }, {
             repoEvent.postValue(it)
         }, {
-            ToastUtils.showLong(it.errorLog)
+            errorEvent.postValue(it)
         })
     }
 
@@ -54,7 +57,7 @@ class RepoViewModel: BaseViewModel() {
         }, {
             readMeEvent.postValue(it)
         }, {
-//            ToastUtils.showLong(it.errorLog)
+            errorEvent.postValue(it)
         })
     }
 
@@ -64,7 +67,29 @@ class RepoViewModel: BaseViewModel() {
         }, {
             branchEvent.postValue(it)
         }, {
-            ToastUtils.showLong(it.errorLog)
+            errorEvent.postValue(it)
         })
     }
+
+    fun putStared(name: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.putStared(name)
+        }, {
+            starEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
+
+    fun deleteStared(name: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.deleteStared(name)
+        }, {
+            starEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
+
+
 }

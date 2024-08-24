@@ -257,7 +257,16 @@ class HttpRequestManager {
             .toAwait<GithubVersionBean>()
             .await()
     }
-    //https://gitee.com/api/v5/user/starred/{owner}/{repo}
     //https://gitee.com/api/v5/user/starred/{owner}/{repo} put
+    suspend fun putStared(name: String): RepositoryBean {
+        return RxHttp.putJson("api/v5/user/starred/${name}")
+            .toAwait<RepositoryBean>()
+            .await()
+    }
     //https://gitee.com/api/v5/user/starred/{owner}/{repo} delete
+    suspend fun deleteStared(name: String): RepositoryBean {
+        return RxHttp.deleteJson("api/v5/user/starred/${name}")
+            .toAwait<RepositoryBean>()
+            .await()
+    }
 }

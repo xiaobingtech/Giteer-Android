@@ -54,6 +54,7 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             if (it.description == null) {
                 mDatabind.desc.visibility = View.GONE
             }
+            mDatabind.btnStar.text = if (it.stared) {"已星标"} else {"星标"}
             mViewModel.getRepoReadme(name, ref)
         }
         mViewModel.readMeEvent.observe(viewLifecycleOwner) {
@@ -81,6 +82,9 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             dialog.setSingleChoiceItems(it.map { it.name }.toTypedArray(), it.indexOfFirst { it.name == ref }, listener)
             dialog.setPositiveButton("确定", null)
             dialog.show()
+        }
+        mViewModel.starEvent.observe(viewLifecycleOwner) {
+
         }
     }
 
@@ -154,6 +158,18 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             val bundle = Bundle()
             bundle.putString("name", repo?.owner?.login)
             nav().navigate(R.id.userFragment, bundle)
+        }
+
+        fun operateStar() {
+            if (repo!!.stared) {
+                mViewModel.deleteStared(name)
+                repo!!.stared = false
+                mDatabind.btnStar.text = "星标"
+            }else{
+                mViewModel.putStared(name)
+                repo!!.stared = true
+                mDatabind.btnStar.text = "已星标"
+            }
         }
     }
 
