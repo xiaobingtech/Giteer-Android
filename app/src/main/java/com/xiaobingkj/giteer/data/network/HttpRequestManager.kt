@@ -253,6 +253,7 @@ class HttpRequestManager {
     //https://api.github.com/repos/xiaobingtech/sora-editor/releases
     suspend fun getLatestVersion(): GithubVersionBean {
         return RxHttp.get("https://api.github.com/repos/xiaobingtech/sora-editor/releases/latest")
+            .setAssemblyEnabled(false)
             .toAwait<GithubVersionBean>()
             .await()
     }

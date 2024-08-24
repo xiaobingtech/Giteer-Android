@@ -30,11 +30,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.kingja.loadsir.core.LoadService
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.ReleaseBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
+import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showLoading
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentReleaseBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
@@ -44,6 +47,8 @@ class ReleaseFragment : BaseVmDbFragment<ReleaseViewModel, FragmentReleaseBindin
     private val adapter = ReleaseAdapter()
     private var page: Int = 1
     private var name = ""
+    //界面状态管理者
+    private lateinit var loadsir: LoadService<Any>
     override fun layoutId(): Int = R.layout.fragment_star
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
@@ -51,6 +56,7 @@ class ReleaseFragment : BaseVmDbFragment<ReleaseViewModel, FragmentReleaseBindin
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.releaseEvent.observe(viewLifecycleOwner, Observer {
+            loadsir.showSuccess()
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
@@ -75,6 +81,12 @@ class ReleaseFragment : BaseVmDbFragment<ReleaseViewModel, FragmentReleaseBindin
         mActivity.supportActionBar?.title = "发行版"
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+
+        loadsir = loadServiceInit(mDatabind.refreshLayout) {
+            //点击重试时触发的操作
+            headerRefresh()
+        }
+
         val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
         listView.addItemDecoration(dividerItemDecoration)
         listView.adapter = adapter
@@ -107,6 +119,9 @@ class ReleaseFragment : BaseVmDbFragment<ReleaseViewModel, FragmentReleaseBindin
     }
 
     fun headerRefresh() {
+        if (adapter.itemCount == 0) {
+            loadsir.showLoading()
+        }
         page = 1
         mViewModel.getReleases(name, page)
     }
@@ -123,7 +138,7 @@ class ReleaseFragment : BaseVmDbFragment<ReleaseViewModel, FragmentReleaseBindin
     }
 
     override fun lazyLoadData() {
-
+        headerRefresh()
     }
 
     override fun showLoading(message: String) {

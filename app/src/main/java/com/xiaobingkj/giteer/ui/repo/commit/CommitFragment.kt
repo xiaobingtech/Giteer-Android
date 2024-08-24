@@ -9,12 +9,15 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.kingja.loadsir.core.LoadService
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.ReleaseBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
+import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showLoading
 import com.xiaobingkj.giteer.ui.repo.release.ReleaseAdapter
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentCommitBinding
@@ -26,6 +29,8 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
     private var page: Int = 1
     private var name = ""
     private var ref = ""
+    //界面状态管理者
+    private lateinit var loadsir: LoadService<Any>
     override fun layoutId(): Int = R.layout.fragment_star
     override fun createObserver() {
         mViewModel.errorEvent.observe(viewLifecycleOwner) {
@@ -33,6 +38,7 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.commitEvent.observe(viewLifecycleOwner, Observer {
+            loadsir.showSuccess()
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
@@ -58,6 +64,12 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
         mActivity.supportActionBar?.title = "提交"
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
+
+        loadsir = loadServiceInit(mDatabind.refreshLayout) {
+            //点击重试时触发的操作
+            headerRefresh()
+        }
+
         val dividerItemDecoration = DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
         listView.addItemDecoration(dividerItemDecoration)
         listView.adapter = adapter
@@ -90,6 +102,9 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
     }
 
     fun headerRefresh() {
+        if (adapter.itemCount == 0) {
+            loadsir.showLoading()
+        }
         page = 1
         mViewModel.getCommits(name, ref, page)
     }
@@ -106,7 +121,7 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
     }
 
     override fun lazyLoadData() {
-
+        headerRefresh()
     }
 
     override fun showLoading(message: String) {

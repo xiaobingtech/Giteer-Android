@@ -1,10 +1,14 @@
 package com.xiaobingkj.giteer.ui
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.GithubVersion
 import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ui.login.LoginViewModel
 import io.github.rosemoe.sora.app.R

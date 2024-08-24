@@ -37,6 +37,7 @@ import me.hgj.jetpackmvvm.network.AppException
 class LoginViewModel: BaseViewModel() {
     val tokenEvent = MutableLiveData<TokenBean>()
     val userEvent = MutableLiveData<UserBean>()
+    val versionEvent = MutableLiveData<GithubVersionBean>()
     val errorEvent = MutableLiveData<AppException>()
 
     fun postOauthToken(refresh_token: String) {
@@ -54,6 +55,16 @@ class LoginViewModel: BaseViewModel() {
             HttpRequestCoroutine.getUser()
         }, {
             userEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
+
+    fun getLatestVersion() {
+        requestNoCheck({
+            HttpRequestCoroutine.getLatestVersion()
+        }, {
+            versionEvent.postValue(it)
         }, {
             errorEvent.postValue(it)
         })
