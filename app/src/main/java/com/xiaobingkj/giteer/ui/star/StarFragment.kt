@@ -12,6 +12,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showEmpty
 import com.xiaobingkj.giteer.ext.showLoading
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentStarBinding
@@ -30,7 +31,11 @@ class StarFragment : BaseVmDbFragment<StarViewModel, FragmentStarBinding>() {
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.repoEvent.observe(viewLifecycleOwner, Observer {
-            loadsir.showSuccess()
+            if (it.size == 0) {
+                loadsir.showEmpty()
+            }else{
+                loadsir.showSuccess()
+            }
             if (prev_id == 0) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }

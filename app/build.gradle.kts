@@ -132,56 +132,56 @@ dependencies {
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso)
 
-    implementation("com.github.hegaojian:JetpackMvvm:1.2.7")
+    implementation(libs.jetpackmvvm)
 
-    implementation("com.tencent:mmkv:1.3.9")
+    implementation(libs.mmkv)
 
-    implementation("cn.yc:WebViewLib:1.4.0")
+    implementation(libs.webviewlib)
 
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.github.liujingxing.rxhttp:rxhttp:3.2.7")
-    ksp("com.github.liujingxing.rxhttp:rxhttp-compiler:3.2.7")
+    implementation(libs.okhttp)
+    implementation(libs.rxhttp)
+    ksp(libs.rxhttp.compiler)
 
-    implementation("io.reactivex.rxjava3:rxjava:3.1.6")
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
-    implementation("com.github.liujingxing.rxlife:rxlife-rxjava3:2.2.2")//管理RxJava3生命周期，页面销毁，关闭请求
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
+    implementation(libs.rxlife.rxjava3)//管理RxJava3生命周期，页面销毁，关闭请求
 
-    implementation("com.blankj:utilcodex:1.31.1")
+    implementation(libs.utilcodex)
 
-    implementation("androidx.appcompat:appcompat:1.0.0")
-    implementation("io.github.scwang90:refresh-layout-kernel:2.1.0")
-    implementation("io.github.scwang90:refresh-header-classics:2.1.0")
-    implementation("io.github.scwang90:refresh-footer-classics:2.1.0")
-    implementation("io.github.scwang90:refresh-header-material:2.1.0")
+    implementation(libs.androidx.appcompat.v100)
+    implementation(libs.refresh.layout.kernel)
+    implementation(libs.refresh.header.classics)
+    implementation(libs.refresh.footer.classics)
+    implementation(libs.refresh.header.material)
 
-    implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.4")
+    implementation(libs.baserecyclerviewadapterhelper4)
 
-    implementation("cn.carbs.android:AvatarImageView:1.0.4")
+    implementation(libs.avatarimageview)
 
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    ksp("com.github.bumptech.glide:ksp:4.16.0")
+    implementation(libs.glide)
+    ksp(libs.ksp)
 
-    implementation("io.noties.markwon:core:4.6.2")
-    implementation("io.noties.markwon:ext-tables:4.6.2")
-    implementation("io.noties.markwon:image-glide:4.6.2")
+    implementation(libs.core)
+    implementation(libs.ext.tables)
+    implementation(libs.image.glide)
 
-    implementation("com.github.bmelnychuk:atv:1.2.+")
-    implementation("com.github.johnkil.print:print:1.3.1")
+    implementation(libs.atv)
+    implementation(libs.print)
 
-    implementation("com.github.SherlockGougou:BigImageViewPager:androidx-7.3.0")
-    implementation("com.github.bumptech.glide:okhttp3-integration:4.11.0")
+    implementation(libs.bigimageviewpager)
+    implementation(libs.okhttp3.integration)
 
-    implementation("xyz.doikki.android.dkplayer:dkplayer-java:3.3.7")
-    implementation("xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7")
-    implementation("xyz.doikki.android.dkplayer:player-exo:3.3.7")
-    implementation("xyz.doikki.android.dkplayer:videocache:3.3.7")
+    implementation(libs.dkplayer.java)
+    implementation(libs.dkplayer.ui)
+    implementation(libs.player.exo)
+    implementation(libs.videocache)
 
-    implementation("com.github.armcha:AutoLinkTextViewV2:3.0.0")
+    implementation(libs.autolinktextviewv2)
 
-    implementation("com.github.getActivity:XXPermissions:20.0")
+    implementation(libs.xxpermissions)
 
-    implementation("cat.ereza:customactivityoncrash:2.4.0")
+    implementation(libs.customactivityoncrash)
 
-    implementation("com.kingja.loadsir:loadsir:1.3.8")
+    implementation(libs.loadsir)
 
 }

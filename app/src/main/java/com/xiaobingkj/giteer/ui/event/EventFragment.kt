@@ -20,6 +20,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showEmpty
 import com.xiaobingkj.giteer.ext.showLoading
 import com.xiaobingkj.giteer.ui.star.StarAdapter
 import io.github.rosemoe.sora.app.R
@@ -44,7 +45,11 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.eventEvent.observe(viewLifecycleOwner, Observer {
-            loadsir.showSuccess()
+            if (it.size == 0) {
+                loadsir.showEmpty()
+            }else{
+                loadsir.showSuccess()
+            }
             if (prev_id == 0) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
@@ -67,7 +72,7 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         mActivity.supportActionBar?.title = "动态"
 
-        setHasOptionsMenu(true)
+//        setHasOptionsMenu(true)
 
         val listView = mDatabind.listView
         listView.layoutManager = LinearLayoutManager(context)
@@ -140,9 +145,9 @@ class EventFragment : BaseVmDbFragment<EventViewModel, FragmentEventBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_event, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+//        menu.clear()
+//        inflater.inflate(R.menu.menu_event, menu)
+//        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

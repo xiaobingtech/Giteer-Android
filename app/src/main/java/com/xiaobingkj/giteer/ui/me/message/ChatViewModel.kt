@@ -22,10 +22,9 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.data
+package com.xiaobingkj.giteer.ui.me.message
 
-class GithubVersion {
-    companion object {
-        val latest = 35
-    }
+import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
+
+class ChatViewModel: BaseViewModel() {
 }

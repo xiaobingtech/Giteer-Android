@@ -36,6 +36,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.IssueBean
 import com.xiaobingkj.giteer.data.model.PullRequestBean
 import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showEmpty
 import com.xiaobingkj.giteer.ext.showLoading
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentTrendSubBinding
@@ -56,7 +57,11 @@ class PullRequestSubFragment(name: String, state: String) : BaseVmDbFragment<Pul
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.issueEvent.observe(this, Observer {
-            loadsir.showSuccess()
+            if (it.size == 0) {
+                loadsir.showEmpty()
+            }else{
+                loadsir.showSuccess()
+            }
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }

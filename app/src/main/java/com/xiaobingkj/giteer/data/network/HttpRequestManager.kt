@@ -257,4 +257,7 @@ class HttpRequestManager {
             .toAwait<GithubVersionBean>()
             .await()
     }
+    //https://gitee.com/api/v5/user/starred/{owner}/{repo}
+    //https://gitee.com/api/v5/user/starred/{owner}/{repo} put
+    //https://gitee.com/api/v5/user/starred/{owner}/{repo} delete
 }

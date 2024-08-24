@@ -68,10 +68,10 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
 
     override fun createObserver() {
         mViewModel.versionEvent.observe(this){
-            if (it.tag_name.toInt() != GithubVersion.latest) {
+            if (it.tag_name.toInt() > GithubVersion.latest) {
                 val dialog = AlertDialog.Builder(this)
-                dialog.setTitle("检测到新版本:"+it.name)
-                dialog.setMessage(it.body)
+                dialog.setTitle("检测到新版本")
+                dialog.setMessage(it.name)
                 val listener = object: DialogInterface.OnClickListener{
                     override fun onClick(dialog: DialogInterface?, which: Int) {
                         val url = it.assets.first().browser_download_url // 要打开的网址

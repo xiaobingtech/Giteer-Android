@@ -1,25 +1,79 @@
 [versions]
 agp = "8.5.1"
+appcompat = "1.0.0"
+atv = "1.2.9"
+autolinktextviewv2 = "3.0.0"
+avatarimageview = "1.0.4"
+baserecyclerviewadapterhelper4 = "4.1.4"
+bigimageviewpager = "androidx-7.3.0"
+customactivityoncrash = "2.4.0"
+imageGlide = "4.6.2"
+jetpackmvvm = "1.2.7"
 kotlin = "1.9.23"
+ksp = "4.16.0"
+loadsir = "1.3.8"
+mmkv = "1.3.9"
+okhttp = "4.12.0"
+okhttp3Integration = "4.11.0"
+print = "1.3.1"
+refreshLayoutKernel = "2.1.0"
+rxandroid = "3.0.2"
+rxhttp = "3.2.7"
+rxjava = "3.1.6"
+rxlifeRxjava3 = "2.2.2"
 tsBinding = "4.3.1"
 lsp4j = "0.22.0"
 androidxAnnotation = "1.8.1"
 activity = "1.9.1"
+utilcodex = "1.31.1"
+videocache = "3.3.7"
+webviewlib = "1.4.0"
+xxpermissions = "20.0"
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidxAnnotation" }
+androidx-appcompat-v100 = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-collection = { module = "androidx.collection:collection", version = "1.4.2" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version = "2.1.4" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.13.1" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version = "1.2.1" }
 androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version = "3.6.1" }
+atv = { module = "com.github.bmelnychuk:atv", version.ref = "atv" }
+autolinktextviewv2 = { module = "com.github.armcha:AutoLinkTextViewV2", version.ref = "autolinktextviewv2" }
+avatarimageview = { module = "cn.carbs.android:AvatarImageView", version.ref = "avatarimageview" }
+baserecyclerviewadapterhelper4 = { module = "io.github.cymchad:BaseRecyclerViewAdapterHelper4", version.ref = "baserecyclerviewadapterhelper4" }
+bigimageviewpager = { module = "com.github.SherlockGougou:BigImageViewPager", version.ref = "bigimageviewpager" }
+core = { module = "io.noties.markwon:core", version.ref = "imageGlide" }
+customactivityoncrash = { module = "cat.ereza:customactivityoncrash", version.ref = "customactivityoncrash" }
 desugar = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.4" }
+dkplayer-java = { module = "xyz.doikki.android.dkplayer:dkplayer-java", version.ref = "videocache" }
+dkplayer-ui = { module = "xyz.doikki.android.dkplayer:dkplayer-ui", version.ref = "videocache" }
+ext-tables = { module = "io.noties.markwon:ext-tables", version.ref = "imageGlide" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "ksp" }
+image-glide = { module = "io.noties.markwon:image-glide", version.ref = "imageGlide" }
+jetpackmvvm = { module = "com.github.hegaojian:JetpackMvvm", version.ref = "jetpackmvvm" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.8.0" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "ksp" }
 lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version = "2.8.4" }
+loadsir = { module = "com.kingja.loadsir:loadsir", version.ref = "loadsir" }
 material = { module = "com.google.android.material:material", version = "1.12.0" }
 gms-instantapps = { module = "com.google.android.gms:play-services-instantapps", version = "18.1.0" }
+mmkv = { module = "com.tencent:mmkv", version.ref = "mmkv" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+okhttp3-integration = { module = "com.github.bumptech.glide:okhttp3-integration", version.ref = "okhttp3Integration" }
+player-exo = { module = "xyz.doikki.android.dkplayer:player-exo", version.ref = "videocache" }
+print = { module = "com.github.johnkil.print:print", version.ref = "print" }
+refresh-footer-classics = { module = "io.github.scwang90:refresh-footer-classics", version.ref = "refreshLayoutKernel" }
+refresh-header-classics = { module = "io.github.scwang90:refresh-header-classics", version.ref = "refreshLayoutKernel" }
+refresh-header-material = { module = "io.github.scwang90:refresh-header-material", version.ref = "refreshLayoutKernel" }
+refresh-layout-kernel = { module = "io.github.scwang90:refresh-layout-kernel", version.ref = "refreshLayoutKernel" }
+rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
+rxhttp = { module = "com.github.liujingxing.rxhttp:rxhttp", version.ref = "rxhttp" }
+rxhttp-compiler = { module = "com.github.liujingxing.rxhttp:rxhttp-compiler", version.ref = "rxhttp" }
+rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
+rxlife-rxjava3 = { module = "com.github.liujingxing.rxlife:rxlife-rxjava3", version.ref = "rxlifeRxjava3" }
 tree-sitter-java = { module = "com.itsaky.androidide.treesitter:tree-sitter-java", version.ref = "tsBinding" }
 tree-sitter = { module = "com.itsaky.androidide.treesitter:android-tree-sitter", version.ref = "tsBinding" }
 lsp4j = { module = "org.eclipse.lsp4j:org.eclipse.lsp4j", version.ref = "lsp4j" }
@@ -34,6 +88,10 @@ jdt-annotation = { module = "org.eclipse.jdt:org.eclipse.jdt.annotation", versio
 tests-google-truth = { module = "com.google.truth:truth", version = "1.4.2" }
 tests-robolectric = { module = "org.robolectric:robolectric", version = "4.11.1" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
+videocache = { module = "xyz.doikki.android.dkplayer:videocache", version.ref = "videocache" }
+webviewlib = { module = "cn.yc:WebViewLib", version.ref = "webviewlib" }
+xxpermissions = { module = "com.github.getActivity:XXPermissions", version.ref = "xxpermissions" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

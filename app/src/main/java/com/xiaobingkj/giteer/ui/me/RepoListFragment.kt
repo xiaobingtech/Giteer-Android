@@ -14,6 +14,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showEmpty
 import com.xiaobingkj.giteer.ext.showLoading
 import com.xiaobingkj.giteer.ui.star.StarAdapter
 import io.github.rosemoe.sora.app.R
@@ -36,7 +37,11 @@ class RepoListFragment : BaseVmDbFragment<RepoListViewModel, FragmentRepoListBin
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.repoEvent.observe(viewLifecycleOwner, Observer {
-            loadsir.showSuccess()
+            if (it.size == 0) {
+                loadsir.showEmpty()
+            }else{
+                loadsir.showSuccess()
+            }
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }

@@ -8,6 +8,7 @@ import com.kingja.loadsir.core.LoadService
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showEmpty
 import com.xiaobingkj.giteer.ext.showLoading
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentSearchRepoBinding
@@ -31,7 +32,11 @@ class SearchRepoFragment : BaseVmDbFragment<SearchRepoViewModel, FragmentSearchR
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.repoEvent.observe(this, Observer {
-            loadsir.showSuccess()
+            if (it.size == 0) {
+                loadsir.showEmpty()
+            }else{
+                loadsir.showSuccess()
+            }
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }

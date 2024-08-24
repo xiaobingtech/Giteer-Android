@@ -92,6 +92,8 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
         mDatabind.click = ProxyClick()
         name = arguments?.getString("name")!!
 
+        setHasOptionsMenu(false)
+
         loadsir = loadServiceInit(mDatabind.scrollView) {
             //点击重试时触发的操作
             requestData()
@@ -110,6 +112,11 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
 
     override fun showLoading(message: String) {
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     inner class ProxyClick() {

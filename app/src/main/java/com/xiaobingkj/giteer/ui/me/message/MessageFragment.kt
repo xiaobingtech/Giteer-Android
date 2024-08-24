@@ -15,6 +15,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.MessageBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showEmpty
 import com.xiaobingkj.giteer.ext.showLoading
 import com.xiaobingkj.giteer.ui.star.StarAdapter
 import io.github.rosemoe.sora.app.R
@@ -35,7 +36,11 @@ class MessageFragment : BaseVmDbFragment<MessageViewModel, FragmentMessageBindin
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.messageEvent.observe(viewLifecycleOwner, Observer {
-            loadsir.showSuccess()
+            if (it.list.size == 0) {
+                loadsir.showEmpty()
+            }else{
+                loadsir.showSuccess()
+            }
             adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             if (page == 1) {
                 currentList = it.list

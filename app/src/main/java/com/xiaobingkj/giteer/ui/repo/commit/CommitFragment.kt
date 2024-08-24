@@ -17,6 +17,7 @@ import com.xiaobingkj.giteer.data.model.ReleaseBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showEmpty
 import com.xiaobingkj.giteer.ext.showLoading
 import com.xiaobingkj.giteer.ui.repo.release.ReleaseAdapter
 import io.github.rosemoe.sora.app.R
@@ -38,7 +39,11 @@ class CommitFragment : BaseVmDbFragment<CommitViewModel, FragmentCommitBinding>(
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.commitEvent.observe(viewLifecycleOwner, Observer {
-            loadsir.showSuccess()
+            if (it.size == 0) {
+                loadsir.showEmpty()
+            }else{
+                loadsir.showSuccess()
+            }
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }

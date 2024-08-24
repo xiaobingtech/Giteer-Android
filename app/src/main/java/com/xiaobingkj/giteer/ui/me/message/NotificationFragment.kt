@@ -15,6 +15,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import com.xiaobingkj.giteer.data.model.MessageBean
 import com.xiaobingkj.giteer.data.model.NotificationBean
 import com.xiaobingkj.giteer.ext.loadServiceInit
+import com.xiaobingkj.giteer.ext.showEmpty
 import com.xiaobingkj.giteer.ext.showLoading
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentNotificationBinding
@@ -33,7 +34,11 @@ class NotificationFragment : BaseVmDbFragment<NotificationViewModel, FragmentNot
             mDatabind.refreshLayout.finishLoadMore()
         }
         mViewModel.notificationEvent.observe(viewLifecycleOwner, Observer {
-            loadsir.showSuccess()
+            if (it.list.size == 0) {
+                loadsir.showEmpty()
+            }else{
+                loadsir.showSuccess()
+            }
             if (page == 1) {
                 adapter.removeAtRange(IntRange(0, adapter.itemCount - 1))
             }
