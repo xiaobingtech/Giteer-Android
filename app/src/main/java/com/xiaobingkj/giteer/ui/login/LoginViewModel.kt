@@ -40,9 +40,19 @@ class LoginViewModel: BaseViewModel() {
     val versionEvent = MutableLiveData<GithubVersionBean>()
     val errorEvent = MutableLiveData<AppException>()
 
-    fun postOauthToken(refresh_token: String) {
+    fun refreshOauthToken(refresh_token: String) {
         requestNoCheck({
-            HttpRequestCoroutine.postOauthToken(refresh_token)
+            HttpRequestCoroutine.refreshOauthToken(refresh_token)
+        }, {
+            tokenEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
+
+    fun getOauthToken(code: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.getOauthToken(code)
         }, {
             tokenEvent.postValue(it)
         }, {

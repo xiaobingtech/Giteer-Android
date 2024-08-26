@@ -5,11 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavDirections
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import cn.carbs.android.avatarimageview.library.AvatarImageView
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.kingja.loadsir.core.LoadService
+import com.xiaobingkj.giteer.data.model.TokenBean
 import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ext.loadServiceInit
@@ -107,6 +111,13 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
 
         fun toMsg() {
             nav().navigate(R.id.msgFragment)
+        }
+
+        fun toSetting() {
+            Storage.token = TokenBean()
+            Storage.user = UserBean()
+            Storage.isLogin = false
+            nav().popBackStack(R.id.loginFragment, false)
         }
     }
 

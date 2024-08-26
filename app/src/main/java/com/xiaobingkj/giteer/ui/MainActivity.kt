@@ -107,7 +107,7 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (navController.currentDestination != null && navController.currentDestination!!.id != R.id.tabFragment) {
+                if (navController.currentDestination != null && navController.currentDestination!!.id != R.id.tabFragment && navController.currentDestination!!.id != R.id.loginFragment) {
                     //如果当前界面不是主页，那么直接调用返回即可
                     navController.navigateUp()
                 } else {

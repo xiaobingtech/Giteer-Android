@@ -31,7 +31,7 @@ class WelcomeFragment : BaseVmDbFragment<LoginViewModel, FragmentWelcomeBinding>
     override fun initView(savedInstanceState: Bundle?) {
         if (Storage.isLogin) {
             if (Storage.token.refresh_token != null) {
-                mViewModel.postOauthToken(Storage.token.refresh_token)
+                mViewModel.refreshOauthToken(Storage.token.refresh_token)
             }
             nav().navigate(R.id.tabFragment)
         }else{

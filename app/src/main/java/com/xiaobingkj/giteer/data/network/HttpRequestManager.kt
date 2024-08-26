@@ -24,6 +24,7 @@
 
 package com.xiaobingkj.giteer.data.network
 
+import com.xiaobingkj.giteer.data.Constants
 import com.xiaobingkj.giteer.data.model.BranchBean
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.EventBean
@@ -52,10 +53,21 @@ val HttpRequestCoroutine: HttpRequestManager by lazy(mode = LazyThreadSafetyMode
 class HttpRequestManager {
 
     //https://gitee.com/oauth/token?grant_type=refresh_token&refresh_token={refresh_token}
-    suspend fun postOauthToken(refresh_token: String): TokenBean {
+    suspend fun refreshOauthToken(refresh_token: String): TokenBean {
         return RxHttp.postJson("oauth/token")
             .add("grant_type", "refresh_token")
             .add("refresh_token", refresh_token)
+            .toAwait<TokenBean>()
+            .await()
+    }
+
+    suspend fun getOauthToken(code: String): TokenBean {
+        return RxHttp.postJson("oauth/token")
+            .add("code", code)
+            .add("client_id", Constants.CLIENT_ID)
+            .add("client_secret", Constants.CLIENT_SECRET)
+            .add("redirect_uri", Constants.REDIRECT_URI)
+            .add("grant_type", "authorization_code")
             .toAwait<TokenBean>()
             .await()
     }
