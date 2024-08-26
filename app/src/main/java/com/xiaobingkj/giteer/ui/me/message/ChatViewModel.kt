@@ -24,7 +24,38 @@
 
 package com.xiaobingkj.giteer.ui.me.message
 
+import androidx.lifecycle.MutableLiveData
+import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.model.MessageBean
+import com.xiaobingkj.giteer.data.model.NotificationBean
+import com.xiaobingkj.giteer.data.model.SendMessageBean
+import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
+import me.hgj.jetpackmvvm.ext.requestNoCheck
+import me.hgj.jetpackmvvm.network.AppException
 
 class ChatViewModel: BaseViewModel() {
+    val msgEvent = MutableLiveData<SendMessageBean>()
+    val pushEvent = MutableLiveData<String>()
+    val errorEvent = MutableLiveData<AppException>()
+
+    fun sendMsg(username: String, content: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.sendMsg(username, content)
+        }, {
+            msgEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
+
+    fun push(touid: String, message: String, sender: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.push(touid, message, sender)
+        }, {
+            pushEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
 }

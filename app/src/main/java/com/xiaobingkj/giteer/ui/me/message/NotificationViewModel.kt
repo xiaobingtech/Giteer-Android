@@ -45,7 +45,6 @@ class NotificationViewModel: BaseViewModel() {
             notificationEvent.postValue(it)
         }, {
             errorEvent.postValue(it)
-            ToastUtils.showLong(it.errorLog)
         })
     }
 }

@@ -184,4 +184,6 @@ dependencies {
 
     implementation(libs.loadsir)
 
+    implementation(libs.chatkit)
+
 }

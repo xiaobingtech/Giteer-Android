@@ -560,4 +560,6 @@
     <string name="events">我的动态</string>
     <string name="star">Star</string>
 
+    <string name="hint_enter_a_message">Type a message…</string>
+
 </resources>

@@ -6,6 +6,7 @@ autolinktextviewv2 = "3.0.0"
 avatarimageview = "1.0.4"
 baserecyclerviewadapterhelper4 = "4.1.4"
 bigimageviewpager = "androidx-7.3.0"
+chatkit = "0.4.1"
 customactivityoncrash = "2.4.0"
 imageGlide = "4.6.2"
 jetpackmvvm = "1.2.7"
@@ -44,6 +45,7 @@ autolinktextviewv2 = { module = "com.github.armcha:AutoLinkTextViewV2", version.
 avatarimageview = { module = "cn.carbs.android:AvatarImageView", version.ref = "avatarimageview" }
 baserecyclerviewadapterhelper4 = { module = "io.github.cymchad:BaseRecyclerViewAdapterHelper4", version.ref = "baserecyclerviewadapterhelper4" }
 bigimageviewpager = { module = "com.github.SherlockGougou:BigImageViewPager", version.ref = "bigimageviewpager" }
+chatkit = { module = "com.github.stfalcon-studio:Chatkit", version.ref = "chatkit" }
 core = { module = "io.noties.markwon:core", version.ref = "imageGlide" }
 customactivityoncrash = { module = "cat.ereza:customactivityoncrash", version.ref = "customactivityoncrash" }
 desugar = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.4" }

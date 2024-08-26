@@ -224,4 +224,8 @@
         android:id="@+id/issueDetailFragment"
         android:name="com.xiaobingkj.giteer.ui.repo.issue.IssueDetailFragment"
         android:label="IssueDetailFragment" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.xiaobingkj.giteer.ui.me.message.ChatFragment"
+        android:label="ChatFragment" />
 </navigation>

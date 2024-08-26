@@ -557,4 +557,7 @@
     <string name="receivedEvents">收到的动态</string>
     <string name="events">我的动态</string>
     <string name="star">Star</string>
+
+    <string name="hint_enter_a_message">文明发言，真诚提问，请输入要发送的内容</string>
+
 </resources>

@@ -23,6 +23,11 @@
  */
 package com.xiaobingkj.giteer.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class MessageBean {
@@ -46,7 +51,7 @@ public class MessageBean {
         this.list = list;
     }
 
-    public static class ListDTO {
+    public static class ListDTO implements Parcelable {
         private int id;
         private SenderDTO sender;
         private boolean unread;
@@ -54,6 +59,27 @@ public class MessageBean {
         private String updated_at;
         private String url;
         private String html_url;
+
+        protected ListDTO(Parcel in) {
+            id = in.readInt();
+            unread = in.readByte() != 0;
+            content = in.readString();
+            updated_at = in.readString();
+            url = in.readString();
+            html_url = in.readString();
+        }
+
+        public static final Creator<ListDTO> CREATOR = new Creator<ListDTO>() {
+            @Override
+            public ListDTO createFromParcel(Parcel in) {
+                return new ListDTO(in);
+            }
+
+            @Override
+            public ListDTO[] newArray(int size) {
+                return new ListDTO[size];
+            }
+        };
 
         public int getId() {
             return id;
@@ -109,6 +135,21 @@ public class MessageBean {
 
         public void setHtml_url(String html_url) {
             this.html_url = html_url;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            dest.writeInt(id);
+            dest.writeByte((byte) (unread ? 1 : 0));
+            dest.writeString(content);
+            dest.writeString(updated_at);
+            dest.writeString(url);
+            dest.writeString(html_url);
         }
 
         public static class SenderDTO {

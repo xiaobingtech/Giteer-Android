@@ -100,7 +100,17 @@ class MessageFragment : BaseVmDbFragment<MessageViewModel, FragmentMessageBindin
                 view: View,
                 position: Int
             ) {
-
+                val msgs = currentList!!.groupBy { it.sender.id }
+                val currentMsgs = msgs.filter { it.key == adapter.getItem(position)?.sender?.id }
+                val bundle = Bundle()
+                val mutableList = mutableListOf<MessageBean.ListDTO>()
+                currentMsgs.values.forEach {
+                    it.forEach {
+                        mutableList.add(it)
+                    }
+                }
+                bundle.putParcelableArray("msgs", mutableList.toTypedArray())
+                nav().navigate(R.id.chatFragment, bundle)
             }
 
         }

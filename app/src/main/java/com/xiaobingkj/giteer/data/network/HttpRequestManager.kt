@@ -39,6 +39,7 @@ import com.xiaobingkj.giteer.data.model.ReleaseBean
 import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
+import com.xiaobingkj.giteer.data.model.SendMessageBean
 import com.xiaobingkj.giteer.data.model.TokenBean
 import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.storage.Storage
@@ -279,6 +280,24 @@ class HttpRequestManager {
     suspend fun deleteStared(name: String): RepositoryBean {
         return RxHttp.deleteJson("api/v5/user/starred/${name}")
             .toAwait<RepositoryBean>()
+            .await()
+    }
+    //notifications/messages
+    suspend fun sendMsg(username: String, content: String): SendMessageBean {
+        return RxHttp.postJson("api/v5/notifications/messages")
+            .add("username", username)
+            .add("content", content)
+            .toAwait<SendMessageBean>()
+            .await()
+    }
+    //https://giteer.app.xiaobingkj.com/jpush-api-php-client/examples/push_example.php
+    suspend fun push(touid: String, message: String, sender: String): String {
+        return RxHttp.get("https://giteer.app.xiaobingkj.com/jpush-api-php-client/examples/push_example.php")
+            .setAssemblyEnabled(false)
+            .add("touid", touid)
+            .add("message", message)
+            .add("sender", sender)
+            .toAwait<String>()
             .await()
     }
 }
