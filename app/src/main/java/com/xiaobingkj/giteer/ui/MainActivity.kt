@@ -56,7 +56,6 @@ import io.github.rosemoe.sora.app.databinding.ActivityMainBinding
 import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
 import me.hgj.jetpackmvvm.base.appContext
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
-import me.hgj.jetpackmvvm.demo.ui.activity.ErrorActivity
 import me.hgj.jetpackmvvm.ext.nav
 import me.hgj.jetpackmvvm.network.manager.NetState
 import java.io.File

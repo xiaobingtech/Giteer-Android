@@ -402,7 +402,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        CrashHandler.INSTANCE.init(mActivity)
+//        CrashHandler.INSTANCE.init(mActivity)
 
         setHasOptionsMenu(true)
 
@@ -520,6 +520,8 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 //        openAssetsFile("samples/sample.txt")
 
         val url = arguments?.getString("url")!!
+        val name = url.split("/").last()
+        mActivity.supportActionBar?.title = name
         mViewModel.getRepoFile(url)
 
         updatePositionText()
@@ -544,7 +546,6 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     override fun onDestroyView() {
         super.onDestroyView()
         mDatabind.editor.release()
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -180,10 +180,12 @@ dependencies {
 
     implementation(libs.xxpermissions)
 
-    implementation(libs.customactivityoncrash)
+    implementation(libs.android.defensecrash)
 
     implementation(libs.loadsir)
 
     implementation(libs.chatkit)
+
+    implementation(libs.mncrashmonitor)
 
 }

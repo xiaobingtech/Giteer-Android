@@ -25,10 +25,13 @@
 package com.xiaobingkj.giteer
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
-import cat.ereza.customactivityoncrash.config.CaocConfig
+import com.android.tony.defenselib.DefenseCrash
 import com.kingja.loadsir.callback.SuccessCallback
 import com.kingja.loadsir.core.LoadSir
+import com.maning.librarycrashmonitor.MCrashMonitor
+import com.maning.librarycrashmonitor.listener.MCrashCallBack
 import com.tencent.mmkv.MMKV
 import com.xiaobingkj.giteer.data.network.RxHttpManager
 import com.xiaobingkj.giteer.ui.MainActivity
@@ -36,7 +39,7 @@ import com.ycbjie.webviewlib.utils.X5WebUtils
 import me.hgj.jetpackmvvm.demo.app.weight.loadCallBack.EmptyCallback
 import me.hgj.jetpackmvvm.demo.app.weight.loadCallBack.ErrorCallback
 import me.hgj.jetpackmvvm.demo.app.weight.loadCallBack.LoadingCallback
-import me.hgj.jetpackmvvm.demo.ui.activity.ErrorActivity
+import java.io.File
 
 
 class GiteerApplication: Application() {
@@ -45,10 +48,6 @@ class GiteerApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        Thread.UncaughtExceptionHandler { t, e ->
-            Log.d(TAG, e.toString())
-        }
         //初始化MMKV
         val rootDir = MMKV.initialize(this)
         Log.d(TAG, "MMKV rootDir:" + rootDir)
@@ -57,19 +56,6 @@ class GiteerApplication: Application() {
         //初始化RxHttp
         RxHttpManager(this).setup()
 
-        //防止项目崩溃，崩溃后打开错误界面
-        CaocConfig.Builder.create()
-            .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //default: CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM
-            .enabled(true)//是否启用CustomActivityOnCrash崩溃拦截机制 必须启用！不然集成这个库干啥？？？
-            .showErrorDetails(true) //是否必须显示包含错误详细信息的按钮 default: true
-            .showRestartButton(true) //是否必须显示“重新启动应用程序”按钮或“关闭应用程序”按钮default: true
-            .logErrorOnRestart(true) //是否必须重新堆栈堆栈跟踪 default: true
-            .trackActivities(true) //是否必须跟踪用户访问的活动及其生命周期调用 default: false
-            .minTimeBetweenCrashesMs(2000) //应用程序崩溃之间必须经过的时间 default: 3000
-            .restartActivity(MainActivity::class.java) // 重启的activity
-            .errorActivity(ErrorActivity::class.java) //发生错误跳转的activity
-            .apply()
-
         //界面加载管理 初始化
         LoadSir.beginBuilder()
             .addCallback(LoadingCallback())//加载
@@ -77,5 +63,34 @@ class GiteerApplication: Application() {
             .addCallback(EmptyCallback())//空
             .setDefaultCallback(SuccessCallback::class.java)//设置默认加载状态页
             .commit()
+
+        initCrash()
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        DefenseCrash.initialize(this)
+        DefenseCrash.install { thread, throwable, isSafeMode, isCrashInChoreographer ->
+            Log.d("Exceptionhandler",
+                "thread:${thread.name}"+
+                        "exception:${throwable.message}"+
+                        "isCrashInChoreographer:$isCrashInChoreographer"+
+                        "isSafeMode:$isSafeMode")
+        }
+    }
+
+    private fun initCrash() {
+        /**
+         * 初始化日志系统
+         * context :    上下文
+         * isDebug :    是不是Debug模式,true:崩溃后显示自定义崩溃页面 ;false:关闭应用,不跳转奔溃页面(默认)
+         * CrashCallBack : 回调执行
+         */
+        MCrashMonitor.init(this, true, object : MCrashCallBack {
+            override fun onCrash(file: File) {
+                //可以在这里保存标识，下次再次进入把日志发送给服务器
+                Log.d("CrashMonitor回调", file.absolutePath)
+            }
+        })
     }
 }
