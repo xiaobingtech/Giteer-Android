@@ -27,6 +27,7 @@ package com.xiaobingkj.giteer.data.network
 import com.xiaobingkj.giteer.data.Constants
 import com.xiaobingkj.giteer.data.model.BranchBean
 import com.xiaobingkj.giteer.data.model.CommitBean
+import com.xiaobingkj.giteer.data.model.ContributionBean
 import com.xiaobingkj.giteer.data.model.EventBean
 import com.xiaobingkj.giteer.data.model.GithubVersionBean
 import com.xiaobingkj.giteer.data.model.IssueBean
@@ -42,6 +43,7 @@ import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.data.model.SendMessageBean
 import com.xiaobingkj.giteer.data.model.TokenBean
+import com.xiaobingkj.giteer.data.model.User
 import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.storage.Storage
 import rxhttp.RxHttp
@@ -305,6 +307,50 @@ class HttpRequestManager {
     suspend fun getPermission(name: String): PermissionBean {
         return RxHttp.get("api/v5/repos/${name}/collaborators/${Storage.user.login}/permission")
             .toAwait<PermissionBean>()
+            .await()
+    }
+    suspend fun putWatched(name: String, type: String = "watching"): RepositoryBean {
+        return RxHttp.putJson("api/v5/user/subscriptions/${name}")
+            .add("type", type)
+            .toAwait<RepositoryBean>()
+            .await()
+    }
+    //https://gitee.com/api/v5/user/subscriptions/{owner}/{repo} delete
+    suspend fun deleteWatched(name: String): RepositoryBean {
+        return RxHttp.deleteJson("api/v5/user/subscriptions/${name}")
+            .toAwait<RepositoryBean>()
+            .await()
+    }
+    //https://gitee.com/api/v5/repos/{owner}/{repo}/forks
+    suspend fun forkRepo(name: String, organization: String = ""): RepositoryBean {
+        return RxHttp.postJson("api/v5/repos/${name}/forks")
+            .add("organization", "")
+            .toAwait<RepositoryBean>()
+            .await()
+    }
+    //https://gitee.com/api/v5/users/{username}/orgs
+    //https://gitee.com/api/v5/user/enterprises(admin,page,perpage)
+    suspend fun getOrgs(name: String, admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<UserBean> {
+        return RxHttp.postJson("api/v5/user/orgs")
+            .add("admin", admin)
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<UserBean>()
+            .await()
+    }
+
+    suspend fun getEnterprises(name: String, admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<UserBean> {
+        return RxHttp.postJson("api/v5/user/enterprises")
+            .add("admin", admin)
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<UserBean>()
+            .await()
+    }
+    //https://gitee.com/fandongtongxue_admin?browser_history=0
+    suspend fun getBrowser_history(): ContributionBean {
+        return RxHttp.get("${Storage.user.login}?browser_history=0")
+            .toAwait<ContributionBean>()
             .await()
     }
 }

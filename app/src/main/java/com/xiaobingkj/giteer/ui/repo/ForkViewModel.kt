@@ -22,38 +22,9 @@
  *     additional information or have any questions
  ******************************************************************************/
 
-package com.xiaobingkj.giteer.ui.me
+package com.xiaobingkj.giteer.ui.repo
 
-import androidx.lifecycle.MutableLiveData
-import com.blankj.utilcode.util.ToastUtils
-import com.xiaobingkj.giteer.data.model.ContributionBean
-import com.xiaobingkj.giteer.data.model.UserBean
-import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
-import me.hgj.jetpackmvvm.ext.requestNoCheck
-import me.hgj.jetpackmvvm.network.AppException
 
-class MeViewModel: BaseViewModel() {
-    val errorEvent = MutableLiveData<AppException>()
-    val userEvent = MutableLiveData<UserBean>()
-    val historyEvent = MutableLiveData<ContributionBean>()
-    fun getUser() {
-        requestNoCheck({
-            HttpRequestCoroutine.getUser()
-        }, {
-            userEvent.postValue(it)
-        }, {
-            errorEvent.postValue(it)
-        })
-    }
-
-    fun getBrowser_history() {
-        requestNoCheck({
-            HttpRequestCoroutine.getBrowser_history()
-        }, {
-            historyEvent.postValue(it)
-        }, {
-            errorEvent.postValue(it)
-        })
-    }
+class ForkViewModel: BaseViewModel() {
 }

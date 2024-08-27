@@ -91,5 +91,24 @@ class RepoViewModel: BaseViewModel() {
             errorEvent.postValue(it)
         })
     }
+    fun putWatched(name: String, type: String = "watching") {
+        requestNoCheck({
+            HttpRequestCoroutine.putWatched(name, type)
+        }, {
+            starEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
+
+    fun deleteWatched(name: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.deleteWatched(name)
+        }, {
+            starEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
 
 }

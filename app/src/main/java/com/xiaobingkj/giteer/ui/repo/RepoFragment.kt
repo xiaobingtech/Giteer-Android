@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.TimeUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.kingja.loadsir.core.LoadService
 import com.xiaobingkj.giteer.data.model.RepositoryBean
@@ -34,6 +35,9 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
     //界面状态管理者
     private lateinit var loadsir: LoadService<Any>
     override fun createObserver() {
+        mViewModel.errorEvent.observe(viewLifecycleOwner) {
+            ToastUtils.showLong(it.errorLog)
+        }
         mViewModel.repoEvent.observe(viewLifecycleOwner) {
             loadsir.showSuccess()
             repo = it
@@ -54,7 +58,8 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             if (it.description == null) {
                 mDatabind.desc.visibility = View.GONE
             }
-            mDatabind.btnStar.text = if (it.stared) {"已星标"} else {"星标"}
+            mDatabind.btnStar.text = if (it.stared) {"Starred"} else {"Star"}
+            mDatabind.btnWatch.text = if (it.watched) {"Watched"} else {"Watch"}
             mViewModel.getRepoReadme(name, ref)
         }
         mViewModel.readMeEvent.observe(viewLifecycleOwner) {
@@ -164,12 +169,27 @@ class RepoFragment : BaseVmDbFragment<RepoViewModel, FragmentRepoBinding>() {
             if (repo!!.stared) {
                 mViewModel.deleteStared(name)
                 repo!!.stared = false
-                mDatabind.btnStar.text = "星标"
+                mDatabind.btnStar.text = "Star"
             }else{
                 mViewModel.putStared(name)
                 repo!!.stared = true
-                mDatabind.btnStar.text = "已星标"
+                mDatabind.btnStar.text = "Starred"
             }
+        }
+        fun operateWatch() {
+            if (repo!!.watched) {
+                mViewModel.deleteWatched(name)
+                repo!!.watched = false
+                mDatabind.btnWatch.text = "Watch"
+            }else{
+
+                mViewModel.putWatched(name)
+                repo!!.watched = true
+                mDatabind.btnWatch.text = "Watched"
+            }
+        }
+        fun operateFork() {
+
         }
     }
 

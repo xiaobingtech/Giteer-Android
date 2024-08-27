@@ -30,6 +30,7 @@ import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ToastUtils
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
+import com.tencent.smtt.sdk.CookieManager
 import com.tencent.smtt.sdk.WebView
 import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ui.MainActivity
@@ -99,6 +100,8 @@ class WebFragment: BaseVmDbFragment<LoginViewModel, FragmentWebViewBinding>() {
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
+                //持久化Cookie
+                CookieManager.getInstance().flush()
                 request?.url.toString().let {
                     if (it.contains("code=")) {
                         val strings = it.split("code=")

@@ -52,6 +52,9 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
             mDatabind.followNum.text = it.following.toString()
             Storage.user = it
         }
+        mViewModel.historyEvent.observe(viewLifecycleOwner) {
+            mDatabind.contribution.contributions = it.data.contribution_calendar.year_streak
+        }
     }
 
     override fun dismissLoading() {
@@ -77,6 +80,7 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
             loadsir.showLoading()
         }
         mViewModel.getUser()
+        mViewModel.getBrowser_history()
     }
 
     override fun showLoading(message: String) {
