@@ -417,8 +417,17 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
             searchOptions.setOnClickListener(::showSearchOptions)
         }
 
+        val canEdit = arguments?.getBoolean("canEdit")
+        mDatabind.editor.editable = canEdit == true
+
         // Configure symbol input view
         val inputView = mDatabind.symbolInput
+        if (canEdit == true) {
+            inputView.visibility = View.VISIBLE
+        }else{
+            inputView.visibility = View.GONE
+        }
+
         inputView.bindEditor(mDatabind.editor)
         inputView.addSymbols(SYMBOLS, SYMBOL_INSERT_TEXT)
         inputView.forEachButton { it.typeface = typeface }

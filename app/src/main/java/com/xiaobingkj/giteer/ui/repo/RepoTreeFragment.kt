@@ -25,6 +25,7 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
     private var ref: String = ""
     private var rootNode: TreeNode? = null
     private var currentNode: TreeNode? = null
+    private var currentUrl: String = ""
     override fun createObserver() {
         mViewModel.treeEvent.observe(viewLifecycleOwner) {
             it.forEach {
@@ -43,6 +44,13 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
                     }
                 }
             }
+        }
+        mViewModel.permissionEvent.observe(viewLifecycleOwner) {
+            val canEdit = it.permission.equals("admin") || it.permission.equals("write")
+            val bundle = Bundle()
+            bundle.putString("url", currentUrl)
+            bundle.putBoolean("canEdit", canEdit)
+            nav().navigate(R.id.mainFragment, bundle)
         }
     }
 
@@ -73,6 +81,7 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
                     parts[parts.size - 1] = EncodeUtils.urlEncode(item.name)
                     val encodeUrl = parts.joinToString("/")
                     val pathLowercase = item.path.lowercase()
+                    currentUrl = encodeUrl
                     val bundle = Bundle()
                     bundle.putString("url", encodeUrl)
                     if (pathLowercase.endsWith("jpg") || pathLowercase.endsWith("png") || pathLowercase.endsWith("webp") || pathLowercase.endsWith("gif")) {
@@ -88,7 +97,7 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
                     }else if (pathLowercase.endsWith("mp4")) {
                         nav().navigate(R.id.videoFragment, bundle)
                     }else{
-                        nav().navigate(R.id.mainFragment, bundle)
+                        mViewModel.getPermission(repo.full_name)
                     }
                 }
             }

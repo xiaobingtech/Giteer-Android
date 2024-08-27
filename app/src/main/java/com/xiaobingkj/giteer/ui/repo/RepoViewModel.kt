@@ -27,6 +27,7 @@ package com.xiaobingkj.giteer.ui.repo
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
 import com.xiaobingkj.giteer.data.model.BranchBean
+import com.xiaobingkj.giteer.data.model.PermissionBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
@@ -90,6 +91,5 @@ class RepoViewModel: BaseViewModel() {
             errorEvent.postValue(it)
         })
     }
-
 
 }

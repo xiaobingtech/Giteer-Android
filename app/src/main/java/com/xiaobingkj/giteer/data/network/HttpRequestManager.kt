@@ -33,6 +33,7 @@ import com.xiaobingkj.giteer.data.model.IssueBean
 import com.xiaobingkj.giteer.data.model.IssueDetailBean
 import com.xiaobingkj.giteer.data.model.MessageBean
 import com.xiaobingkj.giteer.data.model.NotificationBean
+import com.xiaobingkj.giteer.data.model.PermissionBean
 import com.xiaobingkj.giteer.data.model.PullRequestBean
 import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.ReleaseBean
@@ -298,6 +299,12 @@ class HttpRequestManager {
             .add("message", message)
             .add("sender", sender)
             .toAwait<String>()
+            .await()
+    }
+
+    suspend fun getPermission(name: String): PermissionBean {
+        return RxHttp.get("api/v5/repos/${name}/collaborators/${Storage.user.login}/permission")
+            .toAwait<PermissionBean>()
             .await()
     }
 }

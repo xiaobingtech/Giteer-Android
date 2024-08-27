@@ -26,14 +26,18 @@ package com.xiaobingkj.giteer.ui.repo
 
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.model.PermissionBean
 import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.ext.requestNoCheck
+import me.hgj.jetpackmvvm.network.AppException
 
 class RepoTreeViewModel: BaseViewModel() {
+    val errorEvent = MutableLiveData<AppException>()
     val treeEvent = MutableLiveData<List<RepoTreeBean>>()
+    val permissionEvent = MutableLiveData<PermissionBean>()
 
     fun getRepoContents(name: String,  path: String = "", ref: String) {
         requestNoCheck({
@@ -42,6 +46,16 @@ class RepoTreeViewModel: BaseViewModel() {
             treeEvent.postValue(it)
         }, {
             ToastUtils.showLong(it.errorLog)
+        })
+    }
+
+    fun getPermission(name: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.getPermission(name)
+        }, {
+            permissionEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
         })
     }
 }
