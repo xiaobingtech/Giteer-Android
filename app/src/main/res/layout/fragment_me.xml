@@ -149,13 +149,33 @@
                     android:layout_height="10dp"
                     ></View>
                 <HorizontalScrollView
+                    android:id="@+id/scrollView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:scrollbarSize="0dp">
                     <com.xiaobingkj.giteer.ui.me.ContributionGraphView
                         android:id="@+id/contribution"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"></com.xiaobingkj.giteer.ui.me.ContributionGraphView>
                 </HorizontalScrollView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/org"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+                <View
+                    android:background="@color/bg_back"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    ></View>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/enterprise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+                <View
+                    android:background="@color/bg_back"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    ></View>
                 <LinearLayout
                     android:id="@+id/message"
                     android:onClick="@{() -> click.toMsg()}"
@@ -187,7 +207,7 @@
                 <View
                     android:background="@color/bg_back"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="1dp"
                     ></View>
                 <LinearLayout
                     android:id="@+id/email"
@@ -220,7 +240,7 @@
                 <View
                     android:background="@color/bg_back"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="1dp"
                     ></View>
                 <LinearLayout
                     android:id="@+id/setting"

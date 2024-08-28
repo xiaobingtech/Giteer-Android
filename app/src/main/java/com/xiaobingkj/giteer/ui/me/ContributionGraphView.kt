@@ -30,6 +30,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.ColorRes
 import com.xiaobingkj.giteer.data.model.ContributionBean
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -84,10 +85,14 @@ class ContributionGraphView @JvmOverloads constructor(
                 val y = row * (squareSize + squareMargin)
 
                 paint.color = when (contribution.classX) {
-                    "less" -> Color.LTGRAY
+                    "less" -> Color.rgb(238, 238, 238)
+                    "little" -> Color.rgb(214, 230, 133)
+                    "some" -> Color.rgb(140, 198, 101)
+                    "many" -> Color.rgb(68, 163, 64)
+                    "much" -> Color.rgb(30, 104, 35)
                     else -> Color.GREEN // 根据实际情况调整
                 }
-                canvas?.drawRect(x, y, x + squareSize, y + squareSize, paint)
+                canvas.drawRect(x, y, x + squareSize, y + squareSize, paint)
             }
 
             if (currentDate.dayOfWeek == DayOfWeek.SUNDAY) col++

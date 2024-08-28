@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import cn.carbs.android.avatarimageview.library.AvatarImageView
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -26,6 +27,8 @@ import me.hgj.jetpackmvvm.ext.nav
 class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
     override fun layoutId(): Int = R.layout.fragment_me
     private var user: UserBean? = null
+    private var orgAdapter = OrgAdapter()
+    private var enterpriseAdapter = EnterpriseAdapter()
     //界面状态管理者
     private lateinit var loadsir: LoadService<Any>
     override fun createObserver() {
@@ -55,6 +58,16 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
         mViewModel.historyEvent.observe(viewLifecycleOwner) {
             mDatabind.contribution.contributions = it.data.contribution_calendar.year_streak
         }
+        mViewModel.orgEvent.observe(viewLifecycleOwner) {
+            orgAdapter.removeAtRange(IntRange(0, orgAdapter.itemCount - 1))
+            orgAdapter.addAll(it)
+            orgAdapter.notifyDataSetChanged()
+        }
+        mViewModel.enterpriseEvent.observe(viewLifecycleOwner) {
+            enterpriseAdapter.removeAtRange(IntRange(0, orgAdapter.itemCount - 1))
+            enterpriseAdapter.addAll(it)
+            enterpriseAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun dismissLoading() {
@@ -69,6 +82,14 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
             //点击重试时触发的操作
             requestData()
         }
+
+        val orgListView = mDatabind.org
+        orgListView.layoutManager = LinearLayoutManager(context)
+        orgListView.adapter = orgAdapter
+
+        val enterpriseListView = mDatabind.enterprise
+        enterpriseListView.layoutManager = LinearLayoutManager(context)
+        enterpriseListView.adapter = enterpriseAdapter
     }
 
     override fun lazyLoadData() {
@@ -81,6 +102,8 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
         }
         mViewModel.getUser()
         mViewModel.getBrowser_history()
+        mViewModel.getOrgs()
+        mViewModel.getEnterprises()
     }
 
     override fun showLoading(message: String) {

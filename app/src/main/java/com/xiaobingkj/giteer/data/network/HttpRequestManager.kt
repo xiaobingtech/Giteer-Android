@@ -29,6 +29,7 @@ import com.xiaobingkj.giteer.data.model.BranchBean
 import com.xiaobingkj.giteer.data.model.CommitBean
 import com.xiaobingkj.giteer.data.model.ContributionBean
 import com.xiaobingkj.giteer.data.model.EventBean
+import com.xiaobingkj.giteer.data.model.EventBean.OrgDTO
 import com.xiaobingkj.giteer.data.model.GithubVersionBean
 import com.xiaobingkj.giteer.data.model.IssueBean
 import com.xiaobingkj.giteer.data.model.IssueDetailBean
@@ -40,6 +41,7 @@ import com.xiaobingkj.giteer.data.model.ReadMeBean
 import com.xiaobingkj.giteer.data.model.ReleaseBean
 import com.xiaobingkj.giteer.data.model.RepoTreeBean
 import com.xiaobingkj.giteer.data.model.RepositoryBean
+import com.xiaobingkj.giteer.data.model.RepositoryBean.EnterpriseDTO
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
 import com.xiaobingkj.giteer.data.model.SendMessageBean
 import com.xiaobingkj.giteer.data.model.TokenBean
@@ -323,28 +325,45 @@ class HttpRequestManager {
     }
     //https://gitee.com/api/v5/repos/{owner}/{repo}/forks
     suspend fun forkRepo(name: String, organization: String = ""): RepositoryBean {
-        return RxHttp.postJson("api/v5/repos/${name}/forks")
+        return RxHttp.get("api/v5/repos/${name}/forks")
             .add("organization", "")
             .toAwait<RepositoryBean>()
             .await()
     }
     //https://gitee.com/api/v5/users/{username}/orgs
     //https://gitee.com/api/v5/user/enterprises(admin,page,perpage)
-    suspend fun getOrgs(name: String, admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<UserBean> {
-        return RxHttp.postJson("api/v5/user/orgs")
+    suspend fun getOrgs(admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<OrgDTO> {
+        return RxHttp.get("api/v5/user/orgs")
             .add("admin", admin)
             .add("page", page)
             .add("per_page", perpage)
-            .toAwaitList<UserBean>()
+            .toAwaitList<OrgDTO>()
             .await()
     }
 
-    suspend fun getEnterprises(name: String, admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<UserBean> {
-        return RxHttp.postJson("api/v5/user/enterprises")
+    suspend fun getEnterprises(admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<EnterpriseDTO> {
+        return RxHttp.get("api/v5/user/enterprises")
             .add("admin", admin)
             .add("page", page)
             .add("per_page", perpage)
-            .toAwaitList<UserBean>()
+            .toAwaitList<EnterpriseDTO>()
+            .await()
+    }
+    suspend fun getUserOrgs(name: String, admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<OrgDTO> {
+        return RxHttp.get("api/v5/user/${name}/orgs")
+            .add("admin", admin)
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<OrgDTO>()
+            .await()
+    }
+
+    suspend fun getUserEnterprises(name: String, admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<EnterpriseDTO> {
+        return RxHttp.postJson("api/v5/user/${name}/enterprises")
+            .add("admin", admin)
+            .add("page", page)
+            .add("per_page", perpage)
+            .toAwaitList<EnterpriseDTO>()
             .await()
     }
     //https://gitee.com/fandongtongxue_admin?browser_history=0
