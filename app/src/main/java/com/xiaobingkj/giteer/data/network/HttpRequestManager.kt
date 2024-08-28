@@ -350,25 +350,22 @@ class HttpRequestManager {
             .await()
     }
     suspend fun getUserOrgs(name: String, admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<OrgDTO> {
-        return RxHttp.get("api/v5/user/${name}/orgs")
+        return RxHttp.get("api/v5/users/${name}/orgs")
             .add("admin", admin)
             .add("page", page)
             .add("per_page", perpage)
             .toAwaitList<OrgDTO>()
             .await()
     }
-
-    suspend fun getUserEnterprises(name: String, admin: Boolean = true, page: Int, perpage: Int = 100): MutableList<EnterpriseDTO> {
-        return RxHttp.postJson("api/v5/user/${name}/enterprises")
-            .add("admin", admin)
-            .add("page", page)
-            .add("per_page", perpage)
-            .toAwaitList<EnterpriseDTO>()
-            .await()
-    }
     //https://gitee.com/fandongtongxue_admin?browser_history=0
     suspend fun getBrowser_history(): ContributionBean {
         return RxHttp.get("${Storage.user.login}?browser_history=0")
+            .toAwait<ContributionBean>()
+            .await()
+    }
+    //https://gitee.com/fandongtongxue_admin?browser_history=0
+    suspend fun getUserBrowser_history(name: String): ContributionBean {
+        return RxHttp.get("${name}?browser_history=0")
             .toAwait<ContributionBean>()
             .await()
     }

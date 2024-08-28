@@ -26,6 +26,9 @@ package com.xiaobingkj.giteer.ui.me
 
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.ToastUtils
+import com.xiaobingkj.giteer.data.model.ContributionBean
+import com.xiaobingkj.giteer.data.model.EventBean.OrgDTO
+import com.xiaobingkj.giteer.data.model.RepositoryBean.EnterpriseDTO
 import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.network.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
@@ -35,11 +38,32 @@ import me.hgj.jetpackmvvm.network.AppException
 class UserViewModel: BaseViewModel() {
     val errorEvent = MutableLiveData<AppException>()
     val userEvent = MutableLiveData<UserBean>()
+    val historyEvent = MutableLiveData<ContributionBean>()
+    val orgEvent = MutableLiveData<List<OrgDTO>>()
     fun getUser(name: String) {
         requestNoCheck({
             HttpRequestCoroutine.getUser(name)
         }, {
             userEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
+    fun getUserBrowser_history(name: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.getUserBrowser_history(name)
+        }, {
+            historyEvent.postValue(it)
+        }, {
+            errorEvent.postValue(it)
+        })
+    }
+
+    fun getOrgs(name: String) {
+        requestNoCheck({
+            HttpRequestCoroutine.getUserOrgs(name, true, 1)
+        }, {
+            orgEvent.postValue(it)
         }, {
             errorEvent.postValue(it)
         })

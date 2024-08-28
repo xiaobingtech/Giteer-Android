@@ -159,6 +159,7 @@
                         android:layout_height="wrap_content"></com.xiaobingkj.giteer.ui.me.ContributionGraphView>
                 </HorizontalScrollView>
                 <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
                     android:id="@+id/org"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
@@ -168,6 +169,7 @@
                     android:layout_height="1dp"
                     ></View>
                 <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
                     android:id="@+id/enterprise"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>

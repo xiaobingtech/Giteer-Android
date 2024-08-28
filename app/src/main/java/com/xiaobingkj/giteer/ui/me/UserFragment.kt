@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
@@ -23,6 +24,7 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
     override fun layoutId(): Int = R.layout.fragment_user
     private var user: UserBean? = null
     private var name: String = ""
+    private var orgAdapter = OrgAdapter()
     //界面状态管理者
     private lateinit var loadsir: LoadService<Any>
     override fun createObserver() {
@@ -49,6 +51,14 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
             mDatabind.followerNum.text = it.followers.toString()
             mDatabind.followNum.text = it.following.toString()
         }
+        mViewModel.historyEvent.observe(viewLifecycleOwner) {
+            mDatabind.contribution.contributions = it.data.contribution_calendar.year_streak
+        }
+        mViewModel.orgEvent.observe(viewLifecycleOwner) {
+            orgAdapter.removeAtRange(IntRange(0, orgAdapter.itemCount - 1))
+            orgAdapter.addAll(it)
+            orgAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun dismissLoading() {
@@ -64,7 +74,9 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
             requestData()
         }
 
-        requestData()
+        val orgListView = mDatabind.org
+        orgListView.layoutManager = LinearLayoutManager(context)
+        orgListView.adapter = orgAdapter
     }
 
     fun requestData() {
@@ -72,10 +84,12 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
             loadsir.showLoading()
         }
         mViewModel.getUser(name!!)
+        mViewModel.getOrgs(name!!)
+        mViewModel.getUserBrowser_history(name!!)
     }
 
     override fun lazyLoadData() {
-
+        requestData()
     }
 
     override fun showLoading(message: String) {

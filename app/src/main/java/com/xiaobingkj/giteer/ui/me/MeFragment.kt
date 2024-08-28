@@ -64,7 +64,7 @@ class MeFragment : BaseVmDbFragment<MeViewModel,FragmentMeBinding>() {
             orgAdapter.notifyDataSetChanged()
         }
         mViewModel.enterpriseEvent.observe(viewLifecycleOwner) {
-            enterpriseAdapter.removeAtRange(IntRange(0, orgAdapter.itemCount - 1))
+            enterpriseAdapter.removeAtRange(IntRange(0, enterpriseAdapter.itemCount - 1))
             enterpriseAdapter.addAll(it)
             enterpriseAdapter.notifyDataSetChanged()
         }
