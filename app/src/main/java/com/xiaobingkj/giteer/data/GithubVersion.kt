@@ -26,6 +26,6 @@ package com.xiaobingkj.giteer.data
 
 class GithubVersion {
     companion object {
-        val latest = 40
+        val latest = 41
     }
 }

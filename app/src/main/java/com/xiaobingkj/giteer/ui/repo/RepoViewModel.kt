@@ -78,7 +78,7 @@ class RepoViewModel: BaseViewModel() {
         }, {
             starEvent.postValue(it)
         }, {
-            errorEvent.postValue(it)
+//            errorEvent.postValue(it)
         })
     }
 
@@ -88,7 +88,7 @@ class RepoViewModel: BaseViewModel() {
         }, {
             starEvent.postValue(it)
         }, {
-            errorEvent.postValue(it)
+//            errorEvent.postValue(it)
         })
     }
     fun putWatched(name: String, type: String = "watching") {
@@ -97,7 +97,7 @@ class RepoViewModel: BaseViewModel() {
         }, {
             starEvent.postValue(it)
         }, {
-            errorEvent.postValue(it)
+//            errorEvent.postValue(it)
         })
     }
 
@@ -107,7 +107,7 @@ class RepoViewModel: BaseViewModel() {
         }, {
             starEvent.postValue(it)
         }, {
-            errorEvent.postValue(it)
+//            errorEvent.postValue(it)
         })
     }
 
