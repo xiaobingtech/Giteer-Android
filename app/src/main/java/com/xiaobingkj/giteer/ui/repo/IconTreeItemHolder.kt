@@ -37,7 +37,7 @@ class IconTreeItemHolder(context: Context?) : TreeNode.BaseNodeViewHolder<IconTr
     private var tvValue: TextView? = null
     private var arrowView: PrintView? = null
 
-    class IconTreeItem(val icon: Int, val name: String, val path: String, val downloadURL: String) {
+    class IconTreeItem(val icon: Int, val name: String, val path: String, val downloadURL: String, val sha: String) {
 
     }
 

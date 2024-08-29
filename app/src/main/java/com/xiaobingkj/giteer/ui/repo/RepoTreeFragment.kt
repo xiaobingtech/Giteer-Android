@@ -26,21 +26,22 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
     private var rootNode: TreeNode? = null
     private var currentNode: TreeNode? = null
     private var currentUrl: String = ""
+    private var currentItem: IconTreeItemHolder.IconTreeItem? = null
     override fun createObserver() {
         mViewModel.treeEvent.observe(viewLifecycleOwner) {
             it.forEach {
                 if (currentNode != null) {
                     if (it.type.equals("dir")) {
-                        tView?.addNode(currentNode, TreeNode(IconTreeItemHolder.IconTreeItem(R.string.ic_folder, it.name, it.path, it.download_url)))
+                        tView?.addNode(currentNode, TreeNode(IconTreeItemHolder.IconTreeItem(R.string.ic_folder, it.name, it.path, it.download_url, it.sha)))
                     }else{
-                        tView?.addNode(currentNode, TreeNode(IconTreeItemHolder.IconTreeItem(R.string.ic_drive_file, it.name, it.path, it.download_url)))
+                        tView?.addNode(currentNode, TreeNode(IconTreeItemHolder.IconTreeItem(R.string.ic_drive_file, it.name, it.path, it.download_url, it.sha)))
                     }
                     currentNode?.setExpanded(true)
                 }else{
                     if (it.type.equals("dir")) {
-                        tView?.addNode(rootNode, TreeNode(IconTreeItemHolder.IconTreeItem(R.string.ic_folder, it.name, it.path, it.download_url)))
+                        tView?.addNode(rootNode, TreeNode(IconTreeItemHolder.IconTreeItem(R.string.ic_folder, it.name, it.path, it.download_url, it.sha)))
                     }else{
-                        tView?.addNode(rootNode, TreeNode(IconTreeItemHolder.IconTreeItem(R.string.ic_drive_file, it.name, it.path, it.download_url)))
+                        tView?.addNode(rootNode, TreeNode(IconTreeItemHolder.IconTreeItem(R.string.ic_drive_file, it.name, it.path, it.download_url, it.sha)))
                     }
                 }
             }
@@ -48,7 +49,11 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
         mViewModel.permissionEvent.observe(viewLifecycleOwner) {
             val canEdit = it.permission.equals("admin") || it.permission.equals("write")
             val bundle = Bundle()
+            bundle.putString("path", currentItem?.path)
+            bundle.putString("branch", ref)
+            bundle.putString("name", fullName)
             bundle.putString("url", currentUrl)
+            bundle.putString("sha", currentItem?.sha)
             bundle.putBoolean("canEdit", canEdit)
             nav().navigate(R.id.mainFragment, bundle)
         }
@@ -65,6 +70,7 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
         ref = arguments?.getString("ref")!!
 
         rootNode = TreeNode.root()
+        currentNode = rootNode
 
         tView = AndroidTreeView(mActivity, rootNode)
         tView?.setDefaultAnimation(true)
@@ -77,6 +83,7 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
                     currentNode = node
                     requestFoldData(item.path)
                 }else{
+                    currentItem = item
                     var parts = item.downloadURL.split("/").toMutableList()
                     parts[parts.size - 1] = EncodeUtils.urlEncode(item.name)
                     val encodeUrl = parts.joinToString("/")

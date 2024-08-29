@@ -152,4 +152,8 @@
         android:icon="@drawable/redo"
         android:title="@string/redo"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/publish"
+        android:visible="false"
+        />
 </menu>

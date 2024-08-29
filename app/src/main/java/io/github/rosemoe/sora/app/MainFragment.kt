@@ -44,6 +44,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.ToastUtils
 import io.github.rosemoe.sora.app.databinding.FragmentMainBinding
 import io.github.rosemoe.sora.app.tests.TestActivity
@@ -97,6 +98,7 @@ import kotlinx.coroutines.withContext
 import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
 import me.hgj.jetpackmvvm.base.appContext
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
+import me.hgj.jetpackmvvm.ext.nav
 import org.eclipse.tm4e.core.registry.IGrammarSource
 import org.eclipse.tm4e.core.registry.IThemeSource
 import java.util.regex.PatternSyntaxException
@@ -105,6 +107,8 @@ import java.util.regex.PatternSyntaxException
  * Demo and debug Activity for the code editor
  */
 class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
+
+    private var canEdit = false
 
     override fun layoutId(): Int = R.layout.fragment_main
     override fun lazyLoadData() {
@@ -417,7 +421,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
             searchOptions.setOnClickListener(::showSearchOptions)
         }
 
-        val canEdit = arguments?.getBoolean("canEdit")
+        canEdit = arguments?.getBoolean("canEdit") == true
         mDatabind.editor.editable = canEdit == true
 
         // Configure symbol input view
@@ -538,6 +542,10 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
+        if (canEdit) {
+            menu.add(Menu.NONE, R.id.publish, Menu.NONE, "发布更新")
+        }
+
         undo = menu.findItem(R.id.text_undo)
         redo = menu.findItem(R.id.text_redo)
         super.onCreateOptionsMenu(menu, inflater)
@@ -671,6 +679,15 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
                 editor.isDisableSoftKbdIfHardKbdAvailable =
                     !editor.isDisableSoftKbdIfHardKbdAvailable
                 item.isChecked = editor.isDisableSoftKbdIfHardKbdAvailable
+            }
+            R.id.publish -> {
+                val bundle = Bundle()
+                val content = EncodeUtils.base64Encode(mDatabind.editor.text.toString())
+                bundle.putString("content", String(content))
+                bundle.putString("path", arguments?.getString("path"))
+                bundle.putString("name", arguments?.getString("name"))
+                bundle.putString("sha", arguments?.getString("sha"))
+                nav().navigate(R.id.commitAddFragment, bundle)
             }
         }
         return super.onOptionsItemSelected(item)

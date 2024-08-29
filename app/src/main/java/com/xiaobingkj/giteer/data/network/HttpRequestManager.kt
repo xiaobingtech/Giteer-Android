@@ -369,4 +369,15 @@ class HttpRequestManager {
             .toAwait<ContributionBean>()
             .await()
     }
+    suspend fun addCommit(name: String, path: String, content: String, sha: String, message: String, branch: String): CommitBean {
+        return RxHttp.get("api/v5/repos/${name}/commits")
+            .add("name", name)
+            .add("path", path)
+            .add("content", content)
+            .add("sha", sha)
+            .add("message", message)
+            .add("branch", branch)
+            .toAwait<CommitBean>()
+            .await()
+    }
 }

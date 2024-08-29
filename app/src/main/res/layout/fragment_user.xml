@@ -194,6 +194,7 @@
                     android:layout_height="1dp"
                     ></View>
                 <LinearLayout
+                    android:onClick="@{() -> click.toChat()}"
                     android:id="@+id/message"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"

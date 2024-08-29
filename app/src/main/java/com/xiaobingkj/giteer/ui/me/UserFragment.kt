@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.kingja.loadsir.core.LoadService
+import com.xiaobingkj.giteer.data.model.MessageBean
 import com.xiaobingkj.giteer.data.model.UserBean
 import com.xiaobingkj.giteer.data.storage.Storage
 import com.xiaobingkj.giteer.ext.loadServiceInit
@@ -83,9 +84,9 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
         if (user == null) {
             loadsir.showLoading()
         }
-        mViewModel.getUser(name!!)
-        mViewModel.getOrgs(name!!)
-        mViewModel.getUserBrowser_history(name!!)
+        mViewModel.getUser(name)
+        mViewModel.getOrgs(name)
+        mViewModel.getUserBrowser_history(name)
     }
 
     override fun lazyLoadData() {
@@ -118,6 +119,16 @@ class UserFragment : BaseVmDbFragment<UserViewModel, FragmentUserBinding>() {
             bundle.putString("action", "following")
             bundle.putString("name", user?.login)
             nav().navigate(R.id.userListFragment, bundle)
+        }
+        fun toChat() {
+//            val bundle = Bundle()
+//            val mutableList = mutableListOf<MessageBean.ListDTO>()
+//            val message = MessageBean.ListDTO()
+//            message.content = ""
+//            message.sender =
+//            mutableList.add(0, message)
+//            bundle.putParcelableArray("msgs", mutableList.toTypedArray())
+//            nav().navigate(R.id.chatFragment, bundle)
         }
     }
 
