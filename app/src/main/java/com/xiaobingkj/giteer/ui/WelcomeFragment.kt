@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import com.blankj.utilcode.util.ToastUtils
+import com.kingja.loadsir.core.LoadService
 import com.xiaobingkj.giteer.data.GithubVersion
 import com.xiaobingkj.giteer.data.storage.Storage
+import com.xiaobingkj.giteer.ext.loadServiceInit
 import com.xiaobingkj.giteer.ui.login.LoginViewModel
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentWelcomeBinding
@@ -21,7 +23,9 @@ import me.hgj.jetpackmvvm.ext.nav
 class WelcomeFragment : BaseVmDbFragment<LoginViewModel, FragmentWelcomeBinding>() {
     override fun layoutId(): Int = R.layout.fragment_welcome
     override fun createObserver() {
-
+        mViewModel.tokenEvent.observe(viewLifecycleOwner) {
+            Storage.token = it
+        }
     }
 
     override fun dismissLoading() {
