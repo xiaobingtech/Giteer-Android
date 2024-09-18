@@ -25,6 +25,11 @@ class WelcomeFragment : BaseVmDbFragment<LoginViewModel, FragmentWelcomeBinding>
     override fun createObserver() {
         mViewModel.tokenEvent.observe(viewLifecycleOwner) {
             Storage.token = it
+            nav().navigate(R.id.tabFragment)
+        }
+        mViewModel.errorEvent.observe(viewLifecycleOwner) {
+            ToastUtils.showLong(it.errorLog)
+            nav().navigate(R.id.loginFragment)
         }
     }
 
@@ -37,7 +42,6 @@ class WelcomeFragment : BaseVmDbFragment<LoginViewModel, FragmentWelcomeBinding>
             if (Storage.token.refresh_token != null) {
                 mViewModel.refreshOauthToken(Storage.token.refresh_token)
             }
-            nav().navigate(R.id.tabFragment)
         }else{
             nav().navigate(R.id.loginFragment)
         }

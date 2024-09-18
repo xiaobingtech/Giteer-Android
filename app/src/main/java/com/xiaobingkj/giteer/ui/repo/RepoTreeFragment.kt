@@ -11,6 +11,7 @@ import com.unnamed.b.atv.model.TreeNode.TreeNodeClickListener
 import com.unnamed.b.atv.view.AndroidTreeView
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
+import io.github.rosemoe.sora.app.CodeActivity
 import io.github.rosemoe.sora.app.MainFragment
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentRepoTreeBinding
@@ -121,11 +122,11 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
             }
         }
 
-        mViewModel.getRepoContents(fullName, path, ref)
+
     }
 
     override fun lazyLoadData() {
-
+        mViewModel.getRepoContents(fullName, path, ref)
     }
 
     override fun showLoading(message: String) {

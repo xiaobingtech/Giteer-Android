@@ -56,10 +56,10 @@ class EventAdapter(): BaseQuickAdapter<EventBean, QuickViewHolder>() {
         when (item?.type) {
             "PushEvent" -> {
                 if (item.payload.commits.size > 0) {
-                    content = "${item.actor.name} 推送到了分支 ${item.repo.full_name} 的 ${item.payload.ref.split("/").last()} 分支 ${item.payload.commits.first().sha.substring(0, 7)} ${item.payload.commits.first().message}"
+                    content = "${item.actor.name} 推送到了 ${item.repo.full_name} 的 ${item.payload.ref.split("/").last()} 分支 ${item.payload.commits.first().sha.substring(0, 7)} ${item.payload.commits.first().message}"
                     custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b", "${item.payload.commits.first().sha.substring(0, 7)}\\b", "${item.payload.commits.first().message}\\b")
                 }else{
-                    content = "${item.actor.name} 推送到了分支 ${item.repo.full_name} 的 ${item.payload.ref.split("/").last()} 分支"
+                    content = "${item.actor.name} 推送到了 ${item.repo.full_name} 的 ${item.payload.ref.split("/").last()} 分支"
                     custom = MODE_CUSTOM("${item.actor.name}\\b", "${item.repo.full_name}\\b", "${item.payload.ref.split("/").last()}\\b")
                 }
 
