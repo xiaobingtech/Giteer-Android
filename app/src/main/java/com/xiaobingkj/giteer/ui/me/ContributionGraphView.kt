@@ -34,6 +34,9 @@ import androidx.annotation.ColorRes
 import com.xiaobingkj.giteer.data.model.ContributionBean
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 class ContributionGraphView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -102,8 +105,28 @@ class ContributionGraphView @JvmOverloads constructor(
 
     // 根据内容计算视图的大小，这里简化处理
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = (squareSize + squareMargin) * 54 + squareMargin
+        val week = getWeeksInLastYear()
+        val desiredWidth = (squareSize + squareMargin) * week + squareMargin
         val desiredHeight = (squareSize + squareMargin) * 7 + squareMargin
         setMeasuredDimension(desiredWidth.toInt(), desiredHeight.toInt())
+    }
+
+    private fun getWeeksInLastYear(): Int {
+        // 获取当前日期
+        val currentDate = LocalDate.now()
+
+        // 获取一年前的日期
+        val oneYearAgoDate = currentDate.minus(1, ChronoUnit.YEARS)
+
+        // 获取当前日期所在的周一
+        val currentWeekStart = currentDate.with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1)
+
+        // 获取一年前日期所在的周一
+        val oneYearAgoWeekStart = oneYearAgoDate.with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1)
+
+        // 计算周数差
+        val weeks = ChronoUnit.WEEKS.between(oneYearAgoWeekStart, currentWeekStart).toInt()
+
+        return weeks + 1
     }
 }
