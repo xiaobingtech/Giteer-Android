@@ -34,6 +34,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = Versions.versionCode
         versionName = Versions.versionName + "-" + System.currentTimeMillis()
+
+        manifestPlaceholders.putAll(mapOf(
+            "JPUSH_PKGNAME " to applicationId as Any,
+            "JPUSH_APPKEY " to "0970c471173d9049eae6b865",
+            "JPUSH_CHANNEL " to "default_developer"
+        ))
     }
     signingConfigs {
         create("general") {
@@ -180,12 +186,10 @@ dependencies {
 
     implementation(libs.xxpermissions)
 
-    implementation(libs.android.defensecrash)
-
     implementation(libs.loadsir)
 
     implementation(libs.chatkit)
 
-    implementation(libs.mncrashmonitor)
+    implementation(libs.jpush)
 
 }

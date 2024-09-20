@@ -25,6 +25,7 @@
 package com.xiaobingkj.giteer.data.network
 
 import android.app.Application
+import android.util.Log
 import com.tencent.mmkv.MMKV
 import com.tencent.smtt.sdk.CookieManager
 import com.xiaobingkj.giteer.data.storage.Storage
@@ -48,8 +49,11 @@ class RxHttpManager(context: Application) {
             .cookieJar(object: CookieJar{
                 override fun loadForRequest(url: HttpUrl): List<Cookie> {
                     val cookie = CookieManager.getInstance().getCookie("gitee.com")
-                    val list = parseCookieString(cookie)
-                    return list
+                    if (cookie != null) {
+                        val list = parseCookieString(cookie)
+                        return list
+                    }
+                    return listOf()
                 }
 
                 override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {

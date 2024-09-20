@@ -559,5 +559,7 @@
     <string name="star">Star</string>
 
     <string name="hint_enter_a_message">文明发言，真诚提问，请输入要发送的内容</string>
+    <string name="channel_name">通知渠道</string>
+    <string name="channel_description">通知描述</string>
 
 </resources>

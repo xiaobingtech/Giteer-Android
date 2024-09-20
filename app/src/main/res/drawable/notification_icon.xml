@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~    sora-editor - the awesome code editor for Android
+  ~    https://github.com/Rosemoe/sora-editor
+  ~    Copyright (C) 2020-2024  Rosemoe
+  ~
+  ~     This library is free software; you can redistribute it and/or
+  ~     modify it under the terms of the GNU Lesser General Public
+  ~     License as published by the Free Software Foundation; either
+  ~     version 2.1 of the License, or (at your option) any later version.
+  ~
+  ~     This library is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ~     Lesser General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Lesser General Public
+  ~     License along with this library; if not, write to the Free Software
+  ~     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
+  ~     USA
+  ~
+  ~     Please contact Rosemoe by email 2073412493@qq.com if you need
+  ~     additional information or have any questions
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 铃铛的主体 -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M54,4c-22,0 -40,18 -40,40v20c0,4 -4,8 -8,8h96c-4,0 -8,-4 -8,-8v-20c0,-22 -18,-40 -40,-40z" />
+    <!-- 铃铛的底部 -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M34,72h40c0,4 -4,8 -8,8h-24c-4,0 -8,-4 -8,-8z" />
+    <!-- 铃铛的顶部 -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M54,0c-4,0 -8,4 -8,8v4h16v-4c0,-4 -4,-8 -8,-8z" />
+    <!-- 铃铛的挂环 -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M54,0c-4,0 -8,4 -8,8v4h16v-4c0,-4 -4,-8 -8,-8z" />
+</vector>

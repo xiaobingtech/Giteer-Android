@@ -27,11 +27,11 @@ package com.xiaobingkj.giteer
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import com.android.tony.defenselib.DefenseCrash
+import cn.jiguang.api.utils.JCollectionAuth
+import cn.jpush.android.api.JPushInterface
+import com.hjq.permissions.Permission
 import com.kingja.loadsir.callback.SuccessCallback
 import com.kingja.loadsir.core.LoadSir
-import com.maning.librarycrashmonitor.MCrashMonitor
-import com.maning.librarycrashmonitor.listener.MCrashCallBack
 import com.tencent.mmkv.MMKV
 import com.xiaobingkj.giteer.data.network.RxHttpManager
 import com.xiaobingkj.giteer.ui.MainActivity
@@ -49,8 +49,12 @@ class GiteerApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         //初始化MMKV
-        val rootDir = MMKV.initialize(this)
-        Log.d(TAG, "MMKV rootDir:" + rootDir)
+        MMKV.initialize(this)
+        //推送
+        JPushInterface.setDebugMode(true)
+        JPushInterface.init(this)
+        // 调整点二：App用户同意了隐私政策授权，并且开发者确定要开启推送服务后调用
+        JCollectionAuth.setAuth(this, true); //如初始化被拦截过，将重试初始化过程
         //初始化YCWebView
         X5WebUtils.init(this)
         //初始化RxHttp
@@ -64,33 +68,5 @@ class GiteerApplication: Application() {
             .setDefaultCallback(SuccessCallback::class.java)//设置默认加载状态页
             .commit()
 
-        initCrash()
-    }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-        DefenseCrash.initialize(this)
-        DefenseCrash.install { thread, throwable, isSafeMode, isCrashInChoreographer ->
-            Log.d("Exceptionhandler",
-                "thread:${thread.name}"+
-                        "exception:${throwable.message}"+
-                        "isCrashInChoreographer:$isCrashInChoreographer"+
-                        "isSafeMode:$isSafeMode")
-        }
-    }
-
-    private fun initCrash() {
-        /**
-         * 初始化日志系统
-         * context :    上下文
-         * isDebug :    是不是Debug模式,true:崩溃后显示自定义崩溃页面 ;false:关闭应用,不跳转奔溃页面(默认)
-         * CrashCallBack : 回调执行
-         */
-        MCrashMonitor.init(this, true, object : MCrashCallBack {
-            override fun onCrash(file: File) {
-                //可以在这里保存标识，下次再次进入把日志发送给服务器
-                Log.d("CrashMonitor回调", file.absolutePath)
-            }
-        })
     }
 }

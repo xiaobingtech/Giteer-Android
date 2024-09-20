@@ -561,5 +561,7 @@
     <string name="star">Star</string>
 
     <string name="hint_enter_a_message">Type a message…</string>
+    <string name="channel_name">通知渠道</string>
+    <string name="channel_description">通知描述</string>
 
 </resources>

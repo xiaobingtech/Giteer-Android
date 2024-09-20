@@ -1,7 +1,14 @@
 package com.xiaobingkj.giteer.ui.me.message
 
+import android.Manifest
+import android.app.PendingIntent
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.blankj.utilcode.util.TimeUtils
 import com.bumptech.glide.Glide
 import com.stfalcon.chatkit.commons.ImageLoader
@@ -11,6 +18,7 @@ import com.xiaobingkj.giteer.data.model.Message
 import com.xiaobingkj.giteer.data.model.MessageBean
 import com.xiaobingkj.giteer.data.model.User
 import com.xiaobingkj.giteer.data.storage.Storage
+import com.xiaobingkj.giteer.ui.MainActivity
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentChatBinding
 import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
@@ -64,6 +72,7 @@ class ChatFragment() : BaseVmDbFragment<ChatViewModel, FragmentChatBinding>() {
             override fun onSubmit(input: CharSequence?): Boolean {
                 //发送信息
                 mViewModel.sendMsg(msgs.first().sender.login, input.toString())
+                sendMsg()
                 return true
             }
         })
@@ -77,6 +86,39 @@ class ChatFragment() : BaseVmDbFragment<ChatViewModel, FragmentChatBinding>() {
             }
 
         })
+    }
+
+    private fun sendMsg() {
+        val intent = Intent(mActivity, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(mActivity, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        var builder = NotificationCompat.Builder(mActivity, "910529")
+            .setSmallIcon(R.drawable.notification_icon)
+            .setContentTitle("通知标题")
+            .setContentText("通知内容")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+        with(NotificationManagerCompat.from(mActivity)) {
+            if (ActivityCompat.checkSelfPermission(
+                    mActivity,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                // ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                // public fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                //                                        grantResults: IntArray)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+
+                return@with
+            }
+            // notificationId is a unique int for each notification that you must define.
+            notify(Date().time.toInt(), builder.build())
+        }
     }
 
     override fun lazyLoadData() {
