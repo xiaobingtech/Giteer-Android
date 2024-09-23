@@ -393,7 +393,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     }
 
     override fun createObserver() {
-        mViewModel.fileEvent.observe(this){
+        mViewModel.fileEvent.observe(viewLifecycleOwner) {
             mDatabind.editor.setText(it, null)
 
             updatePositionText()
@@ -554,7 +554,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     override fun onDestroyView() {
         super.onDestroyView()
         try {
-            mDatabind.editor?.release()
+            mDatabind.editor.release()
         } catch (e: Exception) {
             Log.e("MainFragment", "Error releasing editor", e)
         }
