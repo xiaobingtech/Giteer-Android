@@ -1,5 +1,4 @@
 [versions]
-agp = "8.5.1"
 androidDefensecrash = "4.0.3"
 appcompat = "1.0.0"
 atv = "1.2.9"
@@ -11,6 +10,7 @@ chatkit = "0.4.1"
 imageGlide = "4.6.2"
 jetpackmvvm = "1.2.7"
 jpush = "5.4.0"
+agp = "8.7.0"
 kotlin = "1.9.23"
 ksp = "4.16.0"
 loadsir = "1.3.8"
@@ -25,19 +25,19 @@ rxhttp = "3.2.7"
 rxjava = "3.1.6"
 rxlifeRxjava3 = "2.2.2"
 tsBinding = "4.3.1"
-lsp4j = "0.22.0"
-androidxAnnotation = "1.8.1"
 activity = "1.9.1"
 utilcodex = "1.31.1"
 videocache = "3.3.7"
 webviewlib = "1.4.0"
 xxpermissions = "20.0"
+lsp4j = "0.23.1"
+androidxAnnotation = "1.8.2"
 
 [libraries]
 android-defensecrash = { module = "com.github.xuuhaoo:Android-DefenseCrash", version.ref = "androidDefensecrash" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidxAnnotation" }
 androidx-appcompat-v100 = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx-collection = { module = "androidx.collection:collection", version = "1.4.2" }
+androidx-collection = { module = "androidx.collection:collection", version = "1.4.4" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version = "2.1.4" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.13.1" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
@@ -61,8 +61,8 @@ jpush = { module = "cn.jiguang.sdk:jpush", version.ref = "jpush" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.8.0" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "ksp" }
-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version = "2.8.4" }
 loadsir = { module = "com.kingja.loadsir:loadsir", version.ref = "loadsir" }
+lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version = "2.8.6" }
 material = { module = "com.google.android.material:material", version = "1.12.0" }
 gms-instantapps = { module = "com.google.android.gms:play-services-instantapps", version = "18.1.0" }
 mmkv = { module = "com.tencent:mmkv", version.ref = "mmkv" }
@@ -83,24 +83,24 @@ rxlife-rxjava3 = { module = "com.github.liujingxing.rxlife:rxlife-rxjava3", vers
 tree-sitter-java = { module = "com.itsaky.androidide.treesitter:tree-sitter-java", version.ref = "tsBinding" }
 tree-sitter = { module = "com.itsaky.androidide.treesitter:android-tree-sitter", version.ref = "tsBinding" }
 lsp4j = { module = "org.eclipse.lsp4j:org.eclipse.lsp4j", version.ref = "lsp4j" }
-leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version = "2.13" }
+leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version = "2.14" }
 junit = { module = "junit:junit", version = "4.13.2" }
-gson = { module = "com.google.code.gson:gson", version = "2.10.1" }
+gson = { module = "com.google.code.gson:gson", version = "2.11.0" }
 jcodings = { module = "org.jruby.jcodings:jcodings", version = "1.0.58" }
 joni = { module = "org.jruby.joni:joni", version = "2.2.1" }
 snakeyaml-engine = { module = "org.snakeyaml:snakeyaml-engine", version = "2.7" }
 jdt-annotation = { module = "org.eclipse.jdt:org.eclipse.jdt.annotation", version = "2.3.0" }
 
-tests-google-truth = { module = "com.google.truth:truth", version = "1.4.2" }
-tests-robolectric = { module = "org.robolectric:robolectric", version = "4.11.1" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
 videocache = { module = "xyz.doikki.android.dkplayer:videocache", version.ref = "videocache" }
 webviewlib = { module = "cn.yc:WebViewLib", version.ref = "webviewlib" }
 xxpermissions = { module = "com.github.getActivity:XXPermissions", version.ref = "xxpermissions" }
+tests-google-truth = { module = "com.google.truth:truth", version = "1.4.4" }
+tests-robolectric = { module = "org.robolectric:robolectric", version = "4.13" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-publish = { id = "com.vanniktech.maven.publish.base", version = "0.28.0" }
+publish = { id = "com.vanniktech.maven.publish.base", version = "0.29.0" }
