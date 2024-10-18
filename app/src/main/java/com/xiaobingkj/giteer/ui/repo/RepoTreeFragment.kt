@@ -11,6 +11,7 @@ import com.unnamed.b.atv.model.TreeNode.TreeNodeClickListener
 import com.unnamed.b.atv.view.AndroidTreeView
 import com.xiaobingkj.giteer.data.model.RepositoryBean
 import com.xiaobingkj.giteer.data.model.RepositoryV3Bean
+import io.github.rosemoe.sora.app.CodeActivity
 import io.github.rosemoe.sora.app.MainFragment
 import io.github.rosemoe.sora.app.R
 import io.github.rosemoe.sora.app.databinding.FragmentRepoTreeBinding
@@ -47,6 +48,8 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
             }
         }
         mViewModel.permissionEvent.observe(viewLifecycleOwner) {
+            startActivity(Intent(mActivity, CodeActivity::class.java))
+            /*
             val canEdit = it.permission.equals("admin") || it.permission.equals("write")
             val bundle = Bundle()
             bundle.putString("path", currentItem?.path)
@@ -56,6 +59,8 @@ class RepoTreeFragment : BaseVmDbFragment<RepoTreeViewModel, FragmentRepoTreeBin
             bundle.putString("sha", currentItem?.sha)
             bundle.putBoolean("canEdit", canEdit)
             nav().navigate(R.id.mainFragment, bundle)
+
+             */
         }
     }
 

@@ -24,7 +24,6 @@
 package io.github.rosemoe.sora.app
 
 import android.app.AlertDialog
-import android.content.Context.MODE_PRIVATE
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.graphics.Typeface
@@ -34,19 +33,17 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.ContextMenu
 import android.view.KeyEvent
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.blankj.utilcode.util.EncodeUtils
-import com.blankj.utilcode.util.ToastUtils
-import io.github.rosemoe.sora.app.databinding.FragmentMainBinding
+import io.github.rosemoe.sora.app.databinding.ActivityCodeBinding
+import io.github.rosemoe.sora.app.databinding.ActivityMainBinding
 import io.github.rosemoe.sora.app.tests.TestActivity
 import io.github.rosemoe.sora.event.ContentChangeEvent
 import io.github.rosemoe.sora.event.EditorKeyEvent
@@ -95,10 +92,6 @@ import io.github.rosemoe.sora.widget.subscribeAlways
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.hgj.jetpackmvvm.base.activity.BaseVmDbActivity
-import me.hgj.jetpackmvvm.base.appContext
-import me.hgj.jetpackmvvm.base.fragment.BaseVmDbFragment
-import me.hgj.jetpackmvvm.ext.nav
 import org.eclipse.tm4e.core.registry.IGrammarSource
 import org.eclipse.tm4e.core.registry.IThemeSource
 import java.util.regex.PatternSyntaxException
@@ -106,23 +99,16 @@ import java.util.regex.PatternSyntaxException
 /**
  * Demo and debug Activity for the code editor
  */
-class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
-
-    private var canEdit = false
-
-    override fun layoutId(): Int = R.layout.fragment_main
-    override fun lazyLoadData() {
-
-    }
+class CodeActivity : AppCompatActivity() {
 
     companion object {
         init {
-            // Load tree-sitter librariesa
+            // Load tree-sitter libraries
             System.loadLibrary("android-tree-sitter")
             System.loadLibrary("tree-sitter-java")
         }
 
-        private const val TAG = "MainFragment"
+        private const val TAG = "MainActivity"
         const val LOG_FILE = "crash-journal.log"
 
         /**
@@ -147,10 +133,130 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     }
 
+    private lateinit var binding: ActivityCodeBinding
     private lateinit var searchMenu: PopupMenu
     private var searchOptions = SearchOptions(false, false)
     private var undo: MenuItem? = null
     private var redo: MenuItem? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        CrashHandler.INSTANCE.init(this)
+        binding = ActivityCodeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val typeface = Typeface.createFromAsset(assets, "JetBrainsMono-Regular.ttf")
+
+        // Setup Listeners
+        binding.apply {
+            btnGotoPrev.setOnClickListener(::gotoPrev)
+            btnGotoNext.setOnClickListener(::gotoNext)
+            btnReplace.setOnClickListener(::replace)
+            btnReplaceAll.setOnClickListener(::replaceAll)
+            searchOptions.setOnClickListener(::showSearchOptions)
+        }
+
+        // Configure symbol input view
+        val inputView = binding.symbolInput
+        inputView.bindEditor(binding.editor)
+        inputView.addSymbols(SYMBOLS, SYMBOL_INSERT_TEXT)
+        inputView.forEachButton { it.typeface = typeface }
+
+        // Commit search when text changed
+        binding.searchEditor.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {
+                tryCommitSearch()
+            }
+        })
+
+        // Search options
+        searchMenu = PopupMenu(this, binding.searchOptions)
+        searchMenu.inflate(R.menu.menu_search_options)
+        searchMenu.setOnMenuItemClickListener {
+            // Update option states
+            it.isChecked = !it.isChecked
+            if (it.isChecked) {
+                // Regex and whole word mode can not be both chose
+                when (it.itemId) {
+                    R.id.search_option_regex -> {
+                        searchMenu.menu.findItem(R.id.search_option_whole_word)!!.isChecked = false
+                    }
+
+                    R.id.search_option_whole_word -> {
+                        searchMenu.menu.findItem(R.id.search_option_regex)!!.isChecked = false
+                    }
+                }
+            }
+            // Update search options and commit search with the new options
+            computeSearchOptions()
+            tryCommitSearch()
+            true
+        }
+
+        // Configure editor
+        binding.editor.apply {
+            typefaceText = typeface
+            props.stickyScroll = true
+            setLineSpacing(2f, 1.1f)
+            nonPrintablePaintingFlags =
+                CodeEditor.FLAG_DRAW_WHITESPACE_LEADING or CodeEditor.FLAG_DRAW_LINE_SEPARATOR or CodeEditor.FLAG_DRAW_WHITESPACE_IN_SELECTION
+            // Update display dynamically
+            // Use CodeEditor#subscribeEvent to add listeners of different events to editor
+            subscribeAlways<SelectionChangeEvent> { updatePositionText() }
+            subscribeAlways<PublishSearchResultEvent> { updatePositionText() }
+            subscribeAlways<ContentChangeEvent> {
+                postDelayedInLifecycle(
+                    ::updateBtnState,
+                    50
+                )
+            }
+            subscribeAlways<SideIconClickEvent> {
+                toast(R.string.tip_side_icon)
+            }
+            subscribeAlways<TextSizeChangeEvent> { event ->
+                Log.d(
+                    TAG,
+                    "TextSizeChangeEvent onReceive() called with: oldTextSize = [${event.oldTextSize}], newTextSize = [${event.newTextSize}]"
+                )
+            }
+
+            subscribeAlways<KeyBindingEvent> { event ->
+                if (event.eventType == EditorKeyEvent.Type.DOWN) {
+                    toast(
+                        "Keybinding event: " + generateKeybindingString(event),
+                        Toast.LENGTH_LONG
+                    )
+                }
+            }
+
+            // Handle span interactions
+            EditorSpanInteractionHandler(this)
+            getComponent<EditorAutoCompletion>()
+                .setEnabledAnimation(true)
+        }
+
+        // Load textmate themes and grammars
+        setupTextmate()
+        // Before using Textmate Language, TextmateColorScheme should be applied
+        ensureTextmateTheme()
+
+        // Set editor language to textmate Java
+        val editor = binding.editor
+        val language = TextMateLanguage.create(
+            "source.java", true
+        )
+        editor.setEditorLanguage(language)
+
+        // Open assets file
+        openAssetsFile("samples/sample.txt")
+
+        updatePositionText()
+        updateBtnState()
+
+        switchThemeIfRequired(this, binding.editor)
+    }
 
     /**
      * Generate new [SearchOptions] for text searching in editor
@@ -173,10 +279,10 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
      * Commit a text search to editor
      */
     private fun tryCommitSearch() {
-        val query = mDatabind.searchEditor.editableText
+        val query = binding.searchEditor.editableText
         if (query.isNotEmpty()) {
             try {
-                mDatabind.editor.searcher.search(
+                binding.editor.searcher.search(
                     query.toString(),
                     searchOptions
                 )
@@ -184,7 +290,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
                 // Regex error
             }
         } else {
-            mDatabind.editor.searcher.stopSearch()
+            binding.editor.searcher.stopSearch()
         }
     }
 
@@ -195,7 +301,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
         // Add assets file provider so that files in assets can be loaded
         FileProviderRegistry.getInstance().addFileProvider(
             AssetsFileResolver(
-                appContext.assets // use application context
+                applicationContext.assets // use application context
             )
         )
         loadDefaultThemes()
@@ -262,7 +368,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
      * Re-apply color scheme
      */
     private fun resetColorScheme() {
-        mDatabind.editor.apply {
+        binding.editor.apply {
             val colorScheme = this.colorScheme
             // reset
             this.colorScheme = colorScheme
@@ -273,7 +379,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
      * Add diagnostic items to editor. For debug only.
      */
     private fun setupDiagnostics() {
-        val editor = mDatabind.editor
+        val editor = binding.editor
         val container = DiagnosticsContainer()
         for (i in 0 until editor.text.lineCount) {
             val index = editor.text.getCharIndex(i, 0)
@@ -292,7 +398,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
      * Ensure the editor uses a [TextMateColorScheme]
      */
     private fun ensureTextmateTheme() {
-        val editor = mDatabind.editor
+        val editor = binding.editor
         var editorColorScheme = editor.colorScheme
         if (editorColorScheme !is TextMateColorScheme) {
             editorColorScheme = TextMateColorScheme.create(ThemeRegistry.getInstance())
@@ -322,39 +428,37 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
      * Open file from assets, and set editor text
      */
     private fun openAssetsFile(name: String) {
-        /*
         lifecycleScope.launch(Dispatchers.IO) {
             val text = ContentIO.createFrom(assets.open(name))
             withContext(Dispatchers.Main) {
-                mDatabind.editor.setText(text, null)
+                binding.editor.setText(text, null)
 
                 updatePositionText()
                 updateBtnState()
             }
         }
-         */
     }
 
     /**
      * Update buttons state for undo/redo
      */
     private fun updateBtnState() {
-        undo?.isEnabled = mDatabind.editor.canUndo()
-        redo?.isEnabled = mDatabind.editor.canRedo()
+        undo?.isEnabled = binding.editor.canUndo()
+        redo?.isEnabled = binding.editor.canRedo()
     }
 
     /**
      * Update editor position tracker text
      */
     private fun updatePositionText() {
-        val cursor = mDatabind.editor.cursor
+        val cursor = binding.editor.cursor
         var text =
             (1 + cursor.leftLine).toString() + ":" + cursor.leftColumn + ";" + cursor.left + " "
 
         text += if (cursor.isSelected) {
             "(" + (cursor.right - cursor.left) + " chars)"
         } else {
-            val content = mDatabind.editor.text
+            val content = binding.editor.text
             if (content.getColumnCount(cursor.leftLine) == cursor.leftColumn) {
                 "(<" + content.getLine(cursor.leftLine).lineSeparator.let {
                     if (it == LineSeparator.NONE) {
@@ -371,7 +475,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
         }
 
         // Indicator for text matching
-        val searcher = mDatabind.editor.searcher
+        val searcher = binding.editor.searcher
         if (searcher.hasQuery()) {
             val idx = searcher.currentMatchedPositionIndex
             val count = searcher.matchedPositionCount
@@ -389,194 +493,47 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
             }
         }
 
-        mDatabind.positionDisplay.text = text
-    }
-
-    override fun createObserver() {
-        mViewModel.fileEvent.observe(viewLifecycleOwner) {
-            mDatabind.editor.setText(it, null)
-
-            updatePositionText()
-            updateBtnState()
-        }
-    }
-
-    override fun dismissLoading() {
-
-    }
-
-    override fun initView(savedInstanceState: Bundle?) {
-//        CrashHandler.INSTANCE.init(mActivity)
-
-        setHasOptionsMenu(true)
-
-        val typeface = Typeface.createFromAsset(mActivity.assets, "JetBrainsMono-Regular.ttf")
-
-        // Setup Listeners
-        mDatabind.apply {
-            btnGotoPrev.setOnClickListener(::gotoPrev)
-            btnGotoNext.setOnClickListener(::gotoNext)
-            btnReplace.setOnClickListener(::replace)
-            btnReplaceAll.setOnClickListener(::replaceAll)
-            searchOptions.setOnClickListener(::showSearchOptions)
-        }
-
-        canEdit = arguments?.getBoolean("canEdit") == true
-        mDatabind.editor.editable = canEdit == true
-
-        // Configure symbol input view
-        val inputView = mDatabind.symbolInput
-        if (canEdit == true) {
-            inputView.visibility = View.VISIBLE
-        }else{
-            inputView.visibility = View.GONE
-        }
-
-        inputView.bindEditor(mDatabind.editor)
-        inputView.addSymbols(SYMBOLS, SYMBOL_INSERT_TEXT)
-        inputView.forEachButton { it.typeface = typeface }
-
-        // Commit search when text changed
-        mDatabind.searchEditor.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun afterTextChanged(editable: Editable) {
-                tryCommitSearch()
-            }
-        })
-
-        // Search options
-        searchMenu = PopupMenu(mActivity, mDatabind.searchOptions)
-        searchMenu.inflate(R.menu.menu_search_options)
-        searchMenu.setOnMenuItemClickListener {
-            // Update option states
-            it.isChecked = !it.isChecked
-            if (it.isChecked) {
-                // Regex and whole word mode can not be both chose
-                when (it.itemId) {
-                    R.id.search_option_regex -> {
-                        searchMenu.menu.findItem(R.id.search_option_whole_word)!!.isChecked = false
-                    }
-
-                    R.id.search_option_whole_word -> {
-                        searchMenu.menu.findItem(R.id.search_option_regex)!!.isChecked = false
-                    }
-                }
-            }
-            // Update search options and commit search with the new options
-            computeSearchOptions()
-            tryCommitSearch()
-            true
-        }
-
-        // Configure editor
-        mDatabind.editor.apply {
-            typefaceText = typeface
-            props.stickyScroll = true
-            setLineSpacing(2f, 1.1f)
-            nonPrintablePaintingFlags =
-                CodeEditor.FLAG_DRAW_WHITESPACE_LEADING or CodeEditor.FLAG_DRAW_LINE_SEPARATOR or CodeEditor.FLAG_DRAW_WHITESPACE_IN_SELECTION
-            // Update display dynamically
-            // Use CodeEditor#subscribeEvent to add listeners of different events to editor
-            subscribeAlways<SelectionChangeEvent> { updatePositionText() }
-            subscribeAlways<PublishSearchResultEvent> { updatePositionText() }
-            subscribeAlways<ContentChangeEvent> {
-                postDelayedInLifecycle(
-                    ::updateBtnState,
-                    50
-                )
-            }
-            subscribeAlways<SideIconClickEvent> {
-                ToastUtils.showLong(R.string.tip_side_icon)
-            }
-            subscribeAlways<TextSizeChangeEvent> { event ->
-                Log.d(
-                    TAG,
-                    "TextSizeChangeEvent onReceive() called with: oldTextSize = [${event.oldTextSize}], newTextSize = [${event.newTextSize}]"
-                )
-            }
-
-            subscribeAlways<KeyBindingEvent> { event ->
-                if (event.eventType == EditorKeyEvent.Type.DOWN) {
-                    ToastUtils.showLong("Keybinding event: " + generateKeybindingString(event))
-                }
-            }
-
-            // Handle span interactions
-            EditorSpanInteractionHandler(this)
-            getComponent<EditorAutoCompletion>()
-                .setEnabledAnimation(true)
-        }
-
-        // Load textmate themes and grammars
-        setupTextmate()
-        // Before using Textmate Language, TextmateColorScheme should be applied
-        ensureTextmateTheme()
-
-        // Set editor language to textmate Java
-        val editor = mDatabind.editor
-        val language = TextMateLanguage.create(
-            "source.java", true
-        )
-        editor.setEditorLanguage(language)
-
-        // Open assets file
-//        openAssetsFile("samples/sample.txt")
-
-        val url = arguments?.getString("url")!!
-        val name = url.split("/").last()
-        mActivity.supportActionBar?.title = name
-        mViewModel.getRepoFile(url)
-
-        updatePositionText()
-        updateBtnState()
-
-        switchThemeIfRequired(mActivity, mDatabind.editor)
+        binding.positionDisplay.text = text
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        switchThemeIfRequired(mActivity, mDatabind.editor)
+        switchThemeIfRequired(this, binding.editor)
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_main, menu)
-        if (canEdit) {
-            menu.add(Menu.NONE, R.id.publish, Menu.NONE, "发布更新")
-        }
-
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
         undo = menu.findItem(R.id.text_undo)
         redo = menu.findItem(R.id.text_redo)
-        super.onCreateOptionsMenu(menu, inflater)
+        return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mDatabind.editor.release()
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.editor.release()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        val editor = mDatabind.editor
+        val editor = binding.editor
         when (id) {
-            R.id.open_test_activity -> mActivity.startActivity<TestActivity>()
+            R.id.open_test_activity -> startActivity<TestActivity>()
             R.id.open_lsp_activity -> {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                    AlertDialog.Builder(mActivity)
+                    AlertDialog.Builder(this)
                         .setTitle(getString(R.string.not_supported))
                         .setMessage(getString(R.string.dialog_api_warning_msg))
                         .setPositiveButton(android.R.string.ok, null)
                         .show()
                 } else {
-                    AlertDialog.Builder(mActivity)
+                    AlertDialog.Builder(this)
                         .setTitle(R.string.dialog_lsp_entry_title)
                         .setMessage(R.string.dialog_lsp_entry_msg)
                         .setPositiveButton(R.string.choice_yes) { _, _ ->
-                            mActivity.startActivity<LspTestActivity>()
+                            startActivity<LspTestActivity>()
                         }
                         .setNegativeButton(R.string.choice_no) { _, _ ->
-                            mActivity.startActivity<LspTestJavaActivity>()
+                            startActivity<LspTestJavaActivity>()
                         }
                         .setNeutralButton(android.R.string.cancel, null)
                         .show()
@@ -614,7 +571,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
                     getString(R.string.center),
                     getString(R.string.bottom)
                 )
-                AlertDialog.Builder(mActivity)
+                AlertDialog.Builder(this)
                     .setTitle(R.string.fixed)
                     .setSingleChoiceItems(themes, -1) { dialog: DialogInterface, which: Int ->
                         editor.lnPanelPositionMode = LineInfoPanelPositionMode.FOLLOW
@@ -634,8 +591,8 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
             R.id.search_panel_st -> toggleSearchPanel(item)
 
             R.id.search_am -> {
-                mDatabind.replaceEditor.setText("")
-                mDatabind.searchEditor.setText("")
+                binding.replaceEditor.setText("")
+                binding.searchEditor.setText("")
                 editor.searcher.stopSearch()
                 editor.beginSearchMode()
             }
@@ -680,25 +637,12 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
                     !editor.isDisableSoftKbdIfHardKbdAvailable
                 item.isChecked = editor.isDisableSoftKbdIfHardKbdAvailable
             }
-            R.id.publish -> {
-                val bundle = Bundle()
-                val content = EncodeUtils.base64Encode(mDatabind.editor.text.toString())
-                bundle.putString("content", String(content))
-                bundle.putString("path", arguments?.getString("path"))
-                bundle.putString("name", arguments?.getString("name"))
-                bundle.putString("sha", arguments?.getString("sha"))
-                nav().navigate(R.id.commitAddFragment, bundle)
-            }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun showLoading(message: String) {
-
-    }
-
     private fun chooseLineNumberPanelPosition() {
-        val editor = mDatabind.editor
+        val editor = binding.editor
         val themes = arrayOf(
             getString(R.string.top),
             getString(R.string.bottom),
@@ -710,7 +654,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
             getString(R.string.bottom_left),
             getString(R.string.bottom_right)
         )
-        AlertDialog.Builder(mActivity)
+        AlertDialog.Builder(this)
             .setTitle(R.string.fixed)
             .setSingleChoiceItems(themes, -1) { dialog: DialogInterface, which: Int ->
                 editor.lnPanelPositionMode = LineInfoPanelPositionMode.FIXED
@@ -739,8 +683,8 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     }
 
     private fun toggleSearchPanel(item: MenuItem) {
-        if (mDatabind.searchPanel.visibility == View.GONE) {
-            mDatabind.apply {
+        if (binding.searchPanel.visibility == View.GONE) {
+            binding.apply {
                 replaceEditor.setText("")
                 searchEditor.setText("")
                 editor.searcher.stopSearch()
@@ -748,34 +692,34 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
                 item.isChecked = true
             }
         } else {
-            mDatabind.searchPanel.visibility = View.GONE
-            mDatabind.editor.searcher.stopSearch()
+            binding.searchPanel.visibility = View.GONE
+            binding.editor.searcher.stopSearch()
             item.isChecked = false
         }
     }
 
     private fun openLogs() {
         runCatching {
-            mActivity.openFileInput(LOG_FILE).reader().readText()
+            openFileInput(LOG_FILE).reader().readText()
         }.onSuccess {
-            mDatabind.editor.setText(it)
+            binding.editor.setText(it)
         }.onFailure {
-            ToastUtils.showLong(it.toString())
+            toast(it.toString())
         }
     }
 
     private fun clearLogs() {
         runCatching {
-            mActivity.openFileOutput(LOG_FILE, MODE_PRIVATE)?.use {}
+            openFileOutput(LOG_FILE, MODE_PRIVATE)?.use {}
         }.onFailure {
-            ToastUtils.showLong(it.toString())
+            toast(it.toString())
         }.onSuccess {
-            ToastUtils.showLong(R.string.deleting_log_success)
+            toast(R.string.deleting_log_success)
         }
     }
 
     private fun chooseLanguage() {
-        val editor = mDatabind.editor
+        val editor = binding.editor
         val languageOptions = arrayOf(
             "Java",
             "TextMate Java",
@@ -796,7 +740,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
             "TextMate JavaScript" to Pair("source.js", "source.js"),
             "TextMate MarkDown" to Pair("text.html.markdown", "text.html.markdown")
         )
-        AlertDialog.Builder(mActivity)
+        AlertDialog.Builder(this)
             .setTitle(R.string.switch_language)
             .setSingleChoiceItems(languageOptions, -1) { dialog: DialogInterface, which: Int ->
                 val selected = languageOptions[which]
@@ -824,13 +768,13 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
                             editor.setEditorLanguage(
                                 TsLanguageJava(
                                     JavaLanguageSpec(
-                                        highlightScmSource = mActivity.assets.open("tree-sitter-queries/java/highlights.scm")
+                                        highlightScmSource = assets.open("tree-sitter-queries/java/highlights.scm")
                                             .reader().readText(),
-                                        codeBlocksScmSource = mActivity.assets.open("tree-sitter-queries/java/blocks.scm")
+                                        codeBlocksScmSource = assets.open("tree-sitter-queries/java/blocks.scm")
                                             .reader().readText(),
-                                        bracketsScmSource = mActivity.assets.open("tree-sitter-queries/java/brackets.scm")
+                                        bracketsScmSource = assets.open("tree-sitter-queries/java/brackets.scm")
                                             .reader().readText(),
-                                        localsScmSource = mActivity.assets.open("tree-sitter-queries/java/locals.scm")
+                                        localsScmSource = assets.open("tree-sitter-queries/java/locals.scm")
                                             .reader().readText()
                                     )
                                 )
@@ -845,7 +789,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     }
 
     private fun chooseTheme() {
-        val editor = mDatabind.editor
+        val editor = binding.editor
         val themes = arrayOf(
             "Default",
             "GitHub",
@@ -859,7 +803,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
             "Solarized(Dark) for TM(VSCode)",
             "TM theme from file"
         )
-        AlertDialog.Builder(mActivity)
+        AlertDialog.Builder(this)
             .setTitle(R.string.color_scheme)
             .setSingleChoiceItems(themes, -1) { dialog: DialogInterface, which: Int ->
                 when (which) {
@@ -908,7 +852,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     fun gotoNext(view: View) {
         try {
-            mDatabind.editor.searcher.gotoNext()
+            binding.editor.searcher.gotoNext()
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -916,7 +860,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     fun gotoPrev(view: View) {
         try {
-            mDatabind.editor.searcher.gotoPrevious()
+            binding.editor.searcher.gotoPrevious()
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -924,7 +868,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     fun replace(view: View) {
         try {
-            mDatabind.editor.searcher.replaceCurrentMatch(mDatabind.replaceEditor.text.toString())
+            binding.editor.searcher.replaceCurrentMatch(binding.replaceEditor.text.toString())
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -932,7 +876,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     fun replaceAll(view: View) {
         try {
-            mDatabind.editor.searcher.replaceAll(mDatabind.replaceEditor.text.toString())
+            binding.editor.searcher.replaceAll(binding.replaceEditor.text.toString())
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -947,13 +891,13 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
             if (result == null) return@registerForActivityResult
 
 
-            val editorLanguage = mDatabind.editor.editorLanguage
+            val editorLanguage = binding.editor.editorLanguage
 
             val language = if (editorLanguage is TextMateLanguage) {
                 editorLanguage.updateLanguage(
                     DefaultGrammarDefinition.withGrammarSource(
                         IGrammarSource.fromInputStream(
-                            mActivity.contentResolver.openInputStream(result),
+                            contentResolver.openInputStream(result),
                             result.path, null
                         ),
                     )
@@ -963,13 +907,13 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
                 TextMateLanguage.create(
                     DefaultGrammarDefinition.withGrammarSource(
                         IGrammarSource.fromInputStream(
-                            mActivity.contentResolver.openInputStream(result),
+                            contentResolver.openInputStream(result),
                             result.path, null
                         ),
                     ), true
                 )
             }
-            mDatabind.editor.setEditorLanguage(language)
+            binding.editor.setEditorLanguage(language)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -983,7 +927,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
             ThemeRegistry.getInstance().loadTheme(
                 IThemeSource.fromInputStream(
-                    mActivity.contentResolver.openInputStream(result), result.path,
+                    contentResolver.openInputStream(result), result.path,
                     null
                 )
             )

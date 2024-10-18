@@ -49,7 +49,11 @@
         <profileable
             android:shell="true"
             tools:targetApi="q" />
-
+        <activity
+            android:name=".CodeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode|keyboard|navigation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".tests.TestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode|keyboard|navigation"
