@@ -56,11 +56,13 @@ public class TextMateNewlineHandler implements NewlineHandler {
 
     private CompleteEnterAction enterAction;
 
+    private Pair<String, String> indentForEnter;
+
     private boolean isEnabled = true;
 
     //private static final Pattern precedingValidPattern = Pattern.compile("^\\s+$");
 
-    private Pair<String, String> indentForEnter;
+
 
     private LanguageConfiguration languageConfiguration;
 
@@ -185,9 +187,9 @@ public class TextMateNewlineHandler implements NewlineHandler {
         var indent = "";
 
         if (language.useTab()) {
-            indent = " ".repeat(language.getTabSize());
-        } else {
             indent = "\t";
+        } else {
+            indent = " ".repeat(language.getTabSize());
         }
 
 

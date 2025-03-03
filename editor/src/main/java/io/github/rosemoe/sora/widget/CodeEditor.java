@@ -118,6 +118,7 @@ import io.github.rosemoe.sora.text.LineSeparator;
 import io.github.rosemoe.sora.text.TextLayoutHelper;
 import io.github.rosemoe.sora.text.TextRange;
 import io.github.rosemoe.sora.text.TextUtils;
+import io.github.rosemoe.sora.text.TextUtilsP;
 import io.github.rosemoe.sora.text.method.KeyMetaStates;
 import io.github.rosemoe.sora.util.Chars;
 import io.github.rosemoe.sora.util.ClipDataUtils;
@@ -1586,7 +1587,7 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
                 return;
             }
             if (layout instanceof WordwrapLayout && wordwrap) {
-                var newLayout = new WordwrapLayout(this, text, antiWordBreaking, ((WordwrapLayout) layout).getRowTable(), clearWordwrapCache);
+                var newLayout = new WordwrapLayout(this, text, antiWordBreaking, (WordwrapLayout) layout, clearWordwrapCache);
                 layout.destroyLayout();
                 layout = newLayout;
                 return;
@@ -1841,7 +1842,12 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
                 }
             }
             // Do not put cursor inside combined characters
-            int begin = TextLayoutHelper.get().getCurPosLeft(col, text.getLine(cur.getLeftLine()));
+            int begin;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                begin = TextUtilsP.getOffsetForBackspaceKey(text.getLine(cur.getLeftLine()), col);
+            } else {
+                begin = TextLayoutHelper.get().getCurPosLeft(col, text.getLine(cur.getLeftLine()));
+            }
             int end = cur.getLeftColumn();
             if (begin > end) {
                 int tmp = begin;
@@ -1849,7 +1855,7 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
                 end = tmp;
             }
             if (begin == end) {
-                if (cur.getLeftLine() > 0) {
+                if (cur.getLeftLine() > 0 && begin == 0) {
                     text.delete(cur.getLeftLine() - 1, text.getColumnCount(cur.getLeftLine() - 1), cur.getLeftLine(), 0);
                 }
             } else {
@@ -1868,16 +1874,28 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
     /**
      * Commit text at current state from IME
      *
-     * @param text Text commit by InputConnection
+     * @param text            Text commit by InputConnection
+     * @param applyAutoIndent Apply automatic indentation
      */
     public void commitText(CharSequence text, boolean applyAutoIndent) {
+        commitText(text, applyAutoIndent, true);
+    }
+
+    /**
+     * Commit text with given options
+     *
+     * @param text Text commit by InputConnection
+     * @param applyAutoIndent Apply automatic indentation
+     * @param applySymbolCompletion Apply symbol surroundings and completions
+     */
+    public void commitText(CharSequence text, boolean applyAutoIndent, boolean applySymbolCompletion) {
         if (text.length() == 0) {
             return;
         }
 
         // replace text
         SymbolPairMatch.SymbolPair pair = null;
-        if (getProps().symbolPairAutoCompletion && text.length() > 0) {
+        if (applySymbolCompletion && getProps().symbolPairAutoCompletion && text.length() > 0) {
             var endCharFromText = text.charAt(text.length() - 1);
 
             char[] inputText = null;
@@ -1895,7 +1913,7 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
 
         var cur = cursor;
         var editorText = this.text;
-        var quoteHandler = editorLanguage.getQuickQuoteHandler();
+        var quoteHandler = LanguageHelper.getQuickQuoteHandler(editorLanguage);
 
         if (pair != null && pair != SymbolPairMatch.SymbolPair.EMPTY_SYMBOL_PAIR) {
 
@@ -1974,12 +1992,13 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
                     }
                     int count = spaceCount + (tabCount * tabWidth);
                     try {
-                        count += editorLanguage.getIndentAdvance(
-                          new ContentReference(this.text),
-                          cur.getLeftLine(),
-                          cur.getLeftColumn(),
-                          spaceCount,
-                          tabCount
+                        count += LanguageHelper.getIndentAdvance(
+                                editorLanguage,
+                                new ContentReference(this.text),
+                                cur.getLeftLine(),
+                                cur.getLeftColumn(),
+                                spaceCount,
+                                tabCount
                         );
                     } catch (Exception e) {
                         Log.w(LOG_TAG, "Language object error", e);
@@ -2215,8 +2234,9 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
         y = Math.max(0, y);
         var stuckLines = renderer.lastStuckLines;
         if (stuckLines != null) {
-            if (y < stuckLines.size() * getRowHeight()) {
-                var index = (int) (y / getRowHeight());
+            // position Y maybe negative
+            var index = (int) Math.max(0, (y / getRowHeight()));
+            if (y < stuckLines.size() * getRowHeight() && index < stuckLines.size()) {
                 return getPointPosition(x, layout.getCharLayoutOffset(stuckLines.get(index).startLine, 0)[0] - getRowHeight() / 2f);
             }
         }
@@ -4310,7 +4330,7 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
     public void updateCursor() {
         updateCursorAnchor();
         updateExtractedText();
-        if (text.getNestedBatchEdit() > 1 && !inputConnection.composingText.isComposing()) {
+        if (text.getNestedBatchEdit() <= 1 && !inputConnection.composingText.isComposing()) {
             updateSelection();
         }
     }
@@ -4625,7 +4645,8 @@ public class CodeEditor extends View implements ContentListener, Formatter.Forma
                     return PointerIcon.getSystemIcon(getContext(), PointerIcon.TYPE_TEXT);
                 } else if (region == RegionResolverKt.REGION_LINE_NUMBER) {
                     switch (props.actionWhenLineNumberClicked) {
-                        case DirectAccessProps.LN_ACTION_SELECT_LINE, DirectAccessProps.LN_ACTION_PLACE_SELECTION_HOME -> {
+                        case DirectAccessProps.LN_ACTION_SELECT_LINE,
+                             DirectAccessProps.LN_ACTION_PLACE_SELECTION_HOME -> {
                             return PointerIcon.getSystemIcon(getContext(), PointerIcon.TYPE_HAND);
                         }
                     }

@@ -24,6 +24,7 @@
 package io.github.rosemoe.sora.util;
 
 import android.content.ClipData;
+import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
@@ -39,11 +40,13 @@ public class ClipDataUtils {
                 sb.append('\n');
             }
             var item = clipData.getItemAt(i);
-            var text = item.getText();
-            if (text == null) {
-                text = item.toString();
+            if (item.getText() != null) {
+                sb.append(item.getText());
+            } else if (item.getUri() != null) {
+                sb.append(item.getUri().toString());
+            } else if (item.getIntent() != null) {
+                sb.append(item.getIntent().toUri(Intent.URI_INTENT_SCHEME));
             }
-            sb.append(text);
         }
         return sb.toString();
     }

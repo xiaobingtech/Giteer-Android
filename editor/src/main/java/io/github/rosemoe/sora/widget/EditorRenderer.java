@@ -1615,13 +1615,18 @@ public class EditorRenderer {
      * Draw non-printable characters
      */
     protected void drawWhitespaces(Canvas canvas, float offset, int line, int row, int rowStart, int rowEnd, int min, int max) {
+        float verticalCanvasOffset = (editor.getRowTop(row) + editor.getRowBottom(row)) / 2f;
+        drawWhitespacesOnCanvas(canvas, offset, line, verticalCanvasOffset, rowStart, rowEnd, min, max);
+    }
+
+    protected void drawWhitespacesOnCanvas(Canvas canvas, float offset, int line, float verticalCanvasOffset, int rowStart, int rowEnd, int min, int max) {
         int paintStart = Math.max(rowStart, Math.min(rowEnd, min));
         int paintEnd = Math.max(rowStart, Math.min(rowEnd, max));
         paintOther.setColor(editor.getColorScheme().getColor(EditorColorScheme.NON_PRINTABLE_CHAR));
 
         if (paintStart < paintEnd) {
             float spaceWidth = paintGeneral.getSpaceWidth();
-            float rowCenter = (editor.getRowTop(row) + editor.getRowBottom(row)) / 2f - editor.getOffsetY();
+            float rowCenter = verticalCanvasOffset - editor.getOffsetY();
             offset += measureText(lineBuf, line, rowStart, paintStart - rowStart);
             var chars = lineBuf.getBackingCharArray();
             var lastPos = paintStart;
@@ -2676,7 +2681,9 @@ public class EditorRenderer {
                 gtr.set(text, startLine, 0, line.length(), spans, paintGeneral, context);
                 var softBreaks = (editor.layout instanceof WordwrapLayout) ? ((WordwrapLayout) editor.layout).getSoftBreaksForLine(startLine) : null;
                 gtr.setSoftBreaks(softBreaks);
-                var hash = Objects.hash(spans, line.length(), editor.getTabWidth(), basicDisplayMode, softBreaks, paintGeneral.getFlags(), paintGeneral.getTextSize(), paintGeneral.getTextScaleX(), paintGeneral.getLetterSpacing(), paintGeneral.getFontFeatureSettings());
+                var hash = Objects.hash(spans, line.length(), editor.getTabWidth(), basicDisplayMode,
+                        softBreaks, paintGeneral.getFlags(), paintGeneral.getTextSize(), paintGeneral.getTextScaleX(),
+                        paintGeneral.getLetterSpacing(), paintGeneral.getFontFeatureSettings(), paintGeneral.getTypeface().hashCode());
                 if (context.getCache().getStyleHash(startLine) != hash || forced) {
                     gtr.buildMeasureCache();
                     context.getCache().setStyleHash(startLine, hash);

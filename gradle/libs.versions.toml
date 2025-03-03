@@ -1,4 +1,5 @@
 [versions]
+
 androidDefensecrash = "4.0.3"
 appcompat = "1.0.0"
 atv = "1.2.9"
@@ -10,8 +11,8 @@ chatkit = "0.4.1"
 imageGlide = "4.6.2"
 jetpackmvvm = "1.2.7"
 jpush = "5.4.0"
-agp = "8.6.0"
-kotlin = "1.9.23"
+agp = "8.8.0"
+kotlin = "2.1.0"
 ksp = "4.16.0"
 loadsir = "1.3.8"
 mmkv = "1.3.9"
@@ -31,15 +32,15 @@ videocache = "3.3.7"
 webviewlib = "1.4.0"
 xxpermissions = "20.0"
 lsp4j = "0.23.1"
-androidxAnnotation = "1.8.2"
+androidxAnnotation = "1.9.1"
 
 [libraries]
 android-defensecrash = { module = "com.github.xuuhaoo:Android-DefenseCrash", version.ref = "androidDefensecrash" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidxAnnotation" }
 androidx-appcompat-v100 = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx-collection = { module = "androidx.collection:collection", version = "1.4.4" }
-androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version = "2.1.4" }
-androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.13.1" }
+androidx-collection = { module = "androidx.collection:collection", version = "1.4.5" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version = "2.2.0" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.15.0" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version = "1.2.1" }
 androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version = "3.6.1" }
@@ -50,7 +51,7 @@ baserecyclerviewadapterhelper4 = { module = "io.github.cymchad:BaseRecyclerViewA
 bigimageviewpager = { module = "com.github.SherlockGougou:BigImageViewPager", version.ref = "bigimageviewpager" }
 chatkit = { module = "com.github.stfalcon-studio:Chatkit", version.ref = "chatkit" }
 core = { module = "io.noties.markwon:core", version.ref = "imageGlide" }
-desugar = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.4" }
+desugar = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.4" }
 dkplayer-java = { module = "xyz.doikki.android.dkplayer:dkplayer-java", version.ref = "videocache" }
 dkplayer-ui = { module = "xyz.doikki.android.dkplayer:dkplayer-ui", version.ref = "videocache" }
 ext-tables = { module = "io.noties.markwon:ext-tables", version.ref = "imageGlide" }
@@ -62,7 +63,7 @@ kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-androi
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "ksp" }
 loadsir = { module = "com.kingja.loadsir:loadsir", version.ref = "loadsir" }
-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version = "2.8.6" }
+lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version = "2.8.7" }
 material = { module = "com.google.android.material:material", version = "1.12.0" }
 gms-instantapps = { module = "com.google.android.gms:play-services-instantapps", version = "18.1.0" }
 mmkv = { module = "com.tencent:mmkv", version.ref = "mmkv" }
@@ -85,11 +86,17 @@ tree-sitter = { module = "com.itsaky.androidide.treesitter:android-tree-sitter",
 lsp4j = { module = "org.eclipse.lsp4j:org.eclipse.lsp4j", version.ref = "lsp4j" }
 leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version = "2.14" }
 junit = { module = "junit:junit", version = "4.13.2" }
-gson = { module = "com.google.code.gson:gson", version = "2.11.0" }
+gson = { module = "com.google.code.gson:gson", version = "2.12.1" }
 jcodings = { module = "org.jruby.jcodings:jcodings", version = "1.0.58" }
 joni = { module = "org.jruby.joni:joni", version = "2.2.1" }
 snakeyaml-engine = { module = "org.snakeyaml:snakeyaml-engine", version = "2.7" }
+moshi = { module = "com.squareup.moshi:moshi", version = "1.15.1" }
 jdt-annotation = { module = "org.eclipse.jdt:org.eclipse.jdt.annotation", version = "2.3.0" }
+monarch-code = { module = "io.github.dingyi222666.monarch:monarch", version = "1.0.3" }
+monarch-language-pack = { module = "io.github.dingyi222666.monarch:monarch-language-pack", version = "1.0.2" }
+monarch-json = { module = "io.github.dingyi222666.monarch:monarch-json-loader", version = "1.0.2" }
+regex-onig = { module = "io.github.dingyi222666.regex-lib:regex-lib-oniguruma", version = "1.0.3" }
+regex-re2j = { module = "io.github.dingyi222666.regex-lib:regex-lib-re2j", version = "1.0.2" }
 
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
@@ -103,4 +110,4 @@ tests-robolectric = { module = "org.robolectric:robolectric", version = "4.13" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-publish = { id = "com.vanniktech.maven.publish.base", version = "0.29.0" }
+publish = { id = "com.vanniktech.maven.publish.base", version = "0.30.0" }

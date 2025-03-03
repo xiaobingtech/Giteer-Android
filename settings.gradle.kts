@@ -50,6 +50,7 @@ include(
     ":bom",
     ":editor",
     ":app",
+    ":language-monarch",
     ":language-java",
     ":language-textmate",
     ":editor-lsp",
