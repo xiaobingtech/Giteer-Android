@@ -36,6 +36,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin) apply false
     alias(libs.plugins.publish) apply false
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
 }
 
 val highApiProjects = arrayOf("editor-lsp")
