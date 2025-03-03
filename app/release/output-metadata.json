@@ -1,20 +1,37 @@
 {
-  "version": 1,
+  "version": 3,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.rose.editor.android",
+  "applicationId": "io.github.rosemoe.sora.app",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "properties": [],
-      "versionCode": 1,
-      "versionName": "1.0",
-      "enabled": true,
+      "attributes": [],
+      "versionCode": 85,
+      "versionName": "0.23.4-1726928089136",
       "outputFile": "app-release.apk"
     }
-  ]
+  ],
+  "elementType": "File",
+  "baselineProfiles": [
+    {
+      "minApi": 28,
+      "maxApi": 30,
+      "baselineProfiles": [
+        "baselineProfiles/1/app-release.dm"
+      ]
+    },
+    {
+      "minApi": 31,
+      "maxApi": 2147483647,
+      "baselineProfiles": [
+        "baselineProfiles/0/app-release.dm"
+      ]
+    }
+  ],
+  "minSdkVersionForDexing": 21
 }

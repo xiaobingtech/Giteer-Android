@@ -408,6 +408,7 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
 //        CrashHandler.INSTANCE.init(mActivity)
 
+        // 确保显示选项菜单
         setHasOptionsMenu(true)
 
         val typeface = Typeface.createFromAsset(mActivity.assets, "JetBrainsMono-Regular.ttf")
@@ -553,7 +554,12 @@ class MainFragment : BaseVmDbFragment<MainViewModel, FragmentMainBinding>() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mDatabind.editor.release()
+        try {
+            // 在 Fragment 销毁时安全地释放编辑器资源
+            mDatabind.editor?.release()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error releasing editor", e)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

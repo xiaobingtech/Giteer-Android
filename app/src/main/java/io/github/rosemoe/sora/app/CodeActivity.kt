@@ -141,9 +141,18 @@ class CodeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 设置主题与应用保持一致
+        setTheme(R.style.Theme_Giteer)
         CrashHandler.INSTANCE.init(this)
         binding = ActivityCodeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        
+        // 设置 Toolbar
+        if (binding.toolbar != null) {
+            setSupportActionBar(binding.toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.title = "代码编辑器"
+        }
 
         val typeface = Typeface.createFromAsset(assets, "JetBrainsMono-Regular.ttf")
 
@@ -517,6 +526,11 @@ class CodeActivity : AppCompatActivity() {
         val id = item.itemId
         val editor = binding.editor
         when (id) {
+            android.R.id.home -> {
+                // 处理返回按钮点击事件
+                onBackPressed()
+                return true
+            }
             R.id.open_test_activity -> startActivity<TestActivity>()
             R.id.open_lsp_activity -> {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
