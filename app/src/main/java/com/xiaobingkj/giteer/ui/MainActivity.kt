@@ -67,7 +67,16 @@ class MainActivity : BaseVmDbActivity<LoginViewModel, ActivityMainBinding>() {
 
     override fun createObserver() {
         mViewModel.versionEvent.observe(this){
-            if (it.tag_name.toInt() > GithubVersion.latest) {
+            // Parse version string by removing 'v' prefix and taking only the main version number before any dots
+            val versionStr = it.tag_name.removePrefix("v").split(".")[0]
+            val version = try {
+                versionStr.toInt()
+            } catch (e: NumberFormatException) {
+                // If parsing fails, default to current version to avoid crashes
+                GithubVersion.latest
+            }
+            
+            if (version > GithubVersion.latest) {
                 val dialog = AlertDialog.Builder(this)
                 dialog.setTitle("检测到新版本")
                 dialog.setMessage(it.name)
